@@ -119,13 +119,6 @@
 			"CAP_CHOWN"
 		],
 [% END -%]
-		"rlimits": [
-			{
-				"type": "RLIMIT_NOFILE",
-				"hard": 1024,
-				"soft": 1024
-			}
-		],
 		"noNewPrivileges": true
 	},
 	"root": {
