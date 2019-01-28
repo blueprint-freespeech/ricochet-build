@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 3.03
+version: 3.04
 filename: 'nsis-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 var:
   container:
@@ -16,7 +16,7 @@ input_files:
   - project: container-image
   - filename: 'nsis-[% c("version") %].tar.bz2'
     URL: 'https://downloads.sourceforge.net/nsis/nsis-[% c("version") %]-src.tar.bz2'
-    sha256sum: abae7f4488bc6de7a4dd760d5f0e7cd3aad7747d4d7cd85786697c8991695eaa
+    sha256sum: 609536046c50f35cfd909dd7df2ab38f2e835d0da3c1048aa0d48c59c5a4f4f5
   - filename: no-insert-timestamp.patch
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
