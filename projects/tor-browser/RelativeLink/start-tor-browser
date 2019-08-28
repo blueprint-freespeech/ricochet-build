@@ -296,7 +296,7 @@ function setControlPortPasswd() {
 TOR_CONTROL_PASSWD environment variable."
 	echo "The Tor ControlPort password should be given inside double"
 	echo "quotes, inside single quotes. That is, if the ControlPort"
-	echo "password is “secret” (without curly quotes) then we must"
+	echo 'password is “secret” (without curly quotes) then we must'
 	echo "start this script after setting the environment variable"
 	echo "exactly like this:"
 	echo
