@@ -294,16 +294,13 @@ function setControlPortPasswd() {
     else
         complain "There seems to have been a quoting problem with your \
 TOR_CONTROL_PASSWD environment variable."
-        cat <<EOF
-
-The Tor ControlPort password should be given inside double quotes, inside single
-quotes, i.e. if the ControlPort password is “secret” (without curly quotes) then
-we must start this script after setting the environment variable exactly like
-this:
-
-  \$ TOR_CONTROL_PASSWD='"secret"' $myname
-
-EOF
+	echo "The Tor ControlPort password should be given inside double"
+	echo "quotes, inside single quotes. That is, if the ControlPort"
+	echo "password is “secret” (without curly quotes) then we must"
+	echo "start this script after setting the environment variable"
+	echo "exactly like this:"
+	echo
+	echo "  \$ TOR_CONTROL_PASSWD='\"secret\"' $myname"
     fi
 }
 
