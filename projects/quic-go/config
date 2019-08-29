@@ -1,0 +1,39 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+git_url: https://github.com/lucas-clemente/quic-go
+git_hash: 907071221cf97f75398d9cf8b1174e94f56e8f96
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/lucas-clemente/quic-go
+  go_lib_deps:
+    - genny
+    - ginkgo
+    - gomega
+    - gomock
+    - goxcrypto
+    - goxnet
+    - qtls
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: genny
+    project: genny
+  - name: ginkgo
+    project: ginkgo
+  - name: gomega
+    project: gomega
+  - name: gomock
+    project: gomock
+  - name: goxcrypto
+    project: goxcrypto
+  - name: goxnet
+    project: goxnet
+  - name: qtls
+    project: qtls

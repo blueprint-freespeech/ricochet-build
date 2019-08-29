@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
-git_url: https://github.com/golang/sys
-git_hash: fae7ac547cb717d141c433a2a173315e216b64c4
+git_url: https://github.com/pion/mdns
+git_hash: c5bfa7641a9decf65f7597ba5299c3ee36feb28e # v0.0.3
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -9,12 +9,16 @@ build: '[% c("projects/go/var/build_go_lib") %]'
 var:
   container:
     use_container: 1
-  go_lib: golang.org/x/sys
-  go_lib_install:
-    - golang.org/x/sys/cpu
-    - golang.org/x/sys/unix
+  go_lib: github.com/pion/mdns
+  go_lib_deps:
+    - goxnet
+    - pion-logging
 
 input_files:
   - project: container-image
   - name: go
     project: go
+  - name: goxnet
+    project: goxnet
+  - name: pion-logging
+    project: pion-logging

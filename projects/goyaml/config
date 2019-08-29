@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
-git_url: https://github.com/golang/sys
-git_hash: fae7ac547cb717d141c433a2a173315e216b64c4
+git_url: https://gopkg.in/yaml.v2
+git_hash: 51d6538a90f86fe93ac480b35f37b2be17fef232 # v2.2.2
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -9,12 +9,13 @@ build: '[% c("projects/go/var/build_go_lib") %]'
 var:
   container:
     use_container: 1
-  go_lib: golang.org/x/sys
-  go_lib_install:
-    - golang.org/x/sys/cpu
-    - golang.org/x/sys/unix
+  go_lib: gopkg.in/yaml.v2
+  go_lib_deps:
+    - gocheck
 
 input_files:
   - project: container-image
   - name: go
     project: go
+  - name: gocheck
+    project: gocheck

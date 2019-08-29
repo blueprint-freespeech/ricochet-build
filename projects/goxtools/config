@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
-git_url: https://github.com/golang/sys
-git_hash: fae7ac547cb717d141c433a2a173315e216b64c4
+git_url: https://go.googlesource.com/tools
+git_hash: aed303cbaa74a4d974e6e79dae05b2901ff009e8
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -9,10 +9,9 @@ build: '[% c("projects/go/var/build_go_lib") %]'
 var:
   container:
     use_container: 1
-  go_lib: golang.org/x/sys
+  go_lib: golang.org/x/tools
   go_lib_install:
-    - golang.org/x/sys/cpu
-    - golang.org/x/sys/unix
+    - golang.org/x/tools/imports
 
 input_files:
   - project: container-image

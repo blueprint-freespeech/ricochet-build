@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
-git_url: https://go.googlesource.com/net
-git_hash: da137c7871d730100384dbcf36e6f8fa493aef5b
+git_url: https://github.com/pion/dtls
+git_hash: 91d652d3f91d6c08c193e4d297067f8f653775f9 # v1.5.1
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -9,16 +9,19 @@ build: '[% c("projects/go/var/build_go_lib") %]'
 var:
   container:
     use_container: 1
-  go_lib: golang.org/x/net
-  go_lib_install:
-    - golang.org/x/net/proxy
-    - golang.org/x/net/dns/dnsmessage
+  go_lib: github.com/pion/dtls
   go_lib_deps:
-    - goxsys
+    - goxcrypto
+    - pion-logging
+    - pion-transport
 
 input_files:
   - project: container-image
   - name: go
     project: go
-  - name: goxsys
-    project: goxsys
+  - name: goxcrypto
+    project: goxcrypto
+  - name: pion-logging
+    project: pion-logging
+  - name: pion-transport
+    project: pion-transport

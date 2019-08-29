@@ -1,0 +1,42 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+git_url: https://github.com/pion/ice
+git_hash: 45cb33ebe6b557dbf50a7779cd713aeedbc84813 # v0.5.13
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/pion/ice
+  go_lib_deps:
+    - goxnet
+    - goxsys
+    - pion-logging
+    - pion-mdns
+    - pion-stun
+    - pion-transport
+    - pion-turn
+    - testify
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: goxnet
+    project: goxnet
+  - name: goxsys
+    project: goxsys
+  - name: pion-logging
+    project: pion-logging
+  - name: pion-mdns
+    project: pion-mdns
+  - name: pion-stun
+    project: pion-stun
+  - name: pion-transport
+    project: pion-transport
+  - name: pion-turn
+    project: pion-turn
+  - name: testify
+    project: testify

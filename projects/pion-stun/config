@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
-git_url: https://github.com/golang/sys
-git_hash: fae7ac547cb717d141c433a2a173315e216b64c4
+git_url: https://github.com/pion/stun
+git_hash: 8136435b6d3ad36535081253a032468235a43581 # v0.3.1
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -9,12 +9,13 @@ build: '[% c("projects/go/var/build_go_lib") %]'
 var:
   container:
     use_container: 1
-  go_lib: golang.org/x/sys
-  go_lib_install:
-    - golang.org/x/sys/cpu
-    - golang.org/x/sys/unix
+  go_lib: github.com/pion/stun
+  go_lib_deps:
+    - goerrors
 
 input_files:
   - project: container-image
   - name: go
     project: go
+  - name: goerrors
+    project: goerrors
