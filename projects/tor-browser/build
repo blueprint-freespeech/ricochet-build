@@ -108,19 +108,12 @@ cp -a Bundle-Data/Docs/* "$TBDIR/$DOCSPATH"
 tar -C Bundle-Data/[% bundledata_osname %] -c . | tar -C "$TBDIR[% IF ! c("var/osx") %]/TorBrowser[% END %]" -x
 
 cat Bundle-Data/PTConfigs/[% bundledata_osname %]/torrc-defaults-appendix >> "$TBDIR/$TORCONFIGPATH/torrc-defaults"
-[% IF c("var/linux") || c("var/osx") -%]
-  [% IF ! c("var/snowflake") %]
-    grep -v 'default_bridge\.snowflake' Bundle-Data/PTConfigs/bridge_prefs.js \
-      >> "$GENERATEDPREFSPATH"
-  [% ELSE %]
-    cat Bundle-Data/PTConfigs/bridge_prefs.js >> "$GENERATEDPREFSPATH"
-  [% END %]
-[% END -%]
-[% IF c("var/windows") -%]
-  # We don't have snowflake available on Windows (yet).
+[% IF ! c("var/snowflake") %]
   grep -v 'default_bridge\.snowflake' Bundle-Data/PTConfigs/bridge_prefs.js \
     >> "$GENERATEDPREFSPATH"
-[% END -%]
+[% ELSE %]
+  cat Bundle-Data/PTConfigs/bridge_prefs.js >> "$GENERATEDPREFSPATH"
+[% END %]
 
 [% IF ! c("var/multi_lingual") %]
   echo 'pref("extensions.torlauncher.prompt_for_locale", false);' >> "$GENERATEDPREFSPATH"

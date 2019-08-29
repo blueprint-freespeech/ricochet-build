@@ -1,2 +1,5 @@
 ## obfs4proxy configuration
 ClientTransportPlugin meek_lite,obfs2,obfs3,obfs4,scramblesuit exec TorBrowser\Tor\PluggableTransports\obfs4proxy.exe
+
+## snowflake configuration
+ClientTransportPlugin snowflake exec TorBrowser\Tor\PluggableTransports\snowflake-client.exe -url https://snowflake-broker.azureedge.net/ -front ajax.aspnetcdn.com -ice stun:stun.l.google.com:19302
