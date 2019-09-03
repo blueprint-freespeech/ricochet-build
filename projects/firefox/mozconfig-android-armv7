@@ -42,3 +42,4 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-webrtc
 
 ac_add_options --without-google-play-services
+ac_add_options --enable-proxy-bypass-protection
