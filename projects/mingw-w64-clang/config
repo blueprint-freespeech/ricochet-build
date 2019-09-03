@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 git_url: https://git.code.sf.net/p/mingw-w64/mingw-w64
-git_hash: 2d52c4b3433e55b1c454f9567c0ae9adc4b83b41
+git_hash: 330025c54b85512d54b6960fad07498365c8fee3
 version: '[% c("abbrev") %]'
 llvm_version: 8.0.0
 gpg_keyring: clang.gpg
@@ -36,5 +36,3 @@ input_files:
   - project: llvm-mingw
     name: llvm-mingw
   - filename: mingw-winrt.patch
-  - filename: 31567_1.patch
-  - filename: 31567_2.patch
