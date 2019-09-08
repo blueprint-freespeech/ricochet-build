@@ -29,8 +29,11 @@ export LLVM_CONFIG="/var/tmp/dist/clang/bin/llvm-config"
 [% IF c("var/linux") || c("var/android") %]
   tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/binutils') %]
   export PATH="/var/tmp/dist/binutils/bin:$PATH"
-  # Use clang for everything on Linux now.
-  export PATH="/var/tmp/dist/clang/bin:$PATH"
+  # Use clang for everything on Linux and Android now if we don't build with
+  # ASan.
+  [% IF ! c("var/asan") -%]
+    export PATH="/var/tmp/dist/clang/bin:$PATH"
+  [% END -%]
 [% END -%]
 
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
