@@ -24,6 +24,7 @@ Tor Browser 9.0a6 -- September 4 2019
    * Bug 25214: Canvas data extraction on locale pdf file should be allowed
    * Bug 30657: Locale is leaked via title of link tag on non-html page
    * Bug 31015: Disabling SVG hides UI icons in extensions
+   * Bug 30538: Unable to comment on The Independent Newspaper
    * Bug 31357: Retire Tom's default obfs4 bridge
  * Windows + OS X + Linux
    * Update Tor to 0.4.1.5
