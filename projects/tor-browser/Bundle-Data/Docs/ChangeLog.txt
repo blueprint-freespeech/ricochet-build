@@ -51,6 +51,7 @@ Tor Browser 9.0a6 -- September 4 2019
    * Backport fix for bug 1572844 to fix broken build
  * OS X
    * Bug 29818: Adapt #13379 patch for 68esr
+   * Bug 31464: meek and moat are broken on macOS 10.9 with Go 1.12
    * Bug 31403: Bump snowflake commit to cd650fa009
  * Linux
    * Bug 31403: Bump snowflake commit to cd650fa009
