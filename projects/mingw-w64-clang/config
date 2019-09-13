@@ -36,3 +36,4 @@ input_files:
   - project: llvm-mingw
     name: llvm-mingw
   - filename: mingw-winrt.patch
+  - filename: sort.patch

@@ -1,0 +1,22 @@
+From 9eeb3b9ea13b25591c9081a5f05a1904d367d523 Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Wed, 11 Sep 2019 13:25:54 +0000
+Subject: [PATCH] sorted
+
+
+diff --git a/utils/merge_archives.py b/utils/merge_archives.py
+index 58d92f0e2..597ca2471 100755
+--- a/utils/merge_archives.py
++++ b/utils/merge_archives.py
+@@ -124,7 +124,7 @@ def main():
+         execute_command_verbose([ar_exe, 'x', arc], cwd=temp_directory_root,
+                                 verbose=args.verbose)
+ 
+-    files = glob.glob(os.path.join(temp_directory_root, '*.o*'))
++    files = sorted(glob.glob(os.path.join(temp_directory_root, '*.o*')))
+     if not files:
+         print_and_exit('Failed to glob for %s' % temp_directory_root)
+     cmd = [ar_exe, 'qcs', args.output] + files
+-- 
+2.23.0
+
