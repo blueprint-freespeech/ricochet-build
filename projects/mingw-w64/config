@@ -6,7 +6,7 @@ version: '[% c("abbrev") %]'
 var:
   container:
     use_container: 1
-  gcc_version: 6.4.0
+  gcc_version: 9.2.0
   deps:
     - automake
     - build-essential
@@ -30,7 +30,6 @@ targets:
 input_files:
   - project: container-image
   - URL: 'https://ftp.gnu.org/gnu/gcc/gcc-[% c("var/gcc_version") %]/gcc-[% c("var/gcc_version") %].tar.xz'
-    sha256sum: 850bf21eafdfe5cd5f6827148184c08c4a0852a37ccf36ce69855334d2c914d4
+    sha256sum: ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206
   - name: binutils
     project: binutils
-  - filename: libtool-sort.patch
