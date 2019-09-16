@@ -9,9 +9,7 @@ cd /var/tmp/build
 
 mv $rootdir/[% c('input_files_by_name/https-everywhere') %] $ext_dir/https-everywhere-eff@eff.org.xpi
 mv $rootdir/[% c('input_files_by_name/noscript') %] $ext_dir/{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi
-[% c("var/touch") %] $ext_dir $ext_dir/*
 
-zip -d $apk META-INF/\*
 [% c('zip', {
         zip_src => [ '$ext_dir' ],
         zip_args => '$apk',
@@ -42,6 +40,19 @@ zip -d $apk lib/\*
 [% END %]
 
 rm -fR lib
+
+# Bug 31564: Android Gradle Plugin has a reproducibility bug. Decompile and recompile to fix ordering of resources.arsc files
+apktool=$rootdir/[% c('input_files_by_name/apktool') %]
+java -jar $apktool d --no-src -o decompiled $apk
+java -jar $apktool b -o $apk decompiled
+# Fix timestamps and remove extra field info from zip entries
+unzip $apk -d tmp
+rm $apk
+cd tmp
+[% c('zip', {
+   zip_src => [ '.' ],
+   zip_args => '$apk',
+   }) %]
 
 # Sign a QA build. This apk is not a debug version and doesn't contain a debug flag in the manifest
 java -jar /usr/share/apksigner/apksigner.jar sign --verbose --min-sdk-version [% c("var/android_min_api") %] --ks $rootdir/android-qa.keystore --out $qa_apk --in $apk --ks-key-alias androidqakey --key-pass pass:android --ks-pass pass:android
