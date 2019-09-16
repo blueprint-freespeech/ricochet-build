@@ -1,10 +1,21 @@
 ### Updating Gradle Dependencies
 If additional Android dependencies are required by the project's build, then
 the Gradle build will fail due to missing dependencies. To find out what the
-missing dependencies are, comment out the following line in the project's build
-file:
+missing dependencies are take the following steps.
+
+For tor-onion-proxy-library and tor-android-service, replace the following line
+in the respective project build file:
+   $GRADLE_HOME/gradle-4.10.2/bin/gradle --offline --no-daemon -P androidplugin=3.1.0 -Dmaven.repo.local=$gradle_repo assembleRelease -x lint
+with
+   $GRADLE_HOME/gradle-4.10.2/bin/gradle --debug --no-daemon -P androidplugin=3.1.0 assembleRelease -x lint
+
+For the firefox project, comment out the following line in the project's build file:
 
    export GRADLE_MAVEN_REPOSITORIES="file://$rootdir/[% c('input_files_by_name/gradle-dependencies') %]"
+
+Also modify the gradle flags to include the debug option so the download logs will show up:
+
+   export GRADLE_FLAGS="--no-daemon --debug"
 
 then allow network access during the build by setting
 var/container/disable_network/build to 0 in rbm.conf, and rerun the build.
@@ -13,7 +24,15 @@ Dependent artifacts will show up as downloads in the logs. You can pull out
 these dependencies into a list with the following command (replacing
 "firefox-android-armv7.log" with the build log file name of the actual project):
 
-`cat logs/firefox-android-armv7.log | grep "Download http" | sed "s/^.*Download //g" > download-urls.txt`
+`cat logs/firefox-android-armv7.log | grep "Performing HTTP" | grep -o "https://.*" | sort | uniq > download-attempts.txt`
+
+The download-attempts.txt file contains all the attempted downloads, so we need to find out which ones failed
+
+`cat logs/firefox-android-armv7.log  | grep "Resource missing" | grep -o "https:.*[^]]" | sort | uniq > download-fails.txt`
+
+Now take the intersection. This removes failures from attempts, leaving just successful downloads
+
+`sort download-attempts.txt download-fails.txt | uniq -u | rev | sort -t/ -u -k1,4 | rev | sort > download-urls.txt`
 
 You will then need to add the new dependency URLs and SHA-256 values into the
 projects/$project/gradle-dependencies-list.txt file. The format of this file is
