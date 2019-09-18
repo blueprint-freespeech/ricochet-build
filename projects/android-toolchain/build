@@ -20,8 +20,9 @@ rm -fR android-ndk-r17b
 
 # The architectures we support
 ./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_armv7") %] --arch arm --install-dir=./arm
-./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_x86") %] --arch x86 --install-dir=./x86
 ./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_aarch64") %] --arch arm64 --install-dir=./arm64
+./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_x86") %] --arch x86 --install-dir=./x86
+./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_x86_64") %] --arch x86_64 --install-dir=./x86_64
 
 # Tool Archives
 cd $SDK_HOME

@@ -24,6 +24,11 @@ zip -d $apk lib/\*
           zip_src => [ 'lib/x86/*' ],
           zip_args => '$apk',
        }) %]
+[% ELSIF c("var/android-x86_64") %]
+    [% c('zip', {
+          zip_src => [ 'lib/x86_64/*' ],
+          zip_args => '$apk',
+       }) %]
 [% ELSIF c("var/android-armv7") %]
     [% c('zip', {
           zip_src => [ 'lib/armeabi-v7a/*' ],

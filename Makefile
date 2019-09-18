@@ -11,6 +11,9 @@ release-android-armv7: submodule-update
 release-android-x86: submodule-update
 	$(rbm) build release --target release --target torbrowser-android-x86
 
+release-android-x86_64: submodule-update
+	$(rbm) build release --target release --target torbrowser-android-x86_64
+
 release-android-aarch64: submodule-update
 	$(rbm) build release --target release --target torbrowser-android-aarch64
 
@@ -43,6 +46,9 @@ alpha-android-armv7: submodule-update
 
 alpha-android-x86: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-android-x86
+
+alpha-android-x86_64: submodule-update
+	$(rbm) build release --target alpha --target torbrowser-android-x86_64
 
 alpha-android-aarch64: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-android-aarch64
@@ -77,6 +83,9 @@ nightly-android-armv7: submodule-update
 nightly-android-x86: submodule-update
 	$(rbm) build release --target nightly --target torbrowser-android-x86
 
+nightly-android-x86_64: submodule-update
+	$(rbm) build release --target nightly --target torbrowser-android-x86_64
+
 nightly-android-aarch64: submodule-update
 	$(rbm) build release --target nightly --target torbrowser-android-aarch64
 
@@ -110,6 +119,9 @@ alpha_nightly-android-armv7: submodule-update
 alpha_nightly-android-x86: submodule-update
 	$(rbm) build release --target alpha_nightly --target torbrowser-android-x86
 
+alpha_nightly-android-x86_64: submodule-update
+	$(rbm) build release --target alpha_nightly --target torbrowser-android-x86_64
+
 alpha_nightly-android-aarch64: submodule-update
 	$(rbm) build release --target alpha_nightly --target torbrowser-android-aarch64
 
@@ -139,6 +151,9 @@ testbuild-android-armv7: submodule-update
 
 testbuild-android-x86: submodule-update
 	$(rbm) build release --target testbuild --target torbrowser-android-x86
+
+testbuild-android-x86_64: submodule-update
+	$(rbm) build release --target testbuild --target torbrowser-android-x86_64
 
 testbuild-android-aarch64: submodule-update
 	$(rbm) build release --target testbuild --target torbrowser-android-aarch64

@@ -45,16 +45,18 @@ The targets are usually used to select:
 
 - the platform: torbrowser-linux-x86_64, torbrowser-linux-i686,
   torbrowser-windows-i686, torbrowser-windows-x86_64, torbrowser-osx-x86_64,
-  torbrowser-android-armv7, torbrowser-android-x86
+  torbrowser-android-armv7, torbrowser-android-aarch64, torbrowser-android-x86,
+  torbrowser-android-x86_64
 - the channel: release, nightly, alpha
 
 The targets torbrowser-linux-x86_64, torbrowser-linux-i686,
 torbrowser-windows-i686, torbrowser-windows-x86_64, torbrowser-osx-x86_64,
-torbrowser-android-armv7, and torbrowser-android-x86 are special cases. They do
-not contain options directly, instead they contain a list of other targets. For
-instance, the torbrowser-linux-x86_64 target is pointing to the linux-x86_64 and
-linux targets. You should define an option under the linux target if it applies
-to Linux on both architectures, or under the linux-x86_64 if it only applies to
+torbrowser-android-armv7, torbrowser-android-x86, torbrowser-android-aarch64,
+torbrowser-android-x86_64 are special cases. They do not contain options
+directly, instead they contain a list of other targets. For instance, the
+torbrowser-linux-x86_64 target is pointing to the linux-x86_64 and linux
+targets. You should define an option under the linux target if it applies to
+Linux on both architectures, or under the linux-x86_64 if it only applies to
 the x86_64 architecture.
 
 An option that is defined at the root of rbm.conf can be overridden by
@@ -156,7 +158,11 @@ $platform should be one of the following:
 
  - torbrowser-android-armv7
 
+ - torbrowser-android-aarch64
+
  - torbrowser-android-x86
+
+ - torbrowser-android-x86_64
 
 For example, to see tor's build script for linux x86_64 on the alpha
 channel, you can use:
