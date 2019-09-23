@@ -39,6 +39,9 @@ openssldir=/var/tmp/dist/openssl
   [% END %]
   tar -C /var/tmp/build -xf [% c('input_files_by_name/zlib') %]
   zlibdir=/var/tmp/build/zlib
+  # XXX: It's a bit unfortunate but we need the pthread dll here as libevent
+  # gets compiled with pthread support once it is enabled in GCC, which we need
+  # to do as otherwise the Rust compilaton breaks.
   mingwlibs=/var/tmp/dist/mingw-w64/[% c("arch") %]-w64-mingw32/bin/
   cp $zlibdir/lib/*.dll $openssldir/bin/*.dll $libeventdir/bin/*.dll \
       $gcclibs/*.dll $mingwlibs/libwinpthread-1.dll $distdir/Tor/
