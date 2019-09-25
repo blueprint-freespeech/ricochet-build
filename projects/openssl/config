@@ -3,6 +3,7 @@ version: 1.1.1d
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 var:
+  openssldir: 'usr/local'
   container:
     use_container: 1
 
@@ -17,6 +18,7 @@ targets:
     var:
       flag_mwindows: ''
       configure_opts: '-shared --cross-compile-prefix=[% c("arch") %]-w64-mingw32- mingw[% IF c("var/windows-x86_64") %]64[% END %] "[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]"'
+      openssldir: 'Program Files[% IF c("var/windows-i686") %] (x86)[% END %]/OpenSSL'
   osx-x86_64:
     var:
       configure_opts: --cross-compile-prefix=x86_64-apple-darwin11- darwin64-x86_64-cc enable-ec_nistp_64_gcc_128

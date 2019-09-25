@@ -14,10 +14,11 @@ export CC='gcc -m32'
   export CC="cc [% c("var/FLAGS") %]"
 [% END -%]
 export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
-./Configure --prefix=$distdir [% c('var/configure_opts') %]
+./Configure [% c('var/configure_opts') %]
 make
-make install
+make DESTDIR="$distdir" install
 cd /var/tmp/dist
+ln -s '[% c("var/openssldir") %]' openssl/openssl
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
