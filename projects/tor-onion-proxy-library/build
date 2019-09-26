@@ -18,6 +18,7 @@ tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 # Patch projects
 cd /var/tmp/build/[% project %]-[% c('version') %]
 patch -p1 < $rootdir/gradle.patch
+patch -p1 < $rootdir/canceldormant.patch
 
 # Build Android Libraries and Apps
 $GRADLE_HOME/gradle-4.10.2/bin/gradle --offline --no-daemon -P androidplugin=3.1.0 -Dmaven.repo.local=$gradle_repo assembleRelease -x lint
