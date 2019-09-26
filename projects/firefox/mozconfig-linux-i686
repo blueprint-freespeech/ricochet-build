@@ -2,9 +2,7 @@
 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-@CONFIG_GUESS@
 mk_add_options MOZ_APP_DISPLAYNAME="Tor Browser"
-mk_add_options MOZILLA_OFFICIAL=1
 export MOZILLA_OFFICIAL=1
-mk_add_options BUILD_OFFICIAL=1
 
 # We want to build with clang now and point to the GCC toolchain until #29041 is
 # fixed. We explicitly need to define the host compiler as well as for some
@@ -19,7 +17,6 @@ export BINDGEN_CFLAGS='--gcc-toolchain=/var/tmp/dist/gcc'
 ac_add_options --target=i686-linux-gnu
 
 ac_add_options --enable-optimize
-#ac_add_options --disable-optimize
 ac_add_options --enable-official-branding
 
 # Let's support GTK3 for ESR60
@@ -36,7 +33,6 @@ ac_add_options --disable-webrtc
 # Let's make sure no preference is enabling either Adobe's or Google's CDM.
 ac_add_options --disable-eme
 ac_add_options --enable-proxy-bypass-protection
-#ac_add_options --disable-ctypes
 
 # Bug 31448: ld.gold fails if we don't disable debug-symbols
 ac_add_options --disable-debug-symbols
