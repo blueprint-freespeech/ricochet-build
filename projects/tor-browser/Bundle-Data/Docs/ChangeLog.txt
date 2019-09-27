@@ -1,3 +1,61 @@
+Tor Browser 9.0a7 -- October 1 2019
+ * All platforms
+   * Bug 30304: Browser locale can be obtained via DTD strings
+   * Bug 31065: Set network.proxy.allow_hijacking_localhost to true
+   * Bug 24653: Merge securityLevel.properties into torbutton.dtd
+   * Bug 31725: Pick up mk in Torbutton properly
+   * Bug 31164: Set up default bridge at Karlstad University
+   * Bug 15563: Disable ServiceWorkers on all platforms
+   * Translations update
+ * Windows + OS X + Linux
+   * Update Tor to 0.4.2.1-alpha
+   * Update OpenSSL to 1.1.1d
+     * Bug 31844: OpenSSL 1.1.1d fails to compile for some platforms/architectures
+   * Update Tor Launcher to 0.2.19.4
+     * Bug 31303: Do not launch tor in browser toolbox
+     * Bug 31491: Clean up the old meek http helper browser profiles
+     * Translations update
+   * Bug 31598: Disable warning on window resize if letterboxing is enabled
+   * Bug 31562: Fix circuit display for error pages
+   * Bug 31575: Firefox is phoning home during start-up
+   * Bug 31491: Clean up the old meek http helper browser profiles
+   * Bug 26345: Hide tracking protection UI
+   * Bug 31601: Disable recommended extensions again
+   * Bug 31604: Don't show Firefox Home when opening new tabs
+   * Bug 31457: disable per-installation profiles
+   * Bug 28822: Re-implement desktop onboarding for ESR 68
+   * Bug 25483: Provide Snowflake based on Pion for Windows, macOS, and Linux
+ * Windows
+   * Bug 30800: ftp:// on Windows can be used to leak the system time zone
+ * OS X
+   * Bug 30126: Make Tor Browser on macOS compatible with Apple's notarization
+   * Bug 31702: Backport Mozilla's bug 1578075
+ * Linux
+   * Bug 31646: Update abicheck to require newer libstdc++.so.6
+   * Bug 31380: Snowflake does not start on older Linux systems
+ * Android
+   * Update Tor to 0.4.1.5
+   * Bug 31192: Support x86_64 target on Android
+   * Bug 30380: Cancel dormant by startup
+   * Bug 30943: Show version number on mobile
+   * Bug 31720: Enable website suggestions in address bar
+ * Build System
+   * All platforms
+     * Bug 31621: Fix node bug that makes large writes to stdout fail
+     * Bug 27493: Clean up mozconfig options
+     * Bug 31308: Sync mozconfig files used in tor-browser over to tor-browser-build for esr68
+   * Windows
+     * Bug 30384: Use 64bit containers to build 32bit Windows Tor Browser
+     * Bug 31538: Windows bundles based on ESR 68 are not built reproducibly
+     * Bug 31584: Clean up mingw-w64 project
+     * Bug 31596: Bump mingw-w64 version to pick up fix for #31567
+     * Bug 39187: Bump NSIS version to 3.04
+     * Bug 31732: Windows nightly builds are busted due to mingw-w64 commit bump
+   * Linux
+     * Bug 31448: gold and lld break linking 32bit Linux bundles
+     * Bug 31618: linux32 builds of Tor Browser 9.0a6 are not matching
+     * Bug 31450: Use still GCC for our ASan builds
+
 Tor Browser 8.5.6 -- September 9 2019
  * Android
    * Update Torbutton to 2.1.14
