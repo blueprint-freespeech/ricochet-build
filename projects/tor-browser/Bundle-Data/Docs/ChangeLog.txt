@@ -21,7 +21,7 @@ Tor Browser 9.0a7 -- October 1 2019
    * Bug 31491: Clean up the old meek http helper browser profiles
    * Bug 26345: Hide tracking protection UI
    * Bug 31601: Disable recommended extensions again
-   * Bug 31604: Don't show Firefox Home when opening new tabs
+   * Bug 30662: Don't show Firefox Home when opening new tabs
    * Bug 31457: disable per-installation profiles
    * Bug 28822: Re-implement desktop onboarding for ESR 68
    * Bug 25483: Provide Snowflake based on Pion for Windows, macOS, and Linux
