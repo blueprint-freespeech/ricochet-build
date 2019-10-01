@@ -15,6 +15,9 @@ mkdir -p [% dest_dir _ '/' _ c('filename') %]
   mkdir -p $HOME
   WINEROOT=$HOME/.wine/drive_c
   wine wineboot -i
+  # Setting up stack protector support
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/mingw-w64') %]
+  cp /var/tmp/dist/mingw-w64/gcclibs/{libssp.a,libssp_nonshared.a} /var/tmp/dist/mingw-w64-clang/[% c("arch") %]-w64-mingw32/lib/
 [% END -%]
 
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/rust') %]

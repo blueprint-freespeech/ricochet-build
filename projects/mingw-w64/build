@@ -56,7 +56,9 @@ cd /var/tmp/build/gcc
 make -j[% c("buildconf/num_procs") %]
 make install
 mkdir -p $distdir/gcclibs
-cp [% c("arch") %]-w64-mingw32/libssp/.libs/libssp-0.dll $distdir/gcclibs
+# We compile libssp both for being used dynamically (in tor) and statically (in
+# firefox).
+cp [% c("arch") %]-w64-mingw32/libssp/.libs/libssp* $distdir/gcclibs
 cp [% c("arch") %]-w64-mingw32/libgcc/shlib/[% c("var/libgcc_dll") %] $distdir/gcclibs
 
 cd /var/tmp/dist
