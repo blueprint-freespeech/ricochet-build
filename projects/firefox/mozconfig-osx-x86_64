@@ -46,3 +46,6 @@ ac_add_options --disable-tests
 # Let's make sure no preference is enabling either Adobe's or Google's CDM.
 ac_add_options --disable-eme
 ac_add_options --enable-proxy-bypass-protection
+
+# Disable telemetry
+ac_add_options MOZ_TELEMETRY_REPORTING=

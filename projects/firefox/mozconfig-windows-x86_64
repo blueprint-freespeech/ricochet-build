@@ -40,3 +40,6 @@ ac_add_options --disable-webrtc # Bug 1393901
 ac_add_options --disable-tests
 ac_add_options --disable-jemalloc # Bug 1547519
 ac_add_options --disable-geckodriver # Bug 1489320
+
+# Disable telemetry
+ac_add_options MOZ_TELEMETRY_REPORTING=

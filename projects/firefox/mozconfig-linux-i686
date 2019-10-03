@@ -36,3 +36,6 @@ ac_add_options --enable-proxy-bypass-protection
 
 # Bug 31448: ld.gold fails if we don't disable debug-symbols
 ac_add_options --disable-debug-symbols
+
+# Disable telemetry
+ac_add_options MOZ_TELEMETRY_REPORTING=
