@@ -62,7 +62,7 @@ channel you want to build:
 
 You can find the build result in the directory release/unsigned/$version
 or alpha/unsigned/$version for release or alpha builds. The result of
-nightly can be found in the nightly/$date directory.
+nightly can be found in the nightly/$version directory.
 
 If you want to build for a specific platform only, append the platform
 name to the makefile target:
