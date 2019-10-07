@@ -28,7 +28,6 @@ input_files:
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
   - project: tor-onion-proxy-library
     name: topl
-  - filename: require-api.patch
   - filename: remove-native-build.patch
   - filename: disable-daemon.patch
   - filename: maven-local.patch
