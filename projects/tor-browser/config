@@ -100,3 +100,7 @@ input_files:
   # To generate a new keystore, see how-to-generate-keystore.txt
   - filename: android-qa.keystore
     enable: '[% c("var/android") %]'
+  - URL: https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.4.0.jar
+    name: apktool
+    sha256sum: a0f116e8916d6f21160e1559847bb8b8c32ee71900f321cafeadbe37b87ebcc1
+    enable: '[% c("var/android") %]'
