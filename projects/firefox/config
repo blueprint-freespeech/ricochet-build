@@ -179,15 +179,9 @@ input_files:
   - project: tor-onion-proxy-library
     name: topl
     enable: '[% c("var/android") %]'
-  - filename: android-packages.patch
-    enable: '[% c("var/android") %]'
-  - filename: android-remove-emulator.patch
-    enable: '[% c("var/android") %]'
   - project: firefox-locale-bundle
     name: firefox-locale-bundle
     enable: '[% c("var/android") %]'
   - project: tba-translation
     name: tba-translation
-    enable: '[% c("var/android") %]'
-  - filename: 1527534.patch
     enable: '[% c("var/android") %]'

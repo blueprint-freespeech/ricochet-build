@@ -56,10 +56,6 @@ mv -f $rootdir/[% c('input_files_by_name/mozconfig') %] .mozconfig
   export ASAN_OPTIONS="detect_leaks=0"
 [% END -%]
 
-[% IF c("var/android-armv7") -%]
-  cp /var/tmp/dist/android-toolchain/android-ndk/arm/lib64/libclang.so.6 /var/tmp/dist/android-toolchain/android-ndk/arm/lib64/libclang.so
-[% END -%]
-
 [% IF c("var/android") %]
   gradle_repo=/var/tmp/dist/gradle-dependencies
   export GRADLE_MAVEN_REPOSITORIES="file://$gradle_repo"
@@ -71,9 +67,9 @@ mv -f $rootdir/[% c('input_files_by_name/mozconfig') %] .mozconfig
   # Move Android library dependencies so they will be included in the apk during the build
   cp $rootdir/[% c('input_files_by_name/topl') %]/* mobile/android/app
   cp $rootdir/[% c('input_files_by_name/tor-android-service') %]/* mobile/android/app
-  # Apply patches
-  patch -p1 < $rootdir/android-packages.patch
-  patch -p1 < $rootdir/android-remove-emulator.patch
+  # Move emulator to location that firefox build expects
+  mkdir /var/tmp/dist/android-toolchain/android-sdk-linux/emulator
+  cp /var/tmp/dist/android-toolchain/android-sdk-linux/tools/emulator /var/tmp/dist/android-toolchain/android-sdk-linux/emulator
 
   # Prepare building the multi-locale .apk including our own strings
   mkdir -p /var/tmp/dist/locales
