@@ -116,6 +116,7 @@ Tor Browser 9.0a6 -- September 4 2019
  * Android
    * Bug 31010: Rebase mobile patches for Fennec 68
    * Bug 31010: Don't use addTrustedTab() on mobile
+   * Bug 30607: Support Tor Browser running on Android Q
  * Build System:
    * All Platforms:
      * Bug 30585: Provide standalone clang 8 project across all platforms
