@@ -17,6 +17,8 @@ tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 
 # Patch projects
 cd /var/tmp/build/[% project %]-[% c('version') %]
+# Gradle patch provided so that when generating a gradle dependency list, the
+# build will pull down the correct android tool versions
 patch -p1 < $rootdir/gradle.patch
 patch -p1 < $rootdir/canceldormant.patch
 
