@@ -21,7 +21,7 @@ go build -ldflags '-s'
 cp -a client[% IF c("var/windows") %].exe[% END %] $PTDIR/snowflake-client[% IF c("var/windows") %].exe[% END %]
 
 cd ..
-cp -a README.md LICENSE $DOCSDIR
+cp -a README.md $DOCSDIR
 
 cd $distdir
 [% c('tar', {
