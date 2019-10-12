@@ -1,3 +1,54 @@
+Tor Browser 9.0a8 -- October 14 2019
+ * All Platforms
+   * Bug 13543: Spoof smooth and powerEfficient for Media Capabilities
+   * Bug 28196: about:preferences is not properly translated anymore
+   * Bug 19417: Disable asmjs on safer and safest security levels
+   * Bug 30463: Explicitly disable MOZ_TELEMETRY_REPORTING
+   * Bug 31935: Disable profile downgrade protection
+   * Bug 31811: Backport fix for bug 1554805
+   * Bug 16285: Disable DRM/EME on Android and drop Adobe CDM
+   * Bug 31602: Remove Pocket indicators in UI and disable it
+   * Bug 31914: Fix eslint linter error
+   * Translations update
+ * Windows + OS X + Linux
+   * Update Tor to 0.4.2.2-alpha
+   * Update Tor Launcher to 0.2.19.5
+     * Bug 31286: New strings for about:preferences#tor
+     * Translations update
+   * Bug 31286: Provide network settings on about:preferences#tor
+   * Bug 31886: Fix ko bundle bustage
+   * Bug 31768: Update onboarding for Tor Browser 9
+   * Bug 27511: Add new identity button to toolbar
+   * Bug 31778: Support dark-theme for the Circuit Display UI
+   * Bug 31910: Replace meek_lite with meek in circuit display
+   * Bug 30504: Deal with New Identity related browser console errors
+   * Bug 31929: Don't escape DTD entity in ar
+   * Bug 31747: Some onboarding UI is always shown in English
+   * Bug 32041: Replace = with real hamburguer icon ≡
+ * Windows
+   * Bug 31942: Re-enable signature check for language packs
+   * Bug 29013: Enable stack protection for Firefox on Windows
+ * OS X
+   * Bug 31607: App menu items stop working on macOS
+   * Bug 31955: On macOS avoid throwing inside nonBrowserWindowStartup()
+ * Linux
+   * Bug 31942: Re-enable signature check for language packs
+   * Bug 31968: Don't fail if /proc/cpuinfo is not readable
+   * Bug 24755: Stop using a heredoc in start-tor-browser
+   * Bug 31550: Put curly quotes inside single quotes
+ * Android
+   * Bug 31822: Security slider is not really visible on Android anymore
+ * Build System
+   * All Platforms
+     * Bug 31293: Make sure the lo interface inside the containers is up
+   * Windows
+     * Bug 29013: Enable stack protection support for Firefox on Windows
+   * Android
+     * Bug 31564: Make Android bundles based on ESR 68 reproducible
+     * Bug 31981: Remove require-api.patch
+     * Bug 31979: TOPL: Sort dependency list
+     * Bug 30665: Remove unnecessary build patches for Firefox
+
 Tor Browser 9.0a7 -- October 1 2019
  * All platforms
    * Bug 30304: Browser locale can be obtained via DTD strings
