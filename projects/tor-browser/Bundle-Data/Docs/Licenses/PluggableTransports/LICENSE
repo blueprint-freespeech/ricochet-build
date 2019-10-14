@@ -1,15 +1,6 @@
 This file contains the copyrights and licenses of third-party
-dependencies of pluggable transports that are distributed in the
-pluggable transports bundle.
-
-===============================================================================
-
-Python
-
-Some pluggable transports are written in Python and the binary packages
-include a Python interpreter. A copy of the Python license (which itself
-includes the licenses of some of Python's components) is included in the
-file LICENSE.PYTHON.
+dependencies of pluggable transports that are distributed in
+Tor Browser.
 
 ===============================================================================
 
