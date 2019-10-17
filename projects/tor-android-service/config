@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %]'
-git_hash: 50d01b1fbc6e776d0b39f42f644137dd25a92c7a
+git_hash: e9bbdc6fb25af47ccaf3bace0162125d94812072
 git_url: https://git.torproject.org/tor-android-service.git
 git_submodule: 1
 
@@ -29,5 +29,3 @@ input_files:
   - project: tor-onion-proxy-library
     name: topl
   - filename: remove-native-build.patch
-  - filename: disable-daemon.patch
-  - filename: maven-local.patch

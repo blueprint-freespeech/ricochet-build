@@ -15,8 +15,6 @@ tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 
 cd /var/tmp/build/[% project %]-[% c('version') %]
 patch -p1 < $rootdir/remove-native-build.patch
-patch -p1 < $rootdir/disable-daemon.patch
-patch -p1 < $rootdir/maven-local.patch
 
 # Remove native files, otherwise build will fail after gradle.patch
 rm -fR service/src/main/jni
