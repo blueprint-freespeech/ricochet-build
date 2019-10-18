@@ -364,7 +364,7 @@ Tor Browser 9.0a1 -- May 21 2019
    * Update Tor Launcher to 0.2.19
      * Bug 28044: Integrate Tor Launcher into tor-browser
      * Bug 29627: Moat: add support for obfsproxy's meek_lite
-     * Bug 30139: Remove FTE bits
+     * Bug 30319: Remove FTE bits
      * Translations update
    * Bug 28044: Integrate Tor Launcher into tor-browser
    * Bug 30372: Backport letterboxing (bug 1538130)
