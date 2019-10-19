@@ -1,3 +1,36 @@
+Tor Browser 9.5a1 -- October 23 2019
+ * All Platforms
+   * Update Firefox to 68.2.0esr
+   * Bug 31740: Remove some unnecessary RemoteSettings instances
+   * Bug 30681: Set security.enterprise_roots.enabled to false
+   * Bug 31144: Review network code changes for Firefox 68 ESR
+   * Bug 21549: Enable WASM on standard security level
+   * Bug 28709: Enable FuzzyFox
+ * Windows + OS X + Linux
+   * Update Tor Launcher to 0.2.20.1
+     * Bug 32154: Custom bridge field only allows one line of input
+     * Bug 32112: Fix bad & escaping in translations
+     * Bug 31286: Update to tor settings related strings
+     * Translations update
+   * Bug 32125: Fix circuit display for bridge without a fingerprint
+   * Bug 32076: Upgrade to goptlib v1.1.0
+   * Bug 32061: Bump snowflake version to b4f4b29a03
+   * Bug 32092: Fix Tor Browser Support link in preferences
+   * Bug 32111: Fixed issue parsing user-provided bridge strings
+   * Bug 31749: Fix security level panel spawning events
+   * Bug 31920: Fix Security Level panel when its toolbar button moves to overflow
+   * Bug 31748+31961: Fix 'Learn More' links in Security Level preferences and panel
+   * Translations update
+ * Android
+   * Bug 32097: Fix conflicts in mobile onboarding while rebasing to 68.2.0esr
+   * Bug 26529: Notify user about possible proxy-bypass before opening external app
+ * Build System
+   * Windows
+     * Bug 32132: Re-enable jemalloc for Windows users
+     * Bug 31989: Backport backout of old mingw-gcc patch
+   * Android
+     * Bug 30461: Clean up tor-android-service project
+
 Tor Browser 9.0a8 -- October 14 2019
  * All Platforms
    * Bug 13543: Spoof smooth and powerEfficient for Media Capabilities
