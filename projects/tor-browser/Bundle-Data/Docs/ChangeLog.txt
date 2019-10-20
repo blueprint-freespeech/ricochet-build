@@ -5,7 +5,6 @@ Tor Browser 9.5a1 -- October 23 2019
    * Bug 30681: Set security.enterprise_roots.enabled to false
    * Bug 31144: Review network code changes for Firefox 68 ESR
    * Bug 21549: Enable WASM on standard security level
-   * Bug 28709: Enable FuzzyFox
  * Windows + OS X + Linux
    * Update Tor Launcher to 0.2.20.1
      * Bug 32154: Custom bridge field only allows one line of input
