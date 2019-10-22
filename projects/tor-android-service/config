@@ -13,12 +13,6 @@ var:
   # this should be updated when the list of gradle dependencies is changed
   gradle_dependencies_version: 3
 
-targets:
-  android:
-    var:
-      arch_deps:
-        - openjdk-8-jdk
-
 input_files:
   - project: container-image
   - name: '[% c("var/compiler") %]'

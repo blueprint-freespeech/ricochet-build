@@ -57,11 +57,6 @@ targets:
       torbrowser_update_channel: default
       branding_directory: '[% IF c("var/android") %]mobile/android[% ELSE %]browser[% END %]/branding/nightly'
 
-  android:
-    var:
-      arch_deps:
-        - openjdk-8-jdk
-
   linux:
     var:
       post_pkginst: |
