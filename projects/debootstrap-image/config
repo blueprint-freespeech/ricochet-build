@@ -4,7 +4,7 @@ version: 2
 pkg_type: build
 
 var:
-  ubuntu_version: 18.04.1
+  ubuntu_version: 19.10
 
   container:
     use_container: 1
@@ -15,8 +15,6 @@ pre: |
   #!/bin/sh
   set -e
   export DEBIAN_FRONTEND=noninteractive
-  # Bug 29158: install fixed packages for apt vulnerability (CVE-2019-3462)
-  dpkg -i ./apt_1.6.6ubuntu0.1_amd64.deb ./libapt-pkg5.0_1.6.6ubuntu0.1_amd64.deb
   apt-get update -y -q
   apt-get install -y -q debian-archive-keyring ubuntu-keyring debootstrap
   debootstrap --arch=[% c("var/container/arch") %] [% c("var/container/debootstrap_opt") %] [% c("var/container/suite") %] base-image [% c("var/container/debootstrap_mirror") %]
@@ -65,14 +63,17 @@ targets:
         suite: stretch
         arch: amd64
 
+  buster-amd64:
+    var:
+      minimal_apt_version: 1.8.2
+      container:
+        suite: buster
+        arch: amd64
+
 input_files:
   - URL: 'http://cdimage.ubuntu.com/ubuntu-base/releases/[% c("var/ubuntu_version") %]/release/ubuntu-base-[% c("var/ubuntu_version") %]-base-amd64.tar.gz'
     filename: 'container-image_ubuntu-base-[% c("var/ubuntu_version") %]-base-amd64.tar.gz'
-    sha256sum: ed76e649f65548a80b361b68011085ec4dde7bb762d667657acbef87765e1a12
-  - URL: http://security.ubuntu.com/ubuntu/pool/main/a/apt/apt_1.6.6ubuntu0.1_amd64.deb
-    sha256sum: df210f9e30cf9deba5fbe815203af854e5e77bdbbe0b96d0d1c0da46a6a8dd0a
-  - URL: http://security.ubuntu.com/ubuntu/pool/main/a/apt/libapt-pkg5.0_1.6.6ubuntu0.1_amd64.deb
-    sha256sum: 0a05a97b1e9b8d52ee8df040a14c5fabdebbb2c2235ac495db29df34f4c8cec3
+    sha256sum: eedcb1dc0ccc86b59eb1f89960c322a2ba3ed3e0323a20a1da8bcc0e6f100f4f
   - URL: '[% c("var/apt_packages_baseurl") %]/[% c("var/apt_package_filename") %]'
     sha256sum: '[% c("var/apt_package_sha256sum") %]'
     enable: '[% c("var/apt_package_filename") %]'
