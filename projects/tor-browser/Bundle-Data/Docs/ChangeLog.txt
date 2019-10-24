@@ -30,6 +30,186 @@ Tor Browser 9.5a1 -- October 23 2019
    * Android
      * Bug 30461: Clean up tor-android-service project
 
+Tor Browser 9.0 -- October 22 2019
+ * All Platforms
+   * Update Firefox to 68.2.0esr
+   * Bug 31740: Remove some unnecessary RemoteSettings instances
+   * Bug 13543: Spoof smooth and powerEfficient for Media Capabilities
+   * Bug 28196: about:preferences is not properly translated anymore
+   * Bug 19417: Disable asmjs on safer and safest security levels
+   * Bug 30463: Explicitly disable MOZ_TELEMETRY_REPORTING
+   * Bug 31935: Disable profile downgrade protection
+   * Bug 16285: Disable DRM/EME on Android and drop Adobe CDM
+   * Bug 31602: Remove Pocket indicators in UI and disable it
+   * Bug 31914: Fix eslint linter error
+   * Bug 30429: Rebase patches for Firefox 68 ESR
+   * Bug 31144: Review network code changes for Firefox 68 ESR
+   * Bug 10760: Integrate Torbutton into Tor Browser directly
+   * Bug 25856: Remove XUL overlays from Torbutton
+   * Bug 31322: Fix about:tor assertion failure debug builds
+   * Bug 29430: Add support for meek_lite bridges to bridgeParser
+   * Bug 28561: Migrate "About Tor Browser" dialog to tor-browser
+   * Bug 30683: Prevent detection of locale via some *.properties
+   * Bug 31298: Backport patch for #24056
+   * Bug 9336: Odd wyswig schemes without isolation for browserspy.dk
+   * Bug 27601: Browser notifications are not working anymore
+   * Bug 30845: Make sure internal extensions are enabled
+   * Bug 28896: Enable extensions in private browsing by default
+   * Bug 31563: Reload search extensions if extensions.enabledScopes has changed
+   * Bug 31396: Fix communication with NoScript for security settings
+   * Bug 31142: Fix crash of tab and messing with about:newtab
+   * Bug 29049: Backport JS Poison Patch
+   * Bug 25214: Canvas data extraction on local pdf file should be allowed
+   * Bug 30657: Locale is leaked via title of link tag on non-html page
+   * Bug 31015: Disabling SVG hides UI icons in extensions
+   * Bug 30681: Set security.enterprise_roots.enabled to false
+   * Bug 30538: Unable to comment on The Independent Newspaper
+   * Bug 31209: View PDF in Tor Browser is fuzzy
+   * Translations update
+ * Windows + OS X + Linux
+   * Update Tor to 0.4.1.6
+   * Update OpenSSL to 1.1.1d
+     * Bug 31844: OpenSSL 1.1.1d fails to compile for some platforms/architectures
+   * Update Tor Launcher to 0.2.20.1
+     * Bug 28044: Integrate Tor Launcher into tor-browser
+     * Bug 32154: Custom bridge field only allows one line of input
+     * Bug 31286: New strings for about:preferences#tor
+     * Bug 31303: Do not launch tor in browser toolbox
+     * Bug 32112: Fix bad & escaping in translations
+     * Bug 31491: Clean up the old meek http helper browser profiles
+     * Bug 29197: Remove use of overlays
+     * Bug 31300: Modify Tor Launcher so it is compatible with ESR68
+     * Bug 31487: Modify moat client code so it is compatible with ESR68
+     * Bug 31488: Moat: support a comma-separated list of transports
+     * Bug 30468: Add mk locale
+     * Bug 30469: Add ro locale
+     * Bug 30319: Remove FTE bits
+     * Translations update
+   * Bug 32092: Fix Tor Browser Support link in preferences
+   * Bug 32111: Fixed issue parsing user-provided bridge strings
+   * Bug 31749: Fix security level panel spawning events
+   * Bug 31920: Fix Security Level panel when its toolbar button moves to overflow
+   * Bug 31748+31961: Fix 'Learn More' links in Security Level preferences and panel
+   * Bug 28044: Integrate Tor Launcher into tor-browser
+   * Bug 31059: Enable Letterboxing
+   * Bug 30468: Add mk locale
+   * Bug 30469: Add ro locale
+   * Bug 29430: Use obfs4proxy's meek_lite with utls instead of meek
+   * Bug 31251: Security Level button UI polish
+   * Bug 31344: Register SecurityLevelPreference's 'unload' callback
+   * Bug 31286: Provide network settings on about:preferences#tor
+   * Bug 31886: Fix ko bundle bustage
+   * Bug 31768: Update onboarding for Tor Browser 9
+   * Bug 27511: Add new identity button to toolbar
+   * Bug 31778: Support dark-theme for the Circuit Display UI
+   * Bug 31910: Replace meek_lite with meek in circuit display
+   * Bug 30504: Deal with New Identity related browser console errors
+   * Bug 31929: Don't escape DTD entity in ar
+   * Bug 31747: Some onboarding UI is always shown in English
+   * Bug 32041: Replace = with real hamburguer icon ≡
+   * Bug 30304: Browser locale can be obtained via DTD strings
+   * Bug 31065: Set network.proxy.allow_hijacking_localhost to true
+   * Bug 24653: Merge securityLevel.properties into torbutton.dtd
+   * Bug 31164: Set up default bridge at Karlstad University
+   * Bug 15563: Disable ServiceWorkers on all platforms
+   * Bug 31598: Disable warning on window resize if letterboxing is enabled
+   * Bug 31562: Fix circuit display for error pages
+   * Bug 31575: Firefox is phoning home during start-up
+   * Bug 31491: Clean up the old meek http helper browser profiles
+   * Bug 26345: Hide tracking protection UI
+   * Bug 31601: Disable recommended extensions again
+   * Bug 30662: Don't show Firefox Home when opening new tabs
+   * Bug 31457: Disable per-installation profiles
+   * Bug 28822: Re-implement desktop onboarding for ESR 68
+ * Windows
+   * Bug 31942: Re-enable signature check for language packs
+   * Bug 29013: Enable stack protection for Firefox on Windows
+   * Bug 30800: ftp:// on Windows can be used to leak the system time zone
+   * Bug 31547: Back out patch for Mozilla's bug 1574980
+   * Bug 31141: Fix typo in font.system.whitelist
+   * Bug 30319: Remove FTE bits
+ * OS X
+   * Bug 30126: Make Tor Browser compatible with macOS 10.15
+   * Bug 31607: App menu items stop working on macOS
+   * Bug 31955: On macOS avoid throwing inside nonBrowserWindowStartup()
+   * Bug 29818: Adapt #13379 patch for 68esr
+   * Bug 31464: Meek and moat are broken on macOS 10.9 with Go 1.12
+ * Linux
+   * Bug 31942: Re-enable signature check for language packs
+   * Bug 31646: Update abicheck to require newer libstdc++.so.6
+   * Bug 31968: Don't fail if /proc/cpuinfo is not readable
+   * Bug 24755: Stop using a heredoc in start-tor-browser
+   * Bug 31550: Put curly quotes inside single quotes
+   * Bug 31394: Replace "-1" with "−1" in start-tor-browser.desktop
+   * Bug 30319: Remove FTE bits
+ * Android
+   * Update Tor to 0.4.1.5
+   * Bug 31010: Rebase mobile patches for Fennec 68
+   * Bug 31010: Don't use addTrustedTab() on mobile
+   * Bug 30607: Support Tor Browser running on Android Q
+   * Bug 31192: Support x86_64 target on Android
+   * Bug 30380: Cancel dormant by startup
+   * Bug 30943: Show version number on mobile
+   * Bug 31720: Enable website suggestions in address bar
+   * Bug 31822: Security slider is not really visible on Android anymore
+   * Bug 24920: Only create Private tabs in permanent Private Browsing Mode
+   * Bug 31730: Revert aarch64-workaround against JIT-related crashes
+   * Bug 32097: Fix conflicts in mobile onboarding while rebasing to 68.2.0esr
+ * Build System
+   * All Platforms
+     * Bug 30585: Provide standalone clang 8 project across all platforms
+     * Bug 30376: Use Rust 1.34 for Tor Browser 9
+     * Bug 30490: Add cbindgen project for building Firefox 68 ESR/Fennec 68
+     * Bug 30701: Add nodejs project for building Firefox 68 ESR/Fennec 68
+       * Bug 31621: Fix node bug that makes large writes to stdout fail
+     * Bug 30734: Add nasm project for building Firefox 68 ESR/Fennec 68
+     * Bug 31293: Make sure the lo interface inside the containers is up
+     * Bug 27493: Clean up mozconfig options
+     * Bug 31308: Sync mozconfig files used in tor-browser over to tor-browser-build for esr68
+   * Windows
+     * Bug 29307: Use Stretch for cross-compiling for Windows
+     * Bug 29731: Remove faketime for Windows builds
+     * Bug 30322: Windows toolchain update for Firefox 68 ESR
+       * Bug 28716: Create mingw-w64-clang toolchain
+       * Bug 28238: Adapt firefox and fxc2 projects for Windows builds
+       * Bug 28716: Optionally omit timestamp in PE header
+       * Bug 31567: NS_tsnprintf() does not handle %s correctly on Windows
+       * Bug 31458: Revert patch for #27503 and bump mingw-w64 revision used
+     * Bug 9898: Provide clean fix for strcmpi issue in NSPR
+     * Bug 29013: Enable stack protection support for Firefox on Windows
+     * Bug 30384: Use 64bit containers to build 32bit Windows Tor Browser
+     * Bug 31538: Windows bundles based on ESR 68 are not built reproducibly
+     * Bug 31584: Clean up mingw-w64 project
+     * Bug 31596: Bump mingw-w64 version to pick up fix for #31567
+     * Bug 29187: Bump NSIS version to 3.04
+     * Bug 31732: Windows nightly builds are busted due to mingw-w64 commit bump
+     * Bug 29319: Remove FTE support for Windows
+   * OS X
+     * Bug 30323: MacOS toolchain update for Firefox 68 ESR
+     * Bug 31467: Switch to clang for cctools project
+     * Bug 31465: Adapt tor-browser-build projects for macOS notarization
+   * Linux
+     * Bug 31448: gold and lld break linking 32bit Linux bundles
+     * Bug 31618: Linux32 builds of Tor Browser 9.0a6 are not matching
+     * Bug 31450: Still use GCC for our ASan builds
+     * Bug 30321: Linux toolchain update for Firefox ESR 68
+       * Bug 30736: Install yasm from wheezy-backports
+       * Bug 31447: Don't install Python just for Mach
+     * Bug 30448: Strip Browser/gtk2/libmozgtk.so
+   * Android
+     * Bug 30324: Android toolchain update for Fennec 68
+       * Bug 31173: Update android-toolchain project to match Firefox
+       * Bug 31389: Update Android Firefox to build with Clang
+       * Bug 31388: Update Rust project for Android
+       * Bug 30665: Get Firefox 68 ESR working with latest android toolchain
+       * Bug 30460: Update TOPL project to use Firefox 68 toolchain
+       * Bug 30461: Update tor-android-service project to use Firefox 68 toolchain
+     * Bug 28753: Use Gradle with --offline when building the browser part
+     * Bug 31564: Make Android bundles based on ESR 68 reproducible
+     * Bug 31981: Remove require-api.patch
+     * Bug 31979: TOPL: Sort dependency list
+     * Bug 30665: Remove unnecessary build patches for Firefox
+
 Tor Browser 9.0a8 -- October 14 2019
  * All Platforms
    * Bug 13543: Spoof smooth and powerEfficient for Media Capabilities
@@ -167,7 +347,7 @@ Tor Browser 9.0a6 -- September 4 2019
    * Bug 31396: Fix communication with NoScript for security settings
    * Bug 31142: Fix crash of tab and messing with about:newtab
    * Bug 29049: Backport JS Poison Patch
-   * Bug 25214: Canvas data extraction on locale pdf file should be allowed
+   * Bug 25214: Canvas data extraction on local pdf file should be allowed
    * Bug 30657: Locale is leaked via title of link tag on non-html page
    * Bug 31015: Disabling SVG hides UI icons in extensions
    * Bug 30538: Unable to comment on The Independent Newspaper
