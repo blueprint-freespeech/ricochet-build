@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016, The Tor Project, Inc.
+# Copyright (c) 2019, The Tor Project, Inc.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -85,6 +85,7 @@ for f in `ls *.mar`; do
       echo "$f does not have the SHA-256 sum of the unsigned MAR file!"
       BADSIGNED_MARS=`expr $BADSIGNED_MARS + 1`
     fi
+    rm $f
     cd ..
   fi
 done

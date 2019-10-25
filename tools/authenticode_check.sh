@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017, The Tor Project, Inc.
+# Copyright (c) 2019, The Tor Project, Inc.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -74,6 +74,7 @@ for f in `ls *.exe`; do
       echo "$f does not have the SHA-256 sum of the unsigned bundle!"
       BADSIGNED_BUNDLES=`expr $BADSIGNED_BUNDLES + 1`
     fi
+    rm $f
     cd ..
   fi
 done
