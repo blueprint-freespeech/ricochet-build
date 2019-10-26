@@ -118,3 +118,5 @@ input_files:
     sha256sum: 9947fc705b0b841b5938c48b22dc33e9647ec0752bae66e50278df4f23f64959
   - filename: 0001-Use-fixed-go-build-tmp-directory.patch
     enable: '[% c("var/android") %]'
+  - filename: 90a3ce02dc25adcf1598faf11a66b151ada3f637.patch
+    enable: '[% c("var/android") %]'
