@@ -1,0 +1,33 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+git_url: https://github.com/golang/mobile
+git_hash: 92f3b9caf7ba8f4f9c10074225afcba0cba47a62
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  no_crosscompile: 1
+  go_lib: golang.org/x/mobile
+  go_lib_deps:
+    - goximage
+    - goxexp
+  go_lib_install:
+    - golang.org/x/mobile/cmd/gobind
+    - golang.org/x/mobile/cmd/gomobile
+  build_go_lib_pre: |
+    [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: goximage
+    project: goximage
+  - name: goxexp
+    project: goxexp
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - filename: 0001-If-the-GOMOBILE_TMPDIR-env-variable-is-defined-use-t.patch

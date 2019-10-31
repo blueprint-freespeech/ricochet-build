@@ -10,8 +10,13 @@ var:
   setup: |
     mkdir -p /var/tmp/dist
     tar -C /var/tmp/dist -xf $rootdir/[% c("go_tarfile") %]
-    export GOOS=[% c("var/GOOS") %]
-    export GOARCH=[% c("var/GOARCH") %]
+    [% IF pc(c("origin_project"), "var/no_crosscompile") -%]
+      export GOOS=linux
+      export GOARCH=amd64
+    [% ELSE -%]
+      export GOOS=[% c("var/GOOS") %]
+      export GOARCH=[% c("var/GOARCH") %]
+    [% END -%]
     export GOPATH=/var/tmp/dist/gopath
     export PATH=/var/tmp/dist/go/bin:/var/tmp/dist/gopath/bin:"$PATH"
     [% IF c("var/linux") -%]
@@ -21,6 +26,8 @@ var:
     [% IF c("var/linux-i686") -%]
       export CGO_ENABLED=1
     [% END -%]
+    export GOTMPDIR=/var/tmp/build/go-tmp
+    mkdir -p "$GOTMPDIR"
 
   # Template build script for building a go library.
   # This can be called as projects/go/var/build_go_lib.
@@ -82,15 +89,32 @@ targets:
   linux-i686:
     var:
       GOARCH: 386
+  android:
+    var:
+      GOOS: android
+  android-x86:
+    var:
+      GOARCH: 386
+  android-x86_64:
+    var:
+      GOARCH: amd64
+  android-armv7:
+    var:
+      GOARCH: arm
+  android-aarch64:
+    var:
+      GOARCH: arm64
 
 input_files:
   - project: container-image
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
-    enable: '[% c("var/windows") || c("var/osx") %]'
+    enable: '[% ! c("var/linux") %]'
   - URL: 'https://golang.org/dl/go[% c("version") %].src.tar.gz'
     name: go
     sha256sum: ab0e56ed9c4732a653ed22e232652709afbf573e710f56a07f7fdeca578d62fc
   - URL: 'https://golang.org/dl/go[% c("var/go14_version") %].src.tar.gz'
     name: go14
     sha256sum: 9947fc705b0b841b5938c48b22dc33e9647ec0752bae66e50278df4f23f64959
+  - filename: 0001-Use-fixed-go-build-tmp-directory.patch
+    enable: '[% c("var/android") %]'

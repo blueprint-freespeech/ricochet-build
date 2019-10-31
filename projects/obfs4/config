@@ -36,3 +36,6 @@ input_files:
     project: goutls
   - name: goxtext
     project: goxtext
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+    enable: '[% c("var/android") %]'
