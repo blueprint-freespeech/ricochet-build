@@ -1,3 +1,28 @@
+Tor Browser 9.5a.2 -- November 5 2019
+ * All Platforms
+   * Update NoScript to 11.0.4
+     * Bug 21004: Don't block JavaScript on onion services on medium security
+     * Bug 27307: NoScript marks HTTP onions as not secure
+   * Bug 30783: Fundraising banner for EOY 2019 campain
+   * Bug 32321: Don't ping Mozilla for Man-in-the-Middle-detection
+   * Bug 32318: Backport Mozilla's fix for bug 1534339
+   * Bug 32250: Backport enhanced letterboxing support (bug 1546832 and 1556017)
+   * Bug 27268: Preferences clean-up
+ * Windows + OS X + Linux
+   * Update Tor Launcher to 0.2.20.2
+     * Bug 32164: Trim each received log line from tor
+     * Translations update
+   * Bug 31803: Replaced about:debugging logo with flat version
+   * Bug 31764: Fix for error when navigating via 'Paste and go'
+   * Bug 32169: Fix TB9 Wikipedia address bar search
+   * Bug 32210: Hide the tor pane when using a system tor
+   * Bug 31658: Use builtin --panel-disabled-color for security level text
+   * Bug 32188: Fix localization on about:preferences#tor
+   * Bug 32184: Red dot is shown while downloading an update
+   * Bug 27604: Fix broken Tor Browser after moving it to a different directory
+ * Android
+   * Bug 32342: Crash when changing the browser locale
+
 Tor Browser 9.5a1 -- October 23 2019
  * All Platforms
    * Update Firefox to 68.2.0esr
