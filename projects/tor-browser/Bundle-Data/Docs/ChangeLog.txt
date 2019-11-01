@@ -1,4 +1,4 @@
-Tor Browser 9.5a.2 -- November 5 2019
+Tor Browser 9.5a2 -- November 5 2019
  * All Platforms
    * Update NoScript to 11.0.4
      * Bug 21004: Don't block JavaScript on onion services on medium security
