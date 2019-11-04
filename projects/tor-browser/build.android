@@ -51,7 +51,7 @@ rm $apk
 cd tmp
 [% c('zip', {
    zip_src => [ '.' ],
-   zip_args => '$apk',
+   zip_args => '-n ja $apk',
    }) %]
 
 # Sign a QA build. This apk is not a debug version and doesn't contain a debug flag in the manifest
