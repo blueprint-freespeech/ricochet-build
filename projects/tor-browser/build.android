@@ -54,9 +54,5 @@ cd tmp
    zip_args => '$apk',
    }) %]
 
-# omni.ja was likely deflated in the above zipping operation. It must be stored, instead.
-zip $apk -d assets/omni.ja
-zip -Z store $apk assets/omni.ja
-
 # Sign a QA build. This apk is not a debug version and doesn't contain a debug flag in the manifest
 java -jar /usr/share/apksigner/apksigner.jar sign --verbose --min-sdk-version [% c("var/android_min_api") %] --ks $rootdir/android-qa.keystore --out $qa_apk --in $apk --ks-key-alias androidqakey --key-pass pass:android --ks-pass pass:android
