@@ -1,4 +1,4 @@
-Tor Browser 9.5a2 -- November 5 2019
+Tor Browser 9.5a2 -- November 6 2019
  * All Platforms
    * Update NoScript to 11.0.4
      * Bug 21004: Don't block JavaScript on onion services on medium security
@@ -9,6 +9,7 @@ Tor Browser 9.5a2 -- November 5 2019
    * Bug 32250: Backport enhanced letterboxing support (bug 1546832 and 1556017)
    * Bug 27268: Preferences clean-up
  * Windows + OS X + Linux
+   * Update Tor to 0.4.2.3-alpha
    * Update Tor Launcher to 0.2.20.2
      * Bug 32164: Trim each received log line from tor
      * Translations update
