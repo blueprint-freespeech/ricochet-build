@@ -1,0 +1,33 @@
+From 44e3391a5a3d9a2c4b57f78e43414465ab84681e Mon Sep 17 00:00:00 2001
+From: Nicolas Vigier <boklm@torproject.org>
+Date: Thu, 27 Jun 2019 19:21:05 +0200
+Subject: [PATCH] Use fixed go-build tmp directory
+
+Use fixed go-build tmp directory, when the directory does not exist, in
+order to avoid some reproducibility issues where build directory gets
+embedded in generated binaries.
+---
+ src/cmd/go/internal/work/action.go | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/src/cmd/go/internal/work/action.go b/src/cmd/go/internal/work/action.go
+index 1f91046eb1..ba74b26a38 100644
+--- a/src/cmd/go/internal/work/action.go
++++ b/src/cmd/go/internal/work/action.go
+@@ -224,9 +224,13 @@ func (b *Builder) Init() {
+ 	if cfg.BuildN {
+ 		b.WorkDir = "$WORK"
+ 	} else {
+-		tmp, err := ioutil.TempDir(os.Getenv("GOTMPDIR"), "go-build")
+-		if err != nil {
+-			base.Fatalf("go: creating work dir: %v", err)
++		tmp := filepath.Join(os.Getenv("GOTMPDIR"), "go-build-workdir")
++		_, err := os.Stat(tmp)
++		if !os.IsNotExist(err) {
++			tmp, err = ioutil.TempDir(os.Getenv("GOTMPDIR"), "go-build")
++			if err != nil {
++				base.Fatalf("go: creating work dir: %v", err)
++			}
+ 		}
+ 		if !filepath.IsAbs(tmp) {
+ 			abs, err := filepath.Abs(tmp)

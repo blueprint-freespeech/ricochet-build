@@ -1,0 +1,35 @@
+From 188307b6acd5003e82cb68872da9463f5f707515 Mon Sep 17 00:00:00 2001
+From: Nicolas Vigier <boklm@torproject.org>
+Date: Thu, 27 Jun 2019 12:46:38 +0200
+Subject: [PATCH] If the GOMOBILE_TMPDIR env variable is defined, use that as
+ tmpdir
+
+Having the option to select a fixed tmpdir makes it possible to have
+reproducible builds, as the build directory is embedded in the generated
+executables.
+---
+ cmd/gomobile/env.go | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/cmd/gomobile/env.go b/cmd/gomobile/env.go
+index 471b009..b97141b 100644
+--- a/cmd/gomobile/env.go
++++ b/cmd/gomobile/env.go
+@@ -61,9 +61,14 @@ func buildEnvInit() (cleanup func(), err error) {
+ 		tmpdir = "$WORK"
+ 		cleanupFn = func() {}
+ 	} else {
+-		tmpdir, err = ioutil.TempDir("", "gomobile-work-")
+-		if err != nil {
+-			return nil, err
++		gomobile_tmpdir := os.Getenv("GOMOBILE_TMPDIR")
++		if gomobile_tmpdir != "" {
++			tmpdir = gomobile_tmpdir
++		} else {
++			tmpdir, err = ioutil.TempDir("", "gomobile-work-")
++			if err != nil {
++				return nil, err
++			}
+ 		}
+ 	}
+ 	if buildX {

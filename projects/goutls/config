@@ -17,6 +17,12 @@ var:
     - gocompress
     - gobsaes
 
+targets:
+  android:
+    var:
+      build_go_lib_pre: |
+        [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+
 input_files:
   - project: container-image
   - name: go
@@ -28,3 +34,6 @@ input_files:
   - name: gobsaes
     project: gobsaes
   - filename: sessionid.patch
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+    enable: '[% c("var/android") %]'
