@@ -1,6 +1,6 @@
-Tor Browser 9.5a2 -- November 6 2019
+Tor Browser 9.5a2 -- November 8 2019
  * All Platforms
-   * Update NoScript to 11.0.4
+   * Update NoScript to 11.0.7
      * Bug 21004: Don't block JavaScript on onion services on medium security
      * Bug 27307: NoScript marks HTTP onions as not secure
    * Bug 30783: Fundraising banner for EOY 2019 campain
@@ -21,8 +21,17 @@ Tor Browser 9.5a2 -- November 6 2019
    * Bug 32188: Fix localization on about:preferences#tor
    * Bug 32184: Red dot is shown while downloading an update
    * Bug 27604: Fix broken Tor Browser after moving it to a different directory
+   * Bug 32220: Improve the letterboxing experience
+   * Bug 30683: Backport upstreamed fix from Mozilla (bug 1581537)
  * Android
    * Bug 32342: Crash when changing the browser locale
+   * Bug 32303: Obfs4 is broken on Android Q
+ * Build System
+   * All Platforms
+     * Bug 32413: Bump Go version to 1.12.13
+     * Bug 32053: Compile Rust code with -O1 to avoid reproducibility issues
+   * Android
+     * Bug 28803: Integrate building Pluggable Transports for Android
 
 Tor Browser 9.5a1 -- October 23 2019
  * All Platforms
