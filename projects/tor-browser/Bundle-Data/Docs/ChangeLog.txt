@@ -1,4 +1,4 @@
-Tor Browser 9.5a2 -- November 8 2019
+Tor Browser 9.5a2 -- November 11 2019
  * All Platforms
    * Update NoScript to 11.0.7
      * Bug 21004: Don't block JavaScript on onion services on medium security
@@ -7,6 +7,7 @@ Tor Browser 9.5a2 -- November 8 2019
    * Bug 32321: Don't ping Mozilla for Man-in-the-Middle-detection
    * Bug 32318: Backport Mozilla's fix for bug 1534339
    * Bug 32250: Backport enhanced letterboxing support (bug 1546832 and 1556017)
+   * Bug 31573: Catch SessionStore.jsm exception
    * Bug 27268: Preferences clean-up
  * Windows + OS X + Linux
    * Update Tor to 0.4.2.3-alpha
@@ -29,7 +30,6 @@ Tor Browser 9.5a2 -- November 8 2019
  * Build System
    * All Platforms
      * Bug 32413: Bump Go version to 1.12.13
-     * Bug 32053: Compile Rust code with -O1 to avoid reproducibility issues
    * Android
      * Bug 28803: Integrate building Pluggable Transports for Android
 
