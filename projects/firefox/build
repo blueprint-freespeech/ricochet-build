@@ -115,7 +115,11 @@ rm -f js/src/configure
     cp /var/tmp/dist/tba-translation/[% lang %]/torbrowser_strings.dtd /var/tmp/dist/locales/[% lang %]/mobile/android/base/
     ./mach build chrome-[% lang %];
   [% END %]
+  # Include localization for all available locales.
+  # mk is excluded above because Mozilla does not provide mk localization.
+  # mk is included here because we may have localization for torbutton.
   export MOZ_CHROME_MULTILOCALE='[% tmpl(c('var/locales').join(' ')) %]'
+  ./mach android assemble-app
   AB_CD=multi ./mach package
   # Copy the result over and return. There is nothing more to do for mobile.
   cp obj-*/dist/*unsigned-unaligned.apk [% dest_dir _ '/' _ c('filename') %]/tor-browser-unsigned-unaligned.apk
