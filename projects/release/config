@@ -76,12 +76,6 @@ targets:
       build_target: nightly
       publish_dir: '[% c("var/today") %]'
 
-  alpha_nightly:
-    output_dir: 'alpha_nightly'
-    var:
-      build_target: alpha
-      publish_dir: '[% c("var/today") %]'
-
   alpha:
     output_dir: alpha
     var:
