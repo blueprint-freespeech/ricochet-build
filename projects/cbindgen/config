@@ -11,5 +11,6 @@ input_files:
   - project: container-image
   - name: rust
     project: rust
+  # `cargo vendor vendor` in the `cbindgen` directory has vendored the sources.
   - URL: https://people.torproject.org/~boklm/mirrors/sources/cbindgen-vendor.tar.bz2
     sha256sum: f4cde3d56df893b543b35b7e4a6e295a275dbb3cee8e8eae549efe679db50ab9
