@@ -82,7 +82,19 @@ build number defined as var/torbrowser_version and var/torbrowser_build.
 incrementals-{release,alpha}
 ----------------------------
 Create incremental mar files for an unsigned build in the release or
-alpha channel.
+alpha channel. The list of versions we create incrementals from is
+defined as var/torbrowser_incremental_from in rbm.conf.
+
+incrementals-nightly
+--------------------
+Create incremental mar files for the current nightly build. The number
+of previous versions we should generate incremental mars from is defined
+as var/max_torbrowser_incremental_from in rbm.conf.
+
+If you want to create incremental mars for a version that is not the
+current one, you can define the environment variable
+TORBROWSER_NIGHTLY_VERSION to the version you want to generate
+incremental mars for.
 
 dmg2mar-{release,alpha)
 -----------------------

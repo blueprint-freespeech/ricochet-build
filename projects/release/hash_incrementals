@@ -1,4 +1,8 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
-cd [% shell_quote(path(dest_dir)) %]/[% c("var/signed_status") %]/[%  c("version") %]-[% c("var/torbrowser_build") %]
+[% IF c("var/nightly") -%]
+  cd [% shell_quote(path(dest_dir)) %]/[%  c("version") %]
+[% ELSE -%]
+  cd [% shell_quote(path(dest_dir)) %]/[% c("var/signed_status") %]/[% c("version") %]-[% c("var/torbrowser_build") %]
+[% END -%]
 sha256sum `ls -1 | grep '\.incremental\.mar$' | sort` > sha256sums-[% c("var/signed_status") %]-build.incrementals.txt

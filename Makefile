@@ -164,6 +164,11 @@ incrementals-alpha: submodule-update
 	tools/update-responses/gen_incrementals alpha
 	$(rbm) build release --step hash_incrementals --target alpha
 
+incrementals-nightly: submodule-update
+	$(rbm) build release --step update_responses_config --target nightly
+	NO_CODESIGNATURE=1 tools/update-responses/gen_incrementals nightly
+	$(rbm) build release --step hash_incrementals --target nightly
+
 update_responses-release: submodule-update
 	$(rbm) build release --step update_responses_config --target release --target signed
 	$(rbm) build release --step create_update_responses_tar --target release --target signed
