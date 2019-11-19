@@ -4,7 +4,6 @@ output_dir: release
 
 var:
   signed_status: unsigned
-  today: '[% USE date; date.format(format = "%Y-%m-%d") %]'
   publish_dir: '[% c("var/signed_status") %]/[% c("version") %]-[% c("var/torbrowser_build") %]'
   containers_target: with_containers
 
@@ -74,13 +73,7 @@ targets:
     output_dir: 'nightly'
     var:
       build_target: nightly
-      publish_dir: '[% c("var/today") %]'
-
-  alpha_nightly:
-    output_dir: 'alpha_nightly'
-    var:
-      build_target: alpha
-      publish_dir: '[% c("var/today") %]'
+      publish_dir: '[% c("version") %]'
 
   alpha:
     output_dir: alpha

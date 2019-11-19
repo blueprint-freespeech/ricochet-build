@@ -36,17 +36,6 @@ nightly-{linux-x86_64,linux-i686,windows-i686,osx-x86_64,android-armv7,
 -----------------------------------------------------------------------
 Same as nightly, for the selected platform only.
 
-alpha_nightly
--------------
-Build Tor Browser for the alpha channel, for all supported platforms.
-This is the same as 'make alpha', but the output directory is different.
-The resulting build can be found in directory alpha_nightly/$date
-
-alpha_nightly-{linux-x86_64,linux-i686,windows-i686,osx-x86_64,android-armv7,
-               android-x86,android-x86_64,android-aarch64}
------------------------------------------------------------------------------
-The same as alpha_nightly, for the selected platform only.
-
 testbuild
 ---------
 Build a Tor Browser test build. To make the build faster, only the en-US

@@ -6,9 +6,8 @@ use strict;
 die "wrong number of arguments" unless @ARGV == 2;
 my ($year, $version) = @ARGV;
 my $date;
-if ($version eq 'tbb-nightly') {
-  my (undef, undef, undef, $day, $mon, $y) = localtime;
-  $date = sprintf("%d%02d%02d010101", $y + 1900, $mon + 1, $day);
+if ($version =~ m/^tbb-nightly\.([^\.]+)\.([^\.]+)\.([^\.]+)$/) {
+  $date = sprintf("%d%02d%02d010101", $1, $2, $3);
 } else {
   my @v = split(/[\.ab]/, $version);
   push @v, '0' if @v < 4;
