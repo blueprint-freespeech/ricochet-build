@@ -290,6 +290,17 @@ cp $rootdir/[% c('input_files_by_name/firefox') %]/mar-tools-*.zip "$OUTDIR"/
        ELSE;
          SET browserdir = tbdir _ '/Browser';
        END;
+       SET build_mar = c("var/build_mar");
+       # On nightly we only build mar files for some locales
+       IF c("var/nightly") && c("var/build_mar");
+         build_mar = 0;
+         FOREACH mar_lang = c("var/mar_locales");
+           mar_lang = tmpl(mar_lang);
+           IF mar_lang == lang;
+             build_mar = 1;
+           END;
+         END;
+       END;
     %]
       cat > "$scripts_dir/create-tor-browser_[% lang %]" << SCRIPT_EOF
 #!/bin/bash
@@ -323,8 +334,11 @@ cp $rootdir/[% c('input_files_by_name/firefox') %]/mar-tools-*.zip "$OUTDIR"/
 
       cd $distdir
 
-      # Create full MAR file and compressed package for this locale.
-      MAR=$MARTOOLS/mar MBSDIFF=$MARTOOLS/mbsdiff $MARTOOLS/make_full_update.sh -q $OUTDIR/[% mar_file %] "[% browserdir %]"
+      [% IF build_mar -%]
+        # Create full MAR file and compressed package for this locale.
+        MAR=$MARTOOLS/mar MBSDIFF=$MARTOOLS/mbsdiff $MARTOOLS/make_full_update.sh -q $OUTDIR/[% mar_file %] "[% browserdir %]"
+      [% END -%]
+
       [% IF c("var/linux") %]
         [% SET tardir = 'tor-browser_' _ lang;
           c('tar', {
