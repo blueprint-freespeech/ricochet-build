@@ -22,7 +22,7 @@ build_targets:
     osx32: Darwin_x86-gcc3
     osx64: Darwin_x86_64-gcc3
 channels:
-    [% pc('firefox', 'var/torbrowser_update_channel') %]: [% c("var/torbrowser_version") %]
+    [% c('var/channel') %]: [% c("var/torbrowser_version") %]
 versions:
     [% c("var/torbrowser_version") %]:
 [% IF c("var/create_unsigned_incrementals") -%]
