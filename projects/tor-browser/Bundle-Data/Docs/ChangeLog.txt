@@ -17,12 +17,12 @@ Tor Browser 9.5a3 -- December 3 2019
      * Bug 30787: Add lt locale
 	 * Bug 30788: Add ms locale
 	 * Bug 30787: Add th locale
- * Windows
-   * Bug 32616: Disable GetSecureOutputDirectoryPath() functionality
  * Android
    * Bug 32365: Localization is broken in Tor Browser 9 on Android
  * OS X
    * Bug 32505: Tighten our rules in our entitlements file for macOS
+ * Windows
+   * Bug 32616: Disable GetSecureOutputDirectoryPath() functionality
 
 Tor Browser 9.5a2 -- November 11 2019
  * All Platforms
