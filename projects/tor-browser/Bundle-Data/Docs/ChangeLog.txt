@@ -11,14 +11,22 @@ Tor Browser 9.5a3 -- December 3 2019
    * Bug 30788: Add ms locale
    * Bug 30787: Add th locale
    * Translations update
+   * Bug 28746: Remove torbutton isolation and fp prefs sync
+   * Bug 28745: Assume always running in Tor Browser
+   * Bug 30888: move torbutton_util.js to modules/utils.js
+   * Bug 30851: Move default preferences to 000-tor-browser.js
+   * Bug 28745: Remove torbutton.js unused code
+   * Bug 32255: Missing ORIGIN header breaks CORS
  * Windows + OS X + Linux
    * Update Tor to 0.4.2.4-rc
    * Update Tor Launcher to 0.2.20.3
      * Bug 30787: Add lt locale
-	 * Bug 30788: Add ms locale
-	 * Bug 30787: Add th locale
+     * Bug 30788: Add ms locale
+     * Bug 30787: Add th locale
+   * Bug 30237: Improve TBB UI of hidden service client authorization
  * Android
    * Bug 32365: Localization is broken in Tor Browser 9 on Android
+   * Bug 32405: Crash immediately after bootstrap on Android
  * OS X
    * Bug 32505: Tighten our rules in our entitlements file for macOS
  * Windows
