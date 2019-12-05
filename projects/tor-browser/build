@@ -274,6 +274,17 @@ cp $rootdir/[% c('input_files_by_name/firefox') %]/mar-tools-*.zip "$OUTDIR"/
   cp $rootdir/[% c('input_files_by_name/tor') %]/tor-debug.tar.xz "$OUTDIR"/tor-[% c("var/mar_osname") %]-debug.tar.xz
 [% END -%]
 
+# Create a tarball with all Linux x86_64 language packs (Bug 32676)
+[% IF c("var/release") && c("var/linux-x86_64") && ! c("var/multi_lingual") && ! c("var/testbuild") -%]
+  pushd $rootdir/[% c('input_files_by_name/firefox-langpacks') %]
+  [% c('tar', {
+           tar_src => [ '.' ],
+           tar_args => '-cJf $OUTDIR/langpacks-tor-browser-linux64-' _ c("var/torbrowser_version") _ '.tar.xz',
+     })
+  %]
+  popd
+[% END -%]
+
 # If we did not create a multi-lingual package above, create a package for
 # each locale.
 [% IF ! c("var/multi_lingual") %]
