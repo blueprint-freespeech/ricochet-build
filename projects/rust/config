@@ -106,3 +106,5 @@ input_files:
     gpg_keyring: rust.gpg
   - filename: unwind.patch
     enable: '[% c("var/windows-i686") %]'
+  - filename: 42574.patch
+  - filename: 43909.patch

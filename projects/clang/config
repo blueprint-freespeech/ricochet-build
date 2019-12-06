@@ -45,3 +45,5 @@ input_files:
     enable: '[% c("var/windows") %]'
   - filename: timestamp.patch
     enable: '[% c("var/windows") %]'
+  - filename: 42574.patch
+  - filename: 43909.patch

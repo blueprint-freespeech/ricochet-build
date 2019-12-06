@@ -20,6 +20,10 @@ tar -xf $rootdir/[% c('input_files_by_name/libcxxabi') %]
 tar -xf $rootdir/[% c('input_files_by_name/lld') %]
 tar -xf $rootdir/[% c('input_files_by_name/compiler-rt') %]
 mv llvm-* llvm
+# LLVM has reproducibility issues when optimizing bitcode, which we need to
+# patch. See: #32053 for more details.
+patch -p1 < $rootdir/42574.patch
+patch -p1 < $rootdir/43909.patch
 mv cfe-* llvm/tools/clang
 mv libcxx-* llvm/projects/libcxx
 mv libcxxabi-* llvm/projects/libcxxabi
