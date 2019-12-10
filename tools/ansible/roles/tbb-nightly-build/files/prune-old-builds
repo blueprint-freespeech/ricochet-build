@@ -44,7 +44,11 @@
 #         Don't delete anything, but say what would be deleted.
 #
 # --prefix <prefix>
-#         Prefix of the directories to be removed. Default is 'tbb-nightly-'.
+#         Prefix of the directories to be removed. Default is 'tbb-nightly.'.
+#
+# --separator <c>
+#         Separator character to separate the year, month, day in the directory
+#         names. Default is '.'.
 #
 # --days <n>
 #         Number of days that we should keep. Default is 6.
@@ -66,7 +70,8 @@ my %options = (
     days   => 6,
     weeks  => 3,
     months => 3,
-    prefix => 'tbb-nightly-',
+    prefix => 'tbb-nightly.',
+    separator => '.',
 );
 
 sub keep_builds {
@@ -79,7 +84,7 @@ sub keep_builds {
     my $n = $options{days};
     my $dt = DateTime->now;
     while ($n) {
-        $res{ $options{prefix} . $dt->ymd } = 1;
+        $res{ $options{prefix} . $dt->ymd($options{separator}) } = 1;
         $dt = $dt - $day;
         $n--;
     }
@@ -89,7 +94,7 @@ sub keep_builds {
         $dt = $dt - $day;
     }
     while ($w) {
-        $res{ $options{prefix} . $dt->ymd } = 1;
+        $res{ $options{prefix} . $dt->ymd($options{separator}) } = 1;
         $dt = $dt - $week;
         $w--;
     }
@@ -100,7 +105,7 @@ sub keep_builds {
         $dt = $dt - $day;
     }
     while ($m) {
-        $res{ $options{prefix} . $dt->ymd } = 1;
+        $res{ $options{prefix} . $dt->ymd($options{separator}) } = 1;
         $dt = $dt - $month;
         $m--;
     }
@@ -113,7 +118,7 @@ sub clean_directory {
     my $k = keep_builds;
     chdir $directory || die "Error entering $directory";
     foreach my $file (glob "$options{prefix}*") {
-        next unless $file =~ m/^$options{prefix}\d{4}-\d{2}-\d{2}$/;
+        next unless $file =~ m/^$options{prefix}\d{4}$options{separator}\d{2}$options{separator}\d{2}$/;
         next if $k->{$file};
         if ($options{'dry-run'}) {
             print "Would remove $file\n";

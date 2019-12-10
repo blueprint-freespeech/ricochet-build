@@ -5,6 +5,7 @@ use DateTime;
 use TBBTestSuite::TestSuite::TorBrowserBuild;
 
 my $date = DateTime->now->ymd;
+my $tbb_version = 'tbb-nightly.' . DateTime->now->ymd('.');
 my $name = "tor-browser-$date";
 
 if (-d "$options->{'reports-dir'}/r/$name") {
@@ -13,8 +14,9 @@ if (-d "$options->{'reports-dir'}/r/$name") {
 }
 
 my $testsuite = TBBTestSuite::TestSuite::TorBrowserBuild->new({
-        publish_dir => "$FindBin::Bin/tor-browser-builds/$date",
-        publish_url => "{{ nightly_build_url }}/tor-browser-builds/$date",
+        tbb_version => $tbb_version,
+        publish_dir => "$FindBin::Bin/tor-browser-builds/$tbb_version",
+        publish_url => "{{ nightly_build_url }}/tor-browser-builds/$tbb_version",
         rbm_local_conf => "$FindBin::Bin/rbm-config/tbb-nightly.rbm.local.conf",
         make_clean => 1,
     });
