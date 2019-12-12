@@ -429,24 +429,19 @@ sub write_downloads_json {
     }
 }
 
-sub osname {
-    my ($osname) = capture_exec('uname', '-s');
-    my ($arch) = capture_exec('uname', '-m');
-    chomp($osname, $arch);
-    if ($osname eq 'Linux' && $arch eq 'x86_64') {
-        return 'linux64';
+sub marzip_path {
+    my ($config, $version) = @_;
+    for my $osname (qw/linux64 linux32 mac64 win64 win32/) {
+        my $marzip = version_dir($config, $version) . "/mar-tools-$osname.zip";
+        return $marzip if -f $marzip;
     }
-    if ($osname eq 'Linux' && $arch =~ m/^i.86$/) {
-        return 'linux32';
-    }
-    exit_error 'Unknown OS';
+    exit_error 'Could not find mar-tools';
 }
 
 my $martools_tmpdir;
 sub extract_martools {
     my ($config, $version) = @_;
-    my $osname = osname;
-    my $marzip = version_dir($config, $version) . "/mar-tools-$osname.zip";
+    my $marzip = marzip_path($config, $version);
     $martools_tmpdir = get_tmpdir($config);
     my $old_cwd = getcwd;
     chdir $martools_tmpdir;
@@ -566,7 +561,7 @@ sub download_version {
     my %sums = map { chomp; reverse split '  ', $_ }
                  read_file "$destdir/sha256sums-signed-build.txt";
 
-    my $martools = 'mar-tools-' . osname . '.zip';
+    my $martools = 'mar-tools-linux64.zip';
     exit_error "Error downloading $urldir/$martools\n"
         unless getstore("$urldir/$martools", "$tmpdir/$martools") == 200;
     exit_error "Error downloading $urldir/$martools.asc\n"
