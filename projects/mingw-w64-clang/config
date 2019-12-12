@@ -3,7 +3,7 @@ filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 git_url: https://git.code.sf.net/p/mingw-w64/mingw-w64
 git_hash: 0a1d495478d8ed1a94fc77b9dbb428b7e0372588
 version: '[% c("abbrev") %]'
-llvm_version: 8.0.0
+llvm_version: 8.0.1
 gpg_keyring: clang.gpg
 sig_ext: sig
 
@@ -21,16 +21,16 @@ input_files:
     name: clang
   - project: cmake
     name: cmake
-  - URL: 'https://releases.llvm.org/[% c("llvm_version") %]/libcxx-[% c("llvm_version") %].src.tar.xz'
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/libcxx-[% c("llvm_version") %].src.tar.xz'
     name: libcxx
     file_gpg_id: 1
-  - URL: 'https://releases.llvm.org/[% c("llvm_version") %]/libcxxabi-[% c("llvm_version") %].src.tar.xz'
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/libcxxabi-[% c("llvm_version") %].src.tar.xz'
     name: libcxxabi
     file_gpg_id: 1
-  - URL: 'https://releases.llvm.org/[% c("llvm_version") %]/libunwind-[% c("llvm_version") %].src.tar.xz'
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/libunwind-[% c("llvm_version") %].src.tar.xz'
     name: libunwind
     file_gpg_id: 1
-  - URL: 'https://releases.llvm.org/[% c("llvm_version") %]/compiler-rt-[% c("llvm_version") %].src.tar.xz'
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/compiler-rt-[% c("llvm_version") %].src.tar.xz'
     name: compiler-rt
     file_gpg_id: 1
   - project: llvm-mingw
