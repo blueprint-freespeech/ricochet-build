@@ -1,6 +1,6 @@
 # vim: filetype=yaml sw=2
 version: 3.15.3
-git_url: https://cmake.org/cmake.git
+git_url: https://gitlab.kitware.com/cmake/cmake.git
 git_hash: 'v[% c("version") %]'
 tag_gpg_id: 1
 gpg_keyring: cmake.gpg
