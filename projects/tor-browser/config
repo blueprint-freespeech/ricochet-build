@@ -45,7 +45,6 @@ targets:
     build: '[% INCLUDE build.android %]'
     var:
       arch_deps:
-        - openjdk-8-jdk
         - apksigner
 
 input_files:
