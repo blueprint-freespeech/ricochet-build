@@ -417,6 +417,7 @@ sub write_htaccess {
 
 sub write_downloads_json {
     my ($config, @channels) = @_;
+    return unless $config->{create_downloads_json};
     @channels = keys %{$config->{channels}} unless @channels;
     foreach my $channel (@channels) {
         my $version = $config->{channels}{$channel};

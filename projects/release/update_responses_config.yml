@@ -1,5 +1,6 @@
 ---
 tmp_dir: '[% c("tmp_dir") %]'
+create_downloads_json: 1
 appname_marfile: tor-browser
 appname_bundle_osx: TorBrowser
 appname_bundle_linux: tor-browser
