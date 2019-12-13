@@ -73,6 +73,10 @@ cd /var/tmp/dist/go/src
   CGO_ENABLED=1 CC_FOR_TARGET=[% c("var/CC") %] CGO_CFLAGS='-D__ANDROID_API__=[% c("var/android_min_api") %]' CC= CFLAGS= LDFLAGS= ./make.bash
 [% END -%]
 
+# This directory is non-reproducible and doesn't exist in official Go releases,
+# so remove it to preserve reproducibility of the output.
+rm -rf /var/tmp/dist/go/pkg/obj/go-build/
+
 cd /var/tmp/dist
 [% c('tar', {
         tar_src => [ project ],
