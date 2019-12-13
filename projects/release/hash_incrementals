@@ -6,3 +6,6 @@
   cd [% shell_quote(path(dest_dir)) %]/[% c("var/signed_status") %]/[% c("version") %]-[% c("var/torbrowser_build") %]
 [% END -%]
 sha256sum `ls -1 | grep '\.incremental\.mar$' | sort` > sha256sums-[% c("var/signed_status") %]-build.incrementals.txt
+[% IF c("var/sign_build") -%]
+  gpg -abs [% c("var/sign_build_gpg_opts") %] sha256sums-[% c("var/signed_status") %]-build.incrementals.txt
+[% END -%]
