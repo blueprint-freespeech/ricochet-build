@@ -4,6 +4,7 @@ Tor Browser 9.5a3 -- December 3 2019
    * Bump NoScript to 11.0.9
      * Bug 32362: NoScript TRUSTED setting doesn't work
      * Bug 32429: Issues with about:blank and NoScript on .onion sites
+     * Bug 32549: NoScript makes requests to sync-messages.invalid
    * Update HTTPS Everywhere to 2019.11.7
    * Bug 32618: Backport fixes from Mozilla bugs 1467970 and 1590526
    * Bug 32606: Set up default bridge at Georgetown University
@@ -38,6 +39,7 @@ Tor Browser 9.0.2 -- December 3 2019
    * Bump NoScript to 11.0.9
      * Bug 32362: NoScript TRUSTED setting doesn't work
      * Bug 32429: Issues with about:blank and NoScript on .onion sites
+     * Bug 32549: NoScript makes requests to sync-messages.invalid
    * Bump HTTPS Everywhere to 2019.11.7
    * Bug 27268: Preferences clean-up in Torbutton code
    * Translations update
