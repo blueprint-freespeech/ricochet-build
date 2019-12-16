@@ -1,0 +1,74 @@
+#!/usr/bin/perl -w
+use strict;
+use Getopt::Long;
+use DateTime;
+use DateTime::Duration;
+use File::Path qw(remove_tree);
+
+my %options = (
+    days   => 6,
+    weeks  => 3,
+    months => 3,
+    prefix => 'tbb-nightly-',
+);
+
+sub keep_builds {
+    my %res;
+
+    my $day = DateTime::Duration->new(days => 1);
+    my $week = DateTime::Duration->new(weeks => 1);
+    my $month = DateTime::Duration->new(months => 1);
+
+    my $n = $options{days};
+    my $dt = DateTime->now;
+    while ($n) {
+        $res{ $options{prefix} . $dt->ymd } = 1;
+        $dt = $dt - $day;
+        $n--;
+    }
+
+    my $w = $options{weeks};
+    while ($dt->day_of_week != 1) {
+        $dt = $dt - $day;
+    }
+    while ($w) {
+        $res{ $options{prefix} . $dt->ymd } = 1;
+        $dt = $dt - $week;
+        $w--;
+    }
+
+    my $m = $options{months};
+    $dt = DateTime->now;
+    while ($dt->day != 1) {
+        $dt = $dt - $day;
+    }
+    while ($m) {
+        $res{ $options{prefix} . $dt->ymd } = 1;
+        $dt = $dt - $month;
+        $m--;
+    }
+
+    return \%res;
+}
+
+sub clean_directory {
+    my ($directory) = @_;
+    my $k = keep_builds;
+    chdir $directory || die "Error entering $directory";
+    foreach my $file (glob "$options{prefix}*") {
+        next unless $file =~ m/^$options{prefix}\d{4}-\d{2}-\d{2}$/;
+        next if $k->{$file};
+        if ($options{'dry-run'}) {
+            print "Would remove $file\n";
+        } else {
+            remove_tree($file);
+        }
+    }
+}
+
+my @opts = qw(days=i weeks=i months=i prefix=s dry-run!);
+Getopt::Long::GetOptions(\%options, @opts);
+die "Missing argument: directory to clean" unless @ARGV;
+foreach my $dir (@ARGV) {
+    clean_directory($dir);
+}

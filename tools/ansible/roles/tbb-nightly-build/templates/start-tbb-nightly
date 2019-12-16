@@ -2,4 +2,4 @@
 cd {{ testsuite_dir }}
 export RBM_NO_DEBUG=1
 ./tbb-testsuite --config=tbb-nightly "$@"
-./tools/prune-old-builds/prune-old-builds --prefix '' --days {{ nightly_build_keep_builds }} ./tor-browser-builds
+/home/{{ nightly_build_user }}/prune-old-builds --prefix '' --days {{ nightly_build_keep_builds }} ./tor-browser-builds
