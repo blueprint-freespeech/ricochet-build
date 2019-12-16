@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+nssdb="$(dirname "$0")/nssdb"
+if test -d $nssdb
+then
+    echo "Error: $nssdb already exists" >&2
+    exit 1
+fi
+mkdir -p $nssdb
+chmod 700 $nssdb
+certutil -d $nssdb -N --empty-password
+certutil -d $nssdb -S -x -g 4096 -Z SHA384 -n nightly-marsigner -s "CN=Tor Browser Nightly MAR signing key" -t,,
+certutil -d $nssdb -L -r -n nightly-marsigner -o $nssdb/nightly-marsigner.der
