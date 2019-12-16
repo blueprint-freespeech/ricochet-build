@@ -1,4 +1,8 @@
 #!/bin/bash
+[% IF c("var/sign_build") -%]
+  # var/set_default_env will reset HOME. We need to restore it to use gpg.
+  old_HOME="$HOME"
+[% END -%]
 [% c("var/set_default_env") -%]
 [% IF c("var/nightly") -%]
   cd [% shell_quote(path(dest_dir)) %]/[%  c("version") %]
@@ -7,5 +11,6 @@
 [% END -%]
 sha256sum `ls -1 | grep '\.incremental\.mar$' | sort` > sha256sums-[% c("var/signed_status") %]-build.incrementals.txt
 [% IF c("var/sign_build") -%]
+  export HOME="$old_HOME"
   gpg -abs [% c("var/sign_build_gpg_opts") %] sha256sums-[% c("var/signed_status") %]-build.incrementals.txt
 [% END -%]
