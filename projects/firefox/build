@@ -273,3 +273,12 @@ END;
         zip_src => [ 'mar-tools' ],
         zip_args => dest_dir _ '/' _ c('filename') _ '/' _ c('var/martools_filename'),
     }) %]
+
+[% IF c("var/build_infos_json") -%]
+  cat > "[% dest_dir _ '/' _ c('filename') _ '/build-infos.json' %]" << EOF_BUILDINFOS
+  {
+      "firefox_platform_version" : "[% c("var/firefox_platform_version") %]",
+      "firefox_buildid" : "$MOZ_BUILD_DATE"
+  }
+EOF_BUILDINFOS
+[% END -%]

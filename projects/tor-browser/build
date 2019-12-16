@@ -297,6 +297,9 @@ cp $rootdir/[% c('input_files_by_name/firefox') %]/mar-tools-*.zip "$OUTDIR"/
 [% IF c("var/linux") -%]
   cp $rootdir/[% c('input_files_by_name/tor') %]/tor-debug.tar.xz "$OUTDIR"/tor-[% c("var/mar_osname") %]-debug.tar.xz
 [% END -%]
+[% IF c("var/build_infos_json") -%]
+  cp $rootdir/[% c('input_files_by_name/firefox') %]/build-infos.json "$OUTDIR"/build-infos-[% c("var/mar_osname") %].json
+[% END -%]
 
 # Create a tarball with all Linux x86_64 language packs (Bug 32676)
 [% IF c("var/release") && c("var/linux-x86_64") && ! c("var/multi_lingual") && ! c("var/testbuild") -%]
