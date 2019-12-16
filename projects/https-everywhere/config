@@ -27,7 +27,6 @@ var:
     - rsync
     - zip
     - unzip
-  pre_pkginst: ''
 
 input_files:
   - project: container-image
