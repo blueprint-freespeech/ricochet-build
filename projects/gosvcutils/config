@@ -1,0 +1,47 @@
+version: 1.0.10
+git_url:  https://github.com/hlandau/svcutils.git
+git_hash: c25dac49e50cbbcbef8c81b089f56156f4067729
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: gopkg.in/hlandau/svcutils.v1
+  go_lib_install:
+    - gopkg.in/hlandau/svcutils.v1
+    - gopkg.in/hlandau/svcutils.v1/caps
+    - gopkg.in/hlandau/svcutils.v1/chroot
+    - gopkg.in/hlandau/svcutils.v1/dupfd
+    - gopkg.in/hlandau/svcutils.v1/exepath
+    - gopkg.in/hlandau/svcutils.v1/passwd
+    - gopkg.in/hlandau/svcutils.v1/pidfile
+    - gopkg.in/hlandau/svcutils.v1/setuid
+    - gopkg.in/hlandau/svcutils.v1/systemd
+  build_go_lib_pre: |
+    [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+
+    tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/binutils') %]
+    export PATH="/var/tmp/dist/binutils/bin:$PATH"
+
+    export CGO_ENABLED=1
+
+targets:
+  linux-i686:
+    var:
+      arch_deps:
+        - libcap-dev:i386
+  linux-x86_64:
+    var:
+      arch_deps:
+        - libcap-dev
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: binutils
+    project: binutils

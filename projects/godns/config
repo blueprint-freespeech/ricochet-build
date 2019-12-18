@@ -1,0 +1,26 @@
+version: 1.1.22
+git_url:  https://github.com/miekg/dns.git
+git_hash: 1e224ff5dead8366ed6fcdcb832794be42e73f0e
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/miekg/dns
+  go_lib_deps:
+    - goxcryptoed25519
+    - goxnetip
+    - goxsysunix
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: goxcryptoed25519
+    project: goxcryptoed25519
+  - name: goxnetip
+    project: goxnetip
+  - name: goxsysunix
+    project: goxsysunix

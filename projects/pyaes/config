@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 1.6.1
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image
+  - URL: https://files.pythonhosted.org/packages/source/p/pyaes/pyaes-[% c("version") %].tar.gz
+    sha256sum: 02c1b1405c38d3c370b085fb952dd8bea3fadcee6411ad99f312cc129c536d8f
+    # TODO: This version doesn't show up as a Git tag; where did it come from?

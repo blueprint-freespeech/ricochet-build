@@ -14,6 +14,7 @@ var:
     - unzip
     - bzip2
     - xz-utils
+    - patch
 
 targets:
   linux-i686:
@@ -104,3 +105,14 @@ input_files:
     name: apktool
     sha256sum: a0f116e8916d6f21160e1559847bb8b8c32ee71900f321cafeadbe37b87ebcc1
     enable: '[% c("var/android") %]'
+  - name: electrum-nmc
+    project: electrum-nmc
+    enable: '[% c("var/namecoin") %]'
+  - name: ncprop279
+    project: ncprop279
+    enable: '[% c("var/namecoin") %]'
+  - name: stemns
+    project: stemns
+    enable: '[% c("var/namecoin") %]'
+  - filename: namecoin.patch
+    enable: '[% c("var/namecoin") %]'

@@ -1,0 +1,29 @@
+version: 21
+git_url:  https://github.com/coreos/go-systemd.git
+git_hash: d3cd4ed1dbcf5835feba465b180436db54f20228
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/coreos/go-systemd
+  go_lib_install:
+    - github.com/coreos/go-systemd/journal
+  build_go_lib_pre: |
+    [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+
+    tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/binutils') %]
+    export PATH="/var/tmp/dist/binutils/bin:$PATH"
+
+    export CGO_ENABLED=1
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: binutils
+    project: binutils

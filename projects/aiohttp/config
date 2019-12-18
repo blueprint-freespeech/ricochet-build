@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 3.5.4
+git_url: https://github.com/aio-libs/aiohttp.git
+git_hash: f6f647eb828fa738610d61481f11fa51e42599e9
+# TODO: This Git repo doesn't use GPG sigs.  We should pester them about that.
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image

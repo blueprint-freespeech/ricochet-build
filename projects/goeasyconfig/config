@@ -1,0 +1,35 @@
+version: 1.0.17
+git_url:  https://github.com/hlandau/easyconfig.git
+git_hash: c31249162931b4963bbe6e501cccb60d23271a3f
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: gopkg.in/hlandau/easyconfig.v1
+  go_lib_deps:
+    - goconfigurable
+    - gosvcutils
+    - gotoml
+    - gopflag
+    - gokingpin
+  go_lib_install:
+    - gopkg.in/hlandau/easyconfig.v1
+    - gopkg.in/hlandau/easyconfig.v1/cflag
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: goconfigurable
+    project: goconfigurable
+  - name: gosvcutils
+    project: gosvcutils
+  - name: gotoml
+    project: gotoml
+  - name: gopflag
+    project: gopflag
+  - name: gokingpin
+    project: gokingpin

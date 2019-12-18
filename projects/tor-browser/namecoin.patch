@@ -1,0 +1,83 @@
+diff -ru RelativeLink/start-tor-browser RelativeLinkNamecoin/start-tor-browser
+--- RelativeLink/start-tor-browser	2019-11-03 06:56:36.062938844 +0000
++++ RelativeLinkNamecoin/start-tor-browser	2019-12-13 12:00:58.000000000 +0000
+@@ -169,6 +169,11 @@
+     detach=0
+ fi
+ 
++# We can't detach and enable Namecoin at the same time..
++if [ "$TOR_ENABLE_NAMECOIN" = 1 -a "$detach" -eq 1 ]; then
++    detach=0
++fi
++
+ if [ "$show_output" -eq 0 ]; then
+     # If the user hasn't requested 'debug mode' or --help, close stdout and stderr,
+     # to keep Firefox and the stuff loaded by/for it (including the
+@@ -352,6 +357,55 @@
+ #
+ # The --class parameter was added to fix bug 11102.
+ 
++# The Namecoin support in this script is a placeholder proof-of-concept only.
++# In the real world this would be moved to Tor Launcher.
++terminate_namecoin () {
++    echo "Terminating Namecoin..."
++    kill ${ELECTRUM_NMC_PID}
++    kill -s SIGKILL ${STEM_NS_PID}
++    echo "Terminated Namecoin."
++}
++if [ "${TOR_ENABLE_NAMECOIN}" = 1 ]; then
++    python3 -c 'import sys; exit(0) if sys.version_info[:2] >= (3, 6) else exit(1)'
++    if [ "$?" -ne 0 ]; then
++        complain "Namecoin requires at least Python 3.6."
++        exit 1
++    fi
++
++    if [ "$show_usage" -eq 1 ]; then
++        # No help exists for Namecoin
++        TOR_ENABLE_NAMECOIN=0
++    elif [ "$detach" -eq 1 ] ; then
++        # No support yet for detached Namecoin
++        TOR_ENABLE_NAMECOIN=0
++    elif [ "$log_output" -eq 1 -a "$show_output" -eq 1 ]; then
++        # No support yet for logging Namecoin
++        TOR_ENABLE_NAMECOIN=0
++    elif [ "$show_output" -eq 1 ]; then
++        # Launch Namecoin in verbose mode
++        echo "Launching Namecoin..."
++        trap terminate_namecoin SIGINT SIGTERM
++        grep --quiet "__LeaveStreamsUnattached 1" TorBrowser/Data/Tor/torrc-defaults || echo "__LeaveStreamsUnattached 1" >> TorBrowser/Data/Tor/torrc-defaults
++        TorBrowser/Electrum-NMC/run_electrum_nmc daemon -v --dir "TorBrowser/Data/Electrum-NMC/" &
++        ELECTRUM_NMC_PID=$!
++        python3 TorBrowser/StemNS/poc.py &
++        STEM_NS_PID=$!
++        echo "Launched Namecoin."
++    else
++        # Launch Namecoin
++        trap terminate_namecoin SIGINT SIGTERM
++        grep --quiet "__LeaveStreamsUnattached 1" TorBrowser/Data/Tor/torrc-defaults || echo "__LeaveStreamsUnattached 1" >> TorBrowser/Data/Tor/torrc-defaults
++        TorBrowser/Electrum-NMC/run_electrum_nmc daemon --dir "TorBrowser/Data/Electrum-NMC/" &
++        ELECTRUM_NMC_PID=$!
++        python3 TorBrowser/StemNS/poc.py &
++        STEM_NS_PID=$!
++    fi
++fi
++
++if [ "${TOR_ENABLE_NAMECOIN}" != 1 ]; then
++    perl -i -p -e 's/__LeaveStreamsUnattached 1\n//' TorBrowser/Data/Tor/torrc-defaults
++fi
++
+ if [ "$show_usage" -eq 1 ]; then
+     # Display Firefox help, then our help
+     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "Tor Browser" \
+@@ -373,4 +427,10 @@
+         -profile TorBrowser/Data/Browser/profile.default "${@}" > "$logfile" 2>&1 </dev/null
+ fi
+ 
+-exit $?
++FIREFOX_EXIT_CODE=$?
++
++if [ "${TOR_ENABLE_NAMECOIN}" = 1 ]; then
++    terminate_namecoin
++fi
++
++exit ${FIREFOX_EXIT_CODE}

@@ -1,0 +1,14 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar xvf [% project %]-[% c('version') %].tar.gz
+
+mkdir -p /var/tmp/dist/
+cd /var/tmp/dist/
+
+cp -a $rootdir/[% project %]*/[% project %] ./[% project %]
+
+[% c('tar', {
+        tar_src => '.',
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]

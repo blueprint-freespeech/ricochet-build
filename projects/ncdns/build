@@ -1,0 +1,31 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+[% pc('go', 'var/setup', { go_tarfile => c('input_files_by_name/go') }) %]
+[% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+
+tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/binutils') %]
+export PATH="/var/tmp/dist/binutils/bin:$PATH"
+export CGO_ENABLED=1
+distdir=/var/tmp/dist/[% project %]
+mkdir -p $distdir
+
+[% FOREACH dep = c("var/go_lib_deps") -%]
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/' _ dep) %]
+[% END -%]
+
+mkdir -p $GOPATH/src/github.com/namecoin
+tar -C $GOPATH/src/github.com/namecoin -xf [% project %]-[% c('version') %].tar.gz
+mv $GOPATH/src/github.com/namecoin/ncdns-[% c('version') %] $GOPATH/src/github.com/namecoin/ncdns
+
+TAGS="-tags no_namecoin_tls"
+
+[% FOREACH inst IN c("var/go_lib_install") %]
+  go install $TAGS -ldflags '-s' [% inst %]
+[% END %]
+
+cd /var/tmp/dist
+
+[% c('tar', {
+  tar_src => [ 'gopath' ],
+  tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+}) %]

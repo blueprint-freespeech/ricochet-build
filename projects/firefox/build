@@ -92,10 +92,20 @@ fi
   export LDFLAGS="-Wl,--no-insert-timestamp"
 [% END -%]
 
+[% IF c("var/namecoin") %]
+  patch -p1 < $rootdir/namecoin-etld.patch
+[% END -%]
+
 [% IF ! c("var/android") %]
   # Place a copy of the Tor Launcher sources under browser/extensions
   tar -C browser/extensions -xf $rootdir/[% c('input_files_by_name/tor-launcher') %]
 [% END -%]
+
+[% IF c("var/namecoin") %]
+  pushd toolkit/torproject/torbutton
+  patch -p1 < $rootdir/namecoin-torbutton.patch
+  popd
+[% END %]
 
 rm -f configure
 rm -f js/src/configure

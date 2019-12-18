@@ -1,0 +1,82 @@
+#version: 0.0.9
+# Using latest master branch because we need the stream isolation and
+# disable_namecoin_tlsa features.  Once they're in a tagged release, we'll go
+# back to using a version number here.
+version: '[% c("abbrev") %]'
+git_url: https://github.com/namecoin/ncdns.git
+# Using latest master branch because we need the stream isolation and
+# disable_namecoin_tlsa features.  Once they're in a tagged release, we'll go
+# back to using a hash that corresponds to a tag here.
+git_hash: 'ca0fe5552806a4275f38468c4d3fbcb2cba1cb79'
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+var:
+  container:
+    use_container: 1
+  go_lib_deps:
+    - gogroupcache
+    - godegoutils
+    - godexlogconfig
+    - goncbtcjson
+    - goncrpcclient
+    - gobtcd
+    - gopretty
+    - godns
+    - gomadns
+    - goeasyconfig
+    - goservice
+    - goxnet
+  go_lib_install:
+    - github.com/namecoin/ncdns
+    - github.com/namecoin/ncdns/backend
+    - github.com/namecoin/ncdns/namecoin
+    - github.com/namecoin/ncdns/ncdomain
+    - github.com/namecoin/ncdns/ncdt
+    - github.com/namecoin/ncdns/rrtourl
+    - github.com/namecoin/ncdns/server
+    - github.com/namecoin/ncdns/testutil
+    - github.com/namecoin/ncdns/tlshook
+    - github.com/namecoin/ncdns/util
+
+targets:
+  linux-i686:
+    var:
+      arch_deps:
+        - libcap-dev:i386
+  linux-x86_64:
+    var:
+      arch_deps:
+        - libcap-dev
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: binutils
+    project: binutils
+  - name: godexlogconfig
+    project: godexlogconfig
+  - name: goeasyconfig
+    project: goeasyconfig
+  - name: goservice
+    project: goservice
+  - name: gogroupcache
+    project: gogroupcache
+  - name: goncbtcjson
+    project: goncbtcjson
+  - name: goncrpcclient
+    project: goncrpcclient
+  - name: gobtcd
+    project: gobtcd
+  - name: godns
+    project: godns
+  - name: gomadns
+    project: gomadns
+  - name: gopretty
+    project: gopretty
+  - name: godegoutils
+    project: godegoutils
+  - name: goxnet
+    project: goxnet

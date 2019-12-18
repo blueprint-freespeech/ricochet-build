@@ -1,0 +1,32 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+[% pc('go', 'var/setup', { go_tarfile => c('input_files_by_name/go') }) %]
+export CGO_ENABLED=0
+distdir=/var/tmp/dist/[% project %]
+mkdir -p $distdir
+
+[% FOREACH dep = c("var/go_lib_deps") -%]
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/' _ dep) %]
+[% END -%]
+
+mkdir -p $GOPATH/src/github.com/namecoin
+tar -C $GOPATH/src/github.com/namecoin -xf [% project %]-[% c('version') %].tar.gz
+mv $GOPATH/src/github.com/namecoin/ncprop279-[% c('version') %] $GOPATH/src/github.com/namecoin/ncprop279
+
+TAGS="-tags no_namecoin_tls"
+
+go install $TAGS -ldflags '-s' github.com/namecoin/ncprop279
+
+[% IF c("var/linux-x86_64") -%]
+  GOPATHBIN="${GOPATH}/bin"
+[% ELSE -%]
+  GOPATHBIN="${GOPATH}/bin/${GOOS}_${GOARCH}"
+[% END -%]
+
+cp -a $GOPATHBIN/ncprop279 $distdir/
+
+cd $distdir
+[% c('tar', {
+     tar_src   => [ '.' ],
+     tar_args  => '-czf ' _ dest_dir _ '/' _ c('filename'),
+   }) %]

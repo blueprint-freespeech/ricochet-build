@@ -61,6 +61,11 @@ tar -C "$TBDIR[% IF c("var/osx") %]/Contents/Resources[% END %]" -xf [% c('input
   cat > ${TB_STAGE_DIR}/Browser/start-tor-browser << 'RBM_TB_EOF'
 [% INCLUDE 'RelativeLink/start-tor-browser' -%]
 RBM_TB_EOF
+  [% IF c("var/namecoin") %]
+    pushd ${TB_STAGE_DIR}/Browser/
+    patch -p1 < $rootdir/namecoin.patch
+    popd
+  [% END %]
   chmod +x ${TB_STAGE_DIR}/Browser/start-tor-browser
   # Make sure we get the desired scrollbar behavior with Gtk3, see bug 27546.
   GTK_SETTINGS_DIR=${TB_STAGE_DIR}/Browser/.config/gtk-3.0
@@ -70,6 +75,17 @@ RBM_TB_EOF
 
 tar -C ${TB_STAGE_DIR} -xf [% c('input_files_by_name/firefox') %]/tor-browser.tar.gz
 tar -C "$TBDIR[% IF ! c("var/osx") %]/TorBrowser[% END %]" -xf [% c('input_files_by_name/tor') %]/tor.tar.gz
+[% IF c("var/namecoin") %]
+  # Extract Electrum-NMC
+  tar -C "$TBDIR/TorBrowser" -xf [% c('input_files_by_name/electrum-nmc') %]
+
+  # Extract ncprop279
+  mkdir "$TBDIR/TorBrowser/ncprop279"
+  tar -C "$TBDIR/TorBrowser/ncprop279" -xf [% c('input_files_by_name/ncprop279') %]
+
+  # Extract StemNS
+  tar -C "$TBDIR/TorBrowser" -xf [% c('input_files_by_name/stemns') %]
+[% END %]
 
 [% IF c("var/linux");
      SET bundledata_osname = 'linux';
@@ -105,7 +121,14 @@ tar -C "$TBDIR[% IF ! c("var/osx") %]/TorBrowser[% END %]" -xf [% c('input_files
 
 mkdir -p "$TBDIR/$DOCSPATH"
 cp -a Bundle-Data/Docs/* "$TBDIR/$DOCSPATH"
-tar -C Bundle-Data/[% bundledata_osname %] -c . | tar -C "$TBDIR[% IF ! c("var/osx") %]/TorBrowser[% END %]" -x
+[% IF c("var/namecoin") %]
+  EXCLUDE_ELECTRUM=""
+  EXCLUDE_NCPROP279=""
+[% ELSE %]
+  EXCLUDE_ELECTRUM="--exclude=*Electrum-NMC*"
+  EXCLUDE_NCPROP279="--exclude=*ncprop279*"
+[% END %]
+tar -C Bundle-Data/[% bundledata_osname %] "${EXCLUDE_ELECTRUM}" "${EXCLUDE_NCPROP279}" -c . | tar -C "$TBDIR[% IF ! c("var/osx") %]/TorBrowser[% END %]" -x
 
 cat Bundle-Data/PTConfigs/[% bundledata_osname %]/torrc-defaults-appendix >> "$TBDIR/$TORCONFIGPATH/torrc-defaults"
 [% IF ! c("var/snowflake") %]

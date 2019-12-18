@@ -1,0 +1,22 @@
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/hlandau/degoutils.git
+git_hash: 8fa2440b63444dad556d76366f1c3ee070c8a577
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/hlandau/degoutils
+  go_lib_install:
+    - github.com/hlandau/degoutils/net
+  go_lib_deps:
+    - goxnet
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: goxnet
+    project: goxnet

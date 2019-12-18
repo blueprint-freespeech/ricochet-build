@@ -1,0 +1,25 @@
+#!/bin/sh
+[% c("var/set_default_env") -%]
+distdir=/var/tmp/dist/StemNS
+mkdir /var/tmp/build
+mkdir /var/tmp/dist
+
+# Extract StemNS
+tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+
+cp -a /var/tmp/build/[% project %]-[% c('version') %] ${distdir}
+
+# Extract Stem
+tar -C /var/tmp/build -xf stem-[% c("var/stem-version") %].tar.gz
+
+cp -a /var/tmp/build/stem-[% c("var/stem-version") %]/stem ${distdir}/stem
+
+# Apply settings
+cp -a settings_port.py settings_services.py ${distdir}/
+
+cd /var/tmp/dist/
+
+[% c('tar', {
+        tar_src => '.',
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]

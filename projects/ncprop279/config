@@ -1,0 +1,32 @@
+#version: '0.0.2'
+# Using latest master branch because we need the stream isolation feature.
+# Once it's in a tagged release, we'll go back to using a version number here.
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/namecoin/ncprop279.git
+# Using latest master branch because we need the stream isolation feature.
+# Once it's in a tagged release, we'll go back to using a hash that corresponds
+# to a tag here.
+git_hash: '7bdd741d70258407f66aab52b24788f1acccc56b'
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+var:
+  container:
+    use_container: 1
+  go_lib_deps:
+    - godns
+    - goeasyconfig
+    - gomadns
+    - ncdns
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: godns
+    project: godns
+  - name: goeasyconfig
+    project: goeasyconfig
+  - name: gomadns
+    project: gomadns
+  - name: ncdns
+    project: ncdns

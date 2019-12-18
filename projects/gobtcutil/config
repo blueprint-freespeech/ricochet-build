@@ -1,0 +1,23 @@
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/btcsuite/btcutil.git
+git_hash: 9e5f4b9a998d263e3ce9c56664a7816001ac8000
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/btcsuite/btcutil
+  go_lib_deps:
+    - gobtcd2
+    - goxcryptoripemd160
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: gobtcd2
+    project: gobtcd2
+  - name: goxcryptoripemd160
+    project: goxcryptoripemd160

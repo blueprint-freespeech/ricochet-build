@@ -1,0 +1,40 @@
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/hlandau/dexlogconfig.git
+git_hash: 244f29bd260884993b176cd14ef2f7631f6f3c18
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/hlandau/dexlogconfig
+  go_lib_deps:
+    - gobuildinfo
+    - goeasyconfig
+    - gosystemd
+    - goxlog
+  build_go_lib_pre: |
+    [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+
+    tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/binutils') %]
+    export PATH="/var/tmp/dist/binutils/bin:$PATH"
+
+    export CGO_ENABLED=1
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: binutils
+    project: binutils
+  - name: goxlog
+    project: goxlog
+  - name: goeasyconfig
+    project: goeasyconfig
+  - name: gosystemd
+    project: gosystemd
+  - name: gobuildinfo
+    project: gobuildinfo

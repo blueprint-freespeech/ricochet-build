@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 3.0.4
+git_url: https://github.com/chardet/chardet.git
+git_hash: 9b8c5c2fb118d76c6beeab9affd01c332732a530
+# TODO: This Git repo doesn't use GPG sigs.  We should pester them about that.
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image

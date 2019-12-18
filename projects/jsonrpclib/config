@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 0.4.0
+git_url: https://github.com/tcalmant/jsonrpclib.git
+git_hash: fe9fcf2c99973507f7055d6c9e05e155957c2549
+# TODO: This Git repo doesn't use GPG sigs.  We should pester them about that.
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image
