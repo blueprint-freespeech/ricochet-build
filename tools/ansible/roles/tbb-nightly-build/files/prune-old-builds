@@ -1,0 +1,136 @@
+#!/usr/bin/perl -w
+
+# Copyright (c) 2019, The Tor Project, Inc.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#
+#     * Neither the names of the copyright owners nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+# 'prune-old-builds' is a script to prune old builds.
+#
+#
+# Usage:
+#  $ ./prune-old-builds [options] <directory>
+#
+#
+# Available options:
+#
+# --dry-run
+#         Don't delete anything, but say what would be deleted.
+#
+# --prefix <prefix>
+#         Prefix of the directories to be removed. Default is 'tbb-nightly.'.
+#
+# --separator <c>
+#         Separator character to separate the year, month, day in the directory
+#         names. Default is '.'.
+#
+# --days <n>
+#         Number of days that we should keep. Default is 6.
+#
+# --weeks <n>
+#         Number of monday builds that we should keep. Default is 3.
+#
+# --months <n>
+#         Number of 1st day of the month builds that we should keep.
+#         Default is 3.
+
+use strict;
+use Getopt::Long;
+use DateTime;
+use DateTime::Duration;
+use File::Path qw(remove_tree);
+
+my %options = (
+    days   => 6,
+    weeks  => 3,
+    months => 3,
+    prefix => 'tbb-nightly.',
+    separator => '.',
+);
+
+sub keep_builds {
+    my %res;
+
+    my $day = DateTime::Duration->new(days => 1);
+    my $week = DateTime::Duration->new(weeks => 1);
+    my $month = DateTime::Duration->new(months => 1);
+
+    my $n = $options{days};
+    my $dt = DateTime->now;
+    while ($n) {
+        $res{ $options{prefix} . $dt->ymd($options{separator}) } = 1;
+        $dt = $dt - $day;
+        $n--;
+    }
+
+    my $w = $options{weeks};
+    while ($dt->day_of_week != 1) {
+        $dt = $dt - $day;
+    }
+    while ($w) {
+        $res{ $options{prefix} . $dt->ymd($options{separator}) } = 1;
+        $dt = $dt - $week;
+        $w--;
+    }
+
+    my $m = $options{months};
+    $dt = DateTime->now;
+    while ($dt->day != 1) {
+        $dt = $dt - $day;
+    }
+    while ($m) {
+        $res{ $options{prefix} . $dt->ymd($options{separator}) } = 1;
+        $dt = $dt - $month;
+        $m--;
+    }
+
+    return \%res;
+}
+
+sub clean_directory {
+    my ($directory) = @_;
+    my $k = keep_builds;
+    chdir $directory || die "Error entering $directory";
+    foreach my $file (glob "$options{prefix}*") {
+        next unless $file =~ m/^$options{prefix}\d{4}$options{separator}\d{2}$options{separator}\d{2}$/;
+        next if $k->{$file};
+        if ($options{'dry-run'}) {
+            print "Would remove $file\n";
+        } else {
+            remove_tree($file);
+        }
+    }
+}
+
+my @opts = qw(days=i weeks=i months=i prefix=s dry-run!);
+Getopt::Long::GetOptions(\%options, @opts);
+die "Missing argument: directory to clean" unless @ARGV;
+foreach my $dir (@ARGV) {
+    clean_directory($dir);
+}

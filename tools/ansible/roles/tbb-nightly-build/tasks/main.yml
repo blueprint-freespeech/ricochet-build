@@ -39,6 +39,13 @@
       mode: 0644
       owner: "{{ nightly_build_user }}"
 
+- name: prune-old-builds
+  copy:
+      src: prune-old-builds
+      dest: "/home/{{ nightly_build_user }}/prune-old-builds"
+      mode: 0755
+      owner: "{{ nightly_build_user }}"
+
 - name: add start-tbb-nightly script
   template:
       src: start-tbb-nightly
