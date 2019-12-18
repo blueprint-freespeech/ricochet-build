@@ -1,0 +1,23 @@
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/namecoin/ncrpcclient.git
+git_hash: 858e1a5acd8b2da56462f50323633cdf2fe80977
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/namecoin/ncrpcclient
+  go_lib_deps:
+    - gobtcd
+    - goncbtcjson
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: gobtcd
+    project: gobtcd
+  - name: goncbtcjson
+    project: goncbtcjson

@@ -1,0 +1,13 @@
+# vim: filetype=yaml sw=2
+version: 2019.3.9
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+
+input_files:
+  - project: container-image
+  - URL: https://files.pythonhosted.org/packages/source/c/certifi/certifi-[% c("version") %].tar.gz
+    sha256sum: b26104d6835d1f5e49452a26eb2ff87fe7090b89dfcaee5ea2212697e1e1d7ae
+    # TODO: This package uses GPG sigs; we should switch from SHA256 hash to GPG verification.
+  - filename: roots_of_top_10_issuers.pem

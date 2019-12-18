@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 1.16.0
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image
+  - URL: https://files.pythonhosted.org/packages/source/d/dnspython/dnspython-[% c("version") %].zip
+    sha256sum: 36c5e8e38d4369a08b6780b7f27d790a292b2b08eea01607865bf0936c558e01
+    # TODO: This package uses GPG sigs; we should switch from SHA256 hash to GPG verification.

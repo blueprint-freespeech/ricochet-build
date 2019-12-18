@@ -1,0 +1,42 @@
+#!/bin/sh
+[% c("var/set_default_env") -%]
+mkdir -p /var/tmp/build/[% project %]
+tar -C /var/tmp/build/[% project %] -xf [% project %]-[% c("version") %].tar.gz
+
+cd /var/tmp/build/[% project %]/[% project %]-*
+
+mkdir packages
+cd packages
+
+[% FOREACH dep = ['aiohttp', 'aiohttp_socks', 'aiorpcx', 'async_timeout', 'attr', 'certifi', 'chardet', 'dns', 'ecdsa', 'idna', 'idna_ssl', 'jsonrpclib', 'multidict', 'pyaes', 'six', 'typing_extensions', 'yarl'] -%]
+  tar -C . -xf $rootdir/[% c('input_files_by_name/' _ dep) %]
+[% END -%]
+
+mkdir -p /var/tmp/dist/
+cd /var/tmp/dist/
+
+cp -a /var/tmp/build/[% project %]/[% project %]* ./Electrum-NMC
+
+cd ./Electrum-NMC
+# Remove GUI, since it's not used in Tor Browser.
+rm -r electrum_nmc/electrum/gui/
+# Remove plugins, since they're not used in Tor Browser.
+rm -r electrum_nmc/electrum/plugins/*/
+# Remove wallet functionality, since it's not used in Tor Browser.
+mv electrum_nmc/electrum/null_impl/null_wallet/*.py electrum_nmc/electrum/
+rm -r electrum_nmc/electrum/null_impl/
+# Remove some other files that aren't needed.  We have to leave
+# electrum-nmc.desktop there, because it's used in run_electrum_nmc's is_local
+# detection.
+rm -r .git*
+rm -r .travis*
+rm -r contrib/
+rm -r electrum_nmc/electrum/tests/
+rm -r pubkeys
+rm -r tox.ini
+cd ../
+
+[% c('tar', {
+        tar_src => '.',
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]

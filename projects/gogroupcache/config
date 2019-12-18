@@ -1,0 +1,18 @@
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/golang/groupcache.git
+git_hash: 611e8accdfc92c4187d399e95ce826046d4c8d73
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/golang/groupcache
+  go_lib_install:
+    - github.com/golang/groupcache/lru
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go

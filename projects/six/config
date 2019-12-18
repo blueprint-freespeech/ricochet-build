@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 1.12.0
+git_url: https://github.com/benjaminp/six.git
+git_hash: d927b9e27617abca8dbf4d66cc9265ebbde261d6
+# TODO: This Git repo doesn't use GPG sigs.  We should pester them about that.
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image

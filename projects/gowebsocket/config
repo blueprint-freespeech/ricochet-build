@@ -1,0 +1,16 @@
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/btcsuite/websocket.git
+git_hash: 31079b6807923eb23992c421b114992b95131b55
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/btcsuite/websocket
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go

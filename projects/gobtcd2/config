@@ -1,0 +1,32 @@
+# vim: filetype=yaml sw=2
+
+# You're probably wondering why gobtcd2 is a thing, rather than being part of
+# gobtcd.  gobtcd builds the btcjson and rpcclient subpackages of btcd.
+# gobtcd2 builds the btcec, chaincfg, chaincfg/chainhash, and wire subpackages
+# of btcd.  The former set depends on gobtcutil, which depends on the latter
+# set.  This is fine for the dependency management done by "go get", which
+# operates on a per-package level rather than a per-repo level.  Alas, since
+# rbm instead operates on a per-repo level (since each project is one repo),
+# splitting it up was necessary.
+
+version: '[% c("abbrev") %]'
+git_url: '[% pc("gobtcd", "git_url") %]'
+git_hash: '[% pc("gobtcd", "git_hash") %]'
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/btcsuite/btcd
+  go_lib_install:
+    - github.com/btcsuite/btcd/btcec
+    - github.com/btcsuite/btcd/chaincfg
+    - github.com/btcsuite/btcd/chaincfg/chainhash
+    - github.com/btcsuite/btcd/wire
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go

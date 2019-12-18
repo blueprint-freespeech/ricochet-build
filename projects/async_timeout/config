@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 3.0.1
+git_url: https://github.com/aio-libs/async-timeout.git
+git_hash: 992fd174a5282258228b74127914f4b8135bf30a
+# TODO: This Git repo doesn't use GPG sigs.  We should pester them about that.
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image

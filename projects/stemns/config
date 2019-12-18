@@ -1,0 +1,17 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+git_url: https://github.com/namecoin/StemNS.git
+git_hash: '32ed59be344d6bb949faa4a2bf70ae058bfe4d21'
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+var:
+  container:
+    use_container: 1
+  stem-version: 1.7.1
+
+input_files:
+  - project: container-image
+  - URL: 'https://files.pythonhosted.org/packages/source/s/stem/stem-[% c("var/stem-version") %].tar.gz'
+    sha256sum: c9eaf3116cb60c15995cbd3dec3a5cbc50e9bb6e062c4d6d42201e566f498ca2
+    # TODO: This sha256sum was grabbed from PyPI and hasn't been verified.  We should probably switch to using an OpenPGP sig.
+  - filename: settings_port.py
+  - filename: settings_services.py

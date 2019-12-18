@@ -1,0 +1,19 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+git_url: '[% pc("goxcrypto", "git_url") %]'
+git_hash: '[% pc("goxcrypto", "git_hash") %]'
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: golang.org/x/crypto
+  go_lib_install:
+    - golang.org/x/crypto/ed25519
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go

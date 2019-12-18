@@ -1,0 +1,32 @@
+version: '[% c("abbrev") %]'
+git_url:  https://github.com/namecoin/btcd.git
+git_hash: 6cfad711d4ee7367b3ab9dc572097438dbca56eb
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+build: '[% c("projects/go/var/build_go_lib") %]'
+
+var:
+  container:
+    use_container: 1
+  go_lib: github.com/namecoin/btcd
+  go_lib_install:
+    - github.com/namecoin/btcd/btcjson
+    - github.com/namecoin/btcd/rpcclient
+  go_lib_deps:
+    - gobtclog
+    - gobtcutil
+    - gosocks
+    - gowebsocket
+
+input_files:
+  - project: container-image
+  - name: go
+    project: go
+  - name: gobtclog
+    project: gobtclog
+  - name: gobtcutil
+    project: gobtcutil
+  - name: gosocks
+    project: gosocks
+  - name: gowebsocket
+    project: gowebsocket

@@ -1,0 +1,11 @@
+# vim: filetype=yaml sw=2
+version: 19.1.0
+git_url: https://github.com/python-attrs/attrs.git
+git_hash: 0356f0603eb5d8d4e7bae132ab80847fff4abcfc
+# TODO: This Git repo uses GPG sigs; we should switch from commit hash to GPG verification.
+filename: "[% project %]-[% c('version') %]-[% c('var/build_id') %].tar.gz"
+var:
+  container:
+    use_container: 1
+input_files:
+  - project: container-image

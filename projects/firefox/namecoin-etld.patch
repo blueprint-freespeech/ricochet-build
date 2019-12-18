@@ -1,0 +1,25 @@
+diff --git a/mobile/android/app/src/main/assets/publicsuffixlist b/mobile/android/app/src/main/assets/publicsuffixlist
+index 7f834b1..6874b40 100644
+--- a/mobile/android/app/src/main/assets/publicsuffixlist
++++ b/mobile/android/app/src/main/assets/publicsuffixlist
+@@ -3005,6 +3005,8 @@ edu.mn
+ gov.mn
+ london
+ fashion
++onion
++bit.onion
+ creditunion
+ vision
+ eurovision
+diff --git a/netwerk/dns/effective_tld_names.dat b/netwerk/dns/effective_tld_names.dat
+index 9dd962a..3402b20 100644
+--- a/netwerk/dns/effective_tld_names.dat
++++ b/netwerk/dns/effective_tld_names.dat
+@@ -5480,6 +5480,7 @@ pro.om
+ 
+ // onion : https://tools.ietf.org/html/rfc7686
+ onion
++bit.onion
+ 
+ // org : https://en.wikipedia.org/wiki/.org
+ org
