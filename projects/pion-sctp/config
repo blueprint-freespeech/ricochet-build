@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/pion/sctp
-git_hash: 321ee3612199dd7363fc63ec4e111db50c22faf1 # v1.6.9
+git_hash: ced24b2276cf7991920a301ce5f0735cabafaf3e # v1.7.3
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -11,20 +11,29 @@ var:
     use_container: 1
   go_lib: github.com/pion/sctp
   go_lib_deps:
+    - go-spew
+    - gocheck
     - goerrors
     - pion-logging
     - pion-transport
+    - pretty
     - testify
 
 input_files:
   - project: container-image
   - name: go
     project: go
+  - name: go-spew
+    project: go-spew
+  - name: gocheck
+    project: gocheck
   - name: goerrors
     project: goerrors
   - name: pion-logging
     project: pion-logging
   - name: pion-transport
     project: pion-transport
+  - name: pretty
+    project: pretty
   - name: testify
     project: testify

@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/pion/transport
-git_hash: 6903e3cd05a899ca7284753a4b6cb265655c28ff # v0.8.6
+git_hash: 95bf2d4e3f04b8d658048d1de02b30a27c8acc18 # v0.8.10
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -17,6 +17,7 @@ var:
     - github.com/pion/transport/packetio
     - github.com/pion/transport/test
     - github.com/pion/transport/vnet
+
 
 input_files:
   - project: container-image

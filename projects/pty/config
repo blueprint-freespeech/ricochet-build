@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
-git_url: https://github.com/pion/sdp
-git_hash: 9b824fbb8047370a0073ef4b9ebae356e7536502 # v2.3.1
+git_url: https://github.com/kr/pty
+git_hash: 282ce0e5322c82529687d609ee670fac7c7d917c # v1.1.1
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -9,13 +9,9 @@ build: '[% c("projects/go/var/build_go_lib") %]'
 var:
   container:
     use_container: 1
-  go_lib: github.com/pion/sdp
-  go_lib_deps:
-    - testify
+  go_lib: github.com/kr/pty
 
 input_files:
   - project: container-image
   - name: go
     project: go
-  - name: testify
-    project: testify
