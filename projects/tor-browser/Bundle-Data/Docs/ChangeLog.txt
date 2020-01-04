@@ -1,3 +1,26 @@
+ Tor Browser 9.5a4 -- January 7 2020
+ * All Platforms
+   * Update Firefox to 68.4.0esr
+   * Bump NoScript to 11.0.11
+   * Translations update
+   * Update OpenPGP keyring
+   * Bug 31134: Govern graphite again by security settings
+   * Bug 31855: Remove End of Year Fundraising Campaign from about:tor
+   * Bug 32053: Fix LLVM reproducibility issues
+   * Bug 32547: Add new default bridge at UMN
+   * Bug 32659: Remove IPv6 address of default bridge
+ * Windows + OS X + Linux
+   * Update Tor to 0.4.2.5
+   * Update Tor Launcher to 0.2.21
+     * Bug 32636: Clean up locales shipped with Tor Launcher
+     * Translations update
+   * Bug 32674: Point the about:tor "Get involved" link to the community portal
+ * Build System
+   * All Platforms
+     * Bump clang to 8.0.1
+   * Linux
+     * Bug 32676: Create a tarball with all Linux x86_64 language packs
+
 Tor Browser 9.0.2 -- December 3 2019
  * All Platforms
    * Update Firefox to 68.3.0esr
