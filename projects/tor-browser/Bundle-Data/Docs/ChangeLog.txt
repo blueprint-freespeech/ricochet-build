@@ -1,4 +1,4 @@
- Tor Browser 9.5a4 -- January 7 2020
+Tor Browser 9.5a4 -- January 8 2020
  * All Platforms
    * Update Firefox to 68.4.0esr
    * Bump NoScript to 11.0.11
@@ -17,7 +17,7 @@
    * Bug 32674: Point the about:tor "Get involved" link to the community portal
  * Build System
    * All Platforms
-     * Bump clang to 8.0.1
+     * Bug 32739: Bump clang to 8.0.1
    * Linux
      * Bug 32676: Create a tarball with all Linux x86_64 language packs
 
