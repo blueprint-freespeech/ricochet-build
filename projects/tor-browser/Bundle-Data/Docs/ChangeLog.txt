@@ -1,6 +1,6 @@
-Tor Browser 9.5a4 -- January 8 2020
+Tor Browser 9.5a4 -- January 9 2020
  * All Platforms
-   * Update Firefox to 68.4.0esr
+   * Update Firefox to 68.4.1esr
    * Bump NoScript to 11.0.11
    * Translations update
    * Update OpenPGP keyring
