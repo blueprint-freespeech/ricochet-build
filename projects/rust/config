@@ -1,9 +1,15 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
-version: 1.34.2
+version: '[% c("input_file_var/rust_version") %]'
+
+# those values can be changed from the input_files section of other
+# projects. See projects/lucetc/config and bug 32436.
+input_file_var:
+  rust_version: 1.34.2
+  prev_version: 1.33.0
 
 var:
-  prev_version: 1.33.0
+  prev_version: '[% c("input_file_var/prev_version") %]'
   container:
     use_container: 1
 

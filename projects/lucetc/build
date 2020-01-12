@@ -1,0 +1,48 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+[% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+distdir=/var/tmp/dist
+builddir=/var/tmp/build/[% project %]
+
+mkdir -p $distdir
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/binutils') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/rust') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/wasi-sysroot') %]
+export PATH="/var/tmp/dist/cmake/bin:/var/tmp/dist/clang/bin:/var/tmp/dist/binutils/bin:/var/tmp/dist/rust/bin:$PATH"
+export CC=$distdir/clang/bin/clang
+export CFLAGS="-L$distdir/clang/lib"
+export CXXFLAGS=$CFLAGS
+export CXX=$distdir/clang/bin/clang++
+export AR=$distdir/clang/bin/llvm-ar
+export RUSTFLAGS="-C linker=$CXX -C link-arg=$CXXFLAGS"
+export LUCET_PREFIX=$distdir/[% project %]
+export WASI_SYSROOT=$distdir/wasi-sysroot
+
+mkdir -p /var/tmp/build
+tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+
+# Now prepare the offline build
+# Move the directory for hardcoding the path in .cargo/config
+mv /var/tmp/build/[% project %]-[% c('version') %] $builddir
+tar -C $builddir -xjf lucetc-vendor.tar.bz2
+cd $builddir
+# .cargo exists already, let's just add to it
+cat >> .cargo/config << 'EOF'
+
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "/var/tmp/build/lucetc/vendor"
+EOF
+
+make -j[% c("buildconf/num_procs") %] build
+make install
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
