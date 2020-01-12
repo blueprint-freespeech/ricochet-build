@@ -1509,6 +1509,7 @@ Tor Browser 8.0 -- September 5 2018
    * Bug 26049: Reduce delay for showing update prompt to 1 hour
    * Bug 26365: Add potential AltSvc support
    * Bug 9145: Fix broken hardware acceleration on Windows and enable it
+   * Bug 22756: Show Canvas prompt only after user interaction
    * Bug 26045: Add new MAR signing keys
    * Bug 25215: Revert bug 18619 (we are not disabling IndexedDB any longer)
    * Bug 19910: Rip out optimistic data socks handshake variant (#3875)
@@ -1696,6 +1697,7 @@ Tor Browser 8.0a9 -- June 27 2018
    * Bug 17965: Isolate HPKP and HSTS to URL bar domain
    * Bug 26365: Add potential AltSvc support
    * Bug 9145: Fix broken hardware acceleration on Windows and enable it
+   * Bug 22756: Show Canvas prompt only after user interaction
    * Bug 26045: Add new MAR signing keys
    * Bug 22564: Hide Firefox Sync
    * Bug 25090: Disable updater telemetry
