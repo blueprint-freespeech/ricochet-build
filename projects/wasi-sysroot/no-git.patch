@@ -1,0 +1,28 @@
+From 55a106779cd012f9cf5d6f46a7a3523de9ba93c3 Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Sat, 7 Dec 2019 16:12:42 +0000
+Subject: [PATCH] No .git in our tarball
+
+
+diff --git a/Makefile b/Makefile
+index f09a901..dc114cb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -6,11 +6,11 @@ LLVM_PROJ_DIR?=$(ROOT_DIR)/src/llvm-project
+ PREFIX?=/opt/wasi-sdk
+ 
+ CLANG_VERSION=$(shell ./llvm_version.sh $(LLVM_PROJ_DIR))
+-VERSION:=$(shell ./version.sh)
+-DEBUG_PREFIX_MAP=-fdebug-prefix-map=$(ROOT_DIR)=wasisdk://v$(VERSION)
++#VERSION:=$(shell ./version.sh)
++DEBUG_PREFIX_MAP=-fdebug-prefix-map=$(ROOT_DIR)=wasisdk://v8.1g5225b05436ce
+ 
+ default: build
+-	@echo "Use -fdebug-prefix-map=$(ROOT_DIR)=wasisdk://v$(VERSION)"
++	@echo "Use -fdebug-prefix-map=$(ROOT_DIR)=wasisdk://v8.1g5225b05436ce"
+ 
+ clean:
+ 	rm -rf build $(PREFIX)
+-- 
+2.24.0
+
