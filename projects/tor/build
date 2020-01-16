@@ -4,6 +4,12 @@
 distdir=/var/tmp/dist/[% project %]
 mkdir -p /var/tmp/build
 
+[% IF c("var/android") %]
+  TORCONFIGDIR="$distdir/assets/common"
+  libsdir=$distdir/jniLibs/[% c("var/abi") %]
+  mkdir -p $libsdir $TORCONFIGDIR "$distdir/Tor"
+[% END %]
+
 [% IF c("var/linux") || c("var/windows") %]
   TORCONFIGDIR="$distdir/Data/Tor"
   mkdir -p $TORCONFIGDIR
@@ -22,12 +28,19 @@ mkdir -p /var/tmp/build
   mkdir -p $TORCONFIGDIR
 [% END %]
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/openssl') %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/libevent') %]
+[% IF c("var/windows") || c("var/android") %]
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/zlib') %]
+  zlibdir=/var/tmp/dist/zlib
+[% END %]
+[% IF c("var/android") %]
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/zstd') %]
+[% END %]
 [% IF !c("var/android") && c("var/nightly") %]
   tar -C /var/tmp/dist -xf [% c('input_files_by_name/rust') %]
   export PATH=/var/tmp/dist/rust/bin:$PATH
 [% END %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/openssl') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/libevent') %]
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 libeventdir=/var/tmp/dist/libevent
 openssldir=/var/tmp/dist/openssl/openssl
@@ -37,8 +50,6 @@ openssldir=/var/tmp/dist/openssl/openssl
     # We are compiling Tor with Rust enabled for nightlies.
     export TOR_RUST_TARGET=[% c("arch") %]-pc-windows-gnu
   [% END %]
-  tar -C /var/tmp/build -xf [% c('input_files_by_name/zlib') %]
-  zlibdir=/var/tmp/build/zlib
   # XXX: It's a bit unfortunate but we need the pthread dll here as libevent
   # gets compiled with pthread support once it is enabled in GCC, which we need
   # to do as otherwise the Rust compilaton breaks.
@@ -86,7 +97,7 @@ echo '"[% c("abbrev", { abbrev_length => 16 }) %]"' > micro-revision.i
 find -type f -print0 | xargs -0 [% c("var/touch") %]
 [% IF !c("var/android") && c("var/nightly") %]TOR_RUST_DEPENDENCIES=`pwd`/src/ext/rust/crates[% END %] ./configure --disable-asciidoc --with-libevent-dir="$libeventdir" --with-openssl-dir="$openssldir" \
     [% IF c("var/asan") %]--enable-fragile-hardening[% END %] \
-    [% IF c("var/windows") %]--with-zlib-dir="$zlibdir"[% END %] \
+    [% IF c("var/windows") || c("var/android") %]--with-zlib-dir="$zlibdir"[% END %] \
     [% IF c("var/osx") %]--enable-static-openssl[% END %] \
     [% IF !c("var/android") && c("var/nightly") %]--enable-rust[% END %] \
     --prefix="$distdir" [% c("var/configure_opt") %]
@@ -132,6 +143,10 @@ cd $distdir
   done
 [% END %]
 
+[% IF c("var/android") %]
+  install -s --strip-program=[% c("var/configure_host") %]-strip $distdir/bin/tor $libsdir/libTor.so
+[% END %]
+
 mkdir -p [% dest_dir _ '/' _ c('filename') %]
 [%
    IF c("var/expert_bundle");
@@ -143,6 +158,8 @@ mkdir -p [% dest_dir _ '/' _ c('filename') %]
    ELSE;
      IF c("var/osx");
        SET tarsrcdir = [ 'Contents' ];
+     ELSIF c("var/android");
+       SET tarsrcdir = [ 'assets', 'jniLibs' ];
      ELSE;
        SET tarsrcdir = [ 'Data', 'Tor', ];
      END;
