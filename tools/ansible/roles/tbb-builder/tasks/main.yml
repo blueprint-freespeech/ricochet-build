@@ -19,6 +19,7 @@
       - libdata-uuid-perl
       - libdata-dump-perl
       - libfile-copy-recursive-perl
+      - libfile-slurp-perl
       - libgtk2.0-dev
       - curl
       - runc

@@ -28,6 +28,7 @@ You also need a few perl modules installed:
 - File::Temp
 - Path::Tiny
 - File::Path
+- File::Slurp
 - File::Copy::Recursive
 - String::ShellQuote
 - Sort::Versions
@@ -42,7 +43,7 @@ If you are running Debian or Ubuntu, you can install them with:
                   libio-captureoutput-perl libjson-perl libpath-tiny-perl \
                   libstring-shellquote-perl libsort-versions-perl \
                   libdigest-sha-perl libdata-uuid-perl libdata-dump-perl \
-                  libfile-copy-recursive-perl git runc \
+                  libfile-copy-recursive-perl libfile-slurp-perl git runc \
                   mercurial
 
 The build system is based on rbm, which is included as a git submodule
