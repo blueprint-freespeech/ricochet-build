@@ -151,6 +151,9 @@ rm -f js/src/configure
 [% END %]
 
 [% IF c("var/linux") %]
+  [% IF c("var/linux-x86_64") %]
+    cp obj-*/testing/geckodriver/x86_64-unknown-linux-gnu/release/geckodriver $distdir
+  [% END %]
   cp -a obj-*/dist/firefox/* $distdir/Browser/
   # Remove firefox-bin (we don't use it, see ticket #10126)
   rm -f $distdir/Browser/firefox-bin
@@ -213,6 +216,8 @@ cp -p obj-*/dist/host/bin/mbsdiff $MARTOOLS/
 cd $distdir
 
 [% IF c("var/linux-x86_64") %]
+  # No need for an unstripped geckodriver
+  strip geckodriver
   mkdir -p $distdir/Debug/Browser/gtk2
   # Strip and generate debuginfo for the firefox binary that we keep, all *.so
   # files, the plugin-container, and the updater (see ticket #10126)
@@ -257,6 +262,10 @@ END;
 [% c('tar', {
         tar_src => [ 'Debug' ],
         tar_args => '-cJf ' _ dest_dir _ '/' _ c('filename') _ '/tor-browser-debug.tar.xz',
+    }) %]
+[% c('tar', {
+        tar_src => [ 'geckodriver' ],
+        tar_args => '-cJf ' _ dest_dir _ '/' _ c('filename') _ '/geckodriver-linux64.tar.xz',
     }) %]
 [% END %]
 
