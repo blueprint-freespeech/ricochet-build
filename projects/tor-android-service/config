@@ -22,4 +22,6 @@ input_files:
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
   - project: tor-onion-proxy-library
     name: topl
+  - project: tor
+    name: tor
   - filename: remove-native-build.patch
