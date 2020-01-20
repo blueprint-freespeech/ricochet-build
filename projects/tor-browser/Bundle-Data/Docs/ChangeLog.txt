@@ -21,6 +21,30 @@ Tor Browser 9.5a4 -- January 10 2020
    * Linux
      * Bug 32676: Create a tarball with all Linux x86_64 language packs
 
+Tor Browser 9.0.4 -- January 9 2020
+ * All Platforms
+   * Update Firefox to 68.4.1esr
+
+Tor Browser 9.0.3 -- January 7 2020
+ * All Platforms
+   * Update Firefox to 68.4.0esr
+   * Bump NoScript to 11.0.11
+   * Translations update
+   * Update OpenPGP keyring
+   * Bug 32606: Set up default bridge at Georgetown University
+   * Bug 32659: Remove IPv6 address of default bridge
+   * Bug 32547: Add new default bridge at UMN
+   * Bug 31855: Remove End of Year Fundraising Campaign from about:tor
+ * Windows + OS X + Linux
+   * Bump Tor to 0.4.2.5
+   * Update Tor Launcher to 0.2.20.5
+     * Bug 32636: Clean up locales shipped with Tor Launcher
+ * Android
+   * Bug 32405: Crash immediately after bootstrap on Android
+ * Build System
+   * Linux
+     * Bug 32676: Create a tarball with all Linux x86_64 language packs
+
 Tor Browser 9.0.2 -- December 3 2019
  * All Platforms
    * Update Firefox to 68.3.0esr
