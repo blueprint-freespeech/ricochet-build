@@ -33,6 +33,8 @@ ac_add_options --disable-webrtc
 # Let's make sure no preference is enabling either Adobe's or Google's CDM.
 ac_add_options --disable-eme
 ac_add_options --enable-proxy-bypass-protection
+# We want to bundle an own geckodriver, so we can use it for QA and other work
+ac_add_options --enable-geckodriver
 
 # Disable telemetry
 ac_add_options MOZ_TELEMETRY_REPORTING=
