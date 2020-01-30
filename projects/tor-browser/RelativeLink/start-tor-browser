@@ -346,6 +346,9 @@ setControlPortPasswd ${TOR_CONTROL_PASSWD:='"secret"'}
 export FONTCONFIG_PATH="${HOME}/TorBrowser/Data/fontconfig"
 export FONTCONFIG_FILE="fonts.conf"
 
+# Avoid overwriting user's dconf values. Fixes #27903.
+export GSETTINGS_BACKEND=memory
+
 cd "${HOME}"
 
 # We pass all additional command-line arguments we get to Firefox.
