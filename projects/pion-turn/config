@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/pion/turn
-git_hash: cab8f88798429b68b7cfb4db7c12fc6d205e91e2 # v1.3.5
+git_hash: bac88c5c692a9826c9703b2950dc52093ae1779a # v1.4.0
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -12,10 +12,12 @@ var:
   go_lib: github.com/pion/turn
   go_lib_deps:
     - go-spew
+    - gocheck
     - goerrors
     - pion-logging
     - pion-stun
     - pion-transport
+    - pretty
     - testify
 
 input_files:
@@ -24,6 +26,8 @@ input_files:
     project: go
   - name: go-spew
     project: go-spew
+  - name: gocheck
+    project: gocheck
   - name: goerrors
     project: goerrors
   - name: pion-logging
@@ -32,5 +36,7 @@ input_files:
     project: pion-stun
   - name: pion-transport
     project: pion-transport
+  - name: pretty
+    project: pretty
   - name: testify
     project: testify

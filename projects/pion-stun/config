@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/pion/stun
-git_hash: 8136435b6d3ad36535081253a032468235a43581 # v0.3.1
+git_hash: 51fef3542ed793994ff3da9c9b897fb23d744503 # v0.3.3
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'

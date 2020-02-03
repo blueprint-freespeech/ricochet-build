@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/pion/datachannel
-git_hash: 401bef0a9b89c2ca212c908999709ff1967c9617 # v1.4.5
+git_hash: 58b4a51d48764c2cb19e0c7ced43640a87857c69 # v1.4.13
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -11,7 +11,6 @@ var:
     use_container: 1
   go_lib: github.com/pion/datachannel
   go_lib_deps:
-    - go-spew
     - goerrors
     - pion-logging
     - pion-sctp
@@ -22,8 +21,6 @@ input_files:
   - project: container-image
   - name: go
     project: go
-  - name: go-spew
-    project: go-spew
   - name: goerrors
     project: goerrors
   - name: pion-logging
