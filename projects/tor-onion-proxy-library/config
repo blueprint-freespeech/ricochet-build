@@ -32,3 +32,4 @@ input_files:
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
   - filename: gradle.patch
   - filename: canceldormant.patch
+  - filename: 0001-Bug-30767-Custom-obfs4-bridge-does-not-work-on-Tor-B.patch
