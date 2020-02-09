@@ -170,6 +170,7 @@ cp defaults/preferences/000-tor-browser.js $rootdir
   mkdir -p chrome/en-US/locale/browser
   cp -p $rootdir/bookmarks.html chrome/en-US/locale/browser/
   [% c("var/touch") %] chrome/en-US/locale/browser/bookmarks.html
+  chmod 600 chrome/en-US/locale/browser/bookmarks.html
   zip -Xm omni.ja chrome/en-US/locale/browser/bookmarks.html
   rm -rf chrome
 [% END %]
