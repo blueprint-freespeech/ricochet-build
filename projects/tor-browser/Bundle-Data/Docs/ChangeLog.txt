@@ -1,3 +1,32 @@
+Tor Browser 9.5a5 -- February 12 2020
+ * All Platforms
+   * Update Firefox to 68.5.0esr
+   * Bump NoScript to 11.0.13
+   * Translations update
+   * Bug 30237: Control port module improvements for v3 client authentication
+   * Bug 32891: Add new default bridges
+   * Bug 31395: Remove inline script in aboutTor.xhtml
+   * Bug 27268: Preferences clean-up in Torbutton code
+   * Bug 32470: Backport fix for bug 1590538
+   * Bug 32414: Make Services.search.addEngine obey FPI
+   * Bug 32948: Make referer behavior consistent regardless of private browing mode status
+   * Bug 461204: Improve the random number generator for the boundaries in multipart/form-data
+ * Android
+   * Bug 30767: Custom obfs4 bridge does not work on Tor Browser for Android
+ * Windows + OS X + Linux
+   * Update Tor to 0.4.3.1-alpha
+   * Update Tor Launcher to 0.2.21.1
+     * Translations update
+     * Bug 30237: Add v3 onion services client authentication prompt
+     * Bug 32870: Update version of pion-webrtc
+   * Bug 32767: Remove Disconnect search
+   * Bug 30237: Add v3 onion services client authentication prompt
+ * Build System
+   * Linux
+     * Bug 32976: Build and bundle geckodriver
+   * OS X
+     * Bug 33200: Fix permissions on bookmarks.html
+
 Tor Browser 9.5a4 -- January 10 2020
  * All Platforms
    * Update Firefox to 68.4.1esr
