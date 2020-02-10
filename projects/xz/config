@@ -1,0 +1,23 @@
+# vim: filetype=yaml sw=2
+version: 5.2.4
+git_url: https://git.tukaani.org/xz.git
+git_hash: 'v[% c("version") %]'
+tag_gpg_id: 1
+gpg_keyring: xz.gpg
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+var:
+  container:
+    use_container: 1
+
+targets:
+  android:
+    var:
+      arch_deps:
+        - autopoint
+      configure_opt_project: --disable-shared --disable-xz --disable-xzdec --disable-lzmadec --disable-lzmainfo --disable-lzma-links --disable-scripts --disable-doc
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
