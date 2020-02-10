@@ -8,6 +8,8 @@ mkdir -p $PTDIR $DOCSDIR
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/uniuri') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/goptlib') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/pion-webrtc') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/kcp-go') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/smux') %]
 
 mkdir -p /var/tmp/build
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
@@ -18,6 +20,7 @@ ln -sf "$PWD" "$GOPATH/src/git.torproject.org/pluggable-transports/snowflake.git
 # Fix gopath location of versioned dependencies
 ln -sf "$GOPATH/src/github.com/pion/webrtc" "$GOPATH/src/github.com/pion/webrtc/v2"
 ln -sf "$GOPATH/src/github.com/pion/sdp" "$GOPATH/src/github.com/pion/sdp/v2"
+ln -sf "$GOPATH/src/github.com/xtaci/kcp-go" "$GOPATH/src/github.com/xtaci/kcp-go/v5"
 
 cd client
 go build -ldflags '-s'

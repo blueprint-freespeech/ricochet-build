@@ -11,6 +11,8 @@ var:
     use_container: 1
   go_lib: golang.org/x/net
   go_lib_install:
+    - golang.org/x/net/ipv4
+    - golang.org/x/net/ipv6
     - golang.org/x/net/proxy
     - golang.org/x/net/dns/dnsmessage
   go_lib_deps:
