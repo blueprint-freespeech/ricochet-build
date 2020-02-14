@@ -14,11 +14,11 @@ Tor Browser 9.5a5 -- February 12 2020
  * Android
    * Bug 30767: Custom obfs4 bridge does not work on Tor Browser for Android
  * Windows + OS X + Linux
-   * Update Tor to 0.4.3.1-alpha
+   * Update Tor to 0.4.3.2-alpha
    * Update Tor Launcher to 0.2.21.1
      * Translations update
      * Bug 30237: Add v3 onion services client authentication prompt
-     * Bug 32870: Update version of pion-webrtc
+   * Bug 32870: Update version of pion-webrtc
    * Bug 32767: Remove Disconnect search
    * Bug 30237: Add v3 onion services client authentication prompt
  * Build System
