@@ -20,8 +20,6 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 # Gradle patch provided so that when generating a gradle dependency list, the
 # build will pull down the correct android tool versions
 patch -p1 < $rootdir/gradle.patch
-patch -p1 < $rootdir/canceldormant.patch
-patch -p1 < $rootdir/0001-Bug-30767-Custom-obfs4-bridge-does-not-work-on-Tor-B.patch
 
 # Extract obfs4proxy from TorBrowser/Tor/PluggableTransports/obfs4proxy
 tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/obfs4') %]
