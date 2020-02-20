@@ -57,6 +57,7 @@ mv -f $rootdir/[% c('input_files_by_name/mozconfig') %] .mozconfig
 [% END -%]
 
 [% IF c("var/android") %]
+  export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   gradle_repo=/var/tmp/dist/gradle-dependencies
   export GRADLE_MAVEN_REPOSITORIES="file://$gradle_repo"
   export GRADLE_FLAGS="--no-daemon --offline"
