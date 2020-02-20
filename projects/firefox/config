@@ -177,6 +177,8 @@ input_files:
   - project: tba-translation
     name: tba-translation
     enable: '[% c("var/android") %]'
+  - filename: nightly-marsigner.der
+    enable: '[% c("var/nightly") %]'
   - filename: namecoin-torbutton.patch
     enable: '[% c("var/namecoin") %]'
     # TorButton patch authored by Arthur Edelstein, from https://github.com/arthuredelstein/torbutton/ branch 2.1.10-namecoin
