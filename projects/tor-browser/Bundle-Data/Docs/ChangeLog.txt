@@ -27,6 +27,23 @@ Tor Browser 9.5a5 -- February 12 2020
    * OS X
      * Bug 33200: Fix permissions on bookmarks.html
 
+Tor Browser 9.0.5 -- February 11 2020
+ * All Platforms
+   * Update Firefox to 68.5.0esr
+   * Bump NoScript to 11.0.13
+   * Bug 32053: Fix LLVM reproducibility issues
+   * Bug 32255: Missing ORIGIN header breaks CORS
+   * Bug 32891: Add new default bridges
+ * Windows + OS X + Linux
+   * Bump Tor to 0.4.2.6
+ * Windows
+   * Bug 32132: Re-enable jemalloc for Windows users
+ * Build System
+   * All Platforms
+     * Bug 32739: Bump clang to 8.0.1
+   * OS X
+     * Bug 33200: Fix permissions on bookmarks.html
+
 Tor Browser 9.5a4 -- January 10 2020
  * All Platforms
    * Update Firefox to 68.4.1esr
