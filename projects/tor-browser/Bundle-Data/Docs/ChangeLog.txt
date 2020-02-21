@@ -1,3 +1,17 @@
+Tor Browser 9.5a6 -- February 27 2020
+ * All Platforms
+   * Translations update
+ * Windows + OS X + Linux
+   * Update Tor Launcher to 0.2.21.2
+     * Translations update
+     * Bug 19757: Support on-disk storage of v3 client auth keys
+   * Bug 19757: Support on-disk storage of v3 client auth keys
+   * Bug 32493: Disable MOZ_SERVICES_HEALTHREPORT
+   * Bug 32658: Create a new MAR signing key
+ * Build System
+   * All Platforms
+     * Bug 33380: Add *.json to sha256sums-unsigned-build.txt
+
 Tor Browser 9.5a5 -- February 12 2020
  * All Platforms
    * Update Firefox to 68.5.0esr
