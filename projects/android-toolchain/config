@@ -15,6 +15,7 @@ var:
     export GRADLE_HOME=/var/tmp/dist/[% project %]/gradle
     export ANDROID_HOME=$ANDROID_SDK_HOME
     export GRADLE_USER_HOME=$GRADLE_HOME
+    export PATH=$PATH:$ANDROID_NDK_HOME/[% c("var/toolchain_arch") %]/bin
   google_repo: https://dl.google.com/android/repository
 input_files:
   - project: container-image
