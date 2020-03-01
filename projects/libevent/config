@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 2.1.8
+version: 2.1.11
 git_url: https://github.com/libevent/libevent.git
 git_hash: 'release-[% c("version") %]-stable'
 tag_gpg_id: 1
@@ -20,5 +20,3 @@ input_files:
   - project: container-image
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
-  - filename: autotools-openssl-mac.patch
-    enable: '[% c("var/osx") %]'
