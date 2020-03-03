@@ -5,6 +5,7 @@ Tor Browser 9.5a7 -- March 6 2020
    * Update Tor Launcher to 0.2.21.3
      * Translations update
      * Bug 33514: non-en-US Tor Browser 9.5a6 won't start up
+   * Bug 32645: Update URL bar onion indicators
 
 Tor Browser 9.5a6 -- February 27 2020
  * All Platforms
