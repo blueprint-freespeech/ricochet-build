@@ -1,0 +1,25 @@
+From a1625535fc5127ab8e94043280ef7a983bcfc161 Mon Sep 17 00:00:00 2001
+From: Nicolas Vigier <boklm@torproject.org>
+Date: Thu, 5 Mar 2020 20:39:05 +0100
+Subject: [PATCH] If SOURCE_DATE_EPOCH is defined, use it for copyright year
+
+Using the date from SOURCE_DATE_EPOCH instead of the current date makes
+it possible to reproduce a build that was built on a different year:
+https://reproducible-builds.org/specs/source-date-epoch/
+---
+ util/mkrc.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/util/mkrc.pl b/util/mkrc.pl
+index 6762bc4a56..e15c071af7 100755
+--- a/util/mkrc.pl
++++ b/util/mkrc.pl
+@@ -46,7 +46,7 @@ if ( $filename =~ /openssl/i ) {
+     $vft = "VFT_APP";
+ }
+ 
+-my $YEAR = [localtime()]->[5] + 1900;
++my $YEAR = [localtime($ENV{SOURCE_DATE_EPOCH} || time())]->[5] + 1900;
+ print <<___;
+ #include <winver.h>
+ 

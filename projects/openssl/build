@@ -15,6 +15,7 @@ export CC='gcc -m32'
 [% END -%]
 [% IF c("var/windows") -%]
   patch -p1 < $rootdir/escape-openssldir.patch
+  patch -p1 < $rootdir/use-SOURCE_DATE_EPOCH.patch
 [% END -%]
 export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
 ./Configure [% c('var/configure_opts') %]
