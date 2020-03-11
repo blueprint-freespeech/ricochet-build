@@ -1,3 +1,16 @@
+Tor Browser 9.5a8 -- March 13 2020
+ * All Platforms
+   * Update Firefox to 68.6.0esr
+   * Bump NoScript to 11.0.15
+     * Bug 33430: Disable downloadable fonts on Safest security level
+   * Translations update
+ * Windows + OS X + Linux
+   * Update Tor Launcher to 0.2.21.4
+     * Translations update
+ * Build System
+   * Windows
+     * Bug 33535: Patch openssl to use SOURCE_DATE_EPOCH for copyright year
+
 Tor Browser 9.5a7 -- March 6 2020
  * All Platforms
    * Translations update
