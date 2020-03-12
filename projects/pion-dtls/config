@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/pion/dtls
-git_hash: 8748e4ac8bf7960bbf399e6f23a9bf4dd30d4e92 # v2.0.0-rc.3
+git_hash: 147774b64b6a8ac9bd0af5a7efff69ee8e0fd4a8 # v2.0.0-rc.7
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -12,6 +12,8 @@ var:
   go_lib: github.com/pion/dtls
   go_lib_deps:
     - goxcrypto
+    - goxnet
+    - goxxerrors
     - pion-logging
     - pion-transport
 
@@ -21,6 +23,10 @@ input_files:
     project: go
   - name: goxcrypto
     project: goxcrypto
+  - name: goxnet
+    project: goxnet
+  - name: goxxerrors
+    project: goxxerrors
   - name: pion-logging
     project: pion-logging
   - name: pion-transport

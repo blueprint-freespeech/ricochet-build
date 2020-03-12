@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/pion/webrtc
-git_hash: 77c6e3b827e40175572fcf2894bb81ab1e8fd2c9 # v2.1.18
+git_hash: 1f448413f22d6c32d690db594748d8ad5d3812f5 # v2.2.3
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
@@ -11,7 +11,7 @@ var:
     use_container: 1
   go_lib: github.com/pion/webrtc
   go_lib_deps:
-    - goxcrypto
+    - agouti
     - pion-datachannel
     - pion-dtls
     - pion-ice
@@ -28,8 +28,8 @@ input_files:
   - project: container-image
   - name: go
     project: go
-  - name: goxcrypto
-    project: goxcrypto
+  - name: agouti
+    project: agouti
   - name: pion-datachannel
     project: pion-datachannel
   - name: pion-dtls

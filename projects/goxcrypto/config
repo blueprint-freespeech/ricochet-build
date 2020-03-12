@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://go.googlesource.com/crypto
-git_hash: ff983b9c42bc9fbf91556e191cc8efb585c16908
+git_hash: 69ecbb4d6d5dab05e49161c6e77ea40a030884e1
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'

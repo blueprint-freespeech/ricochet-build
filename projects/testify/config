@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/stretchr/testify
-git_hash: 221dbe5ed46703ee255b1da0dec05086f5035f62 # v1.4.0
+git_hash: 3ebf1ddaeb260c4b1ae502a01c7844fa8c1fa0e9 # v1.5.1
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 build: '[% c("projects/go/var/build_go_lib") %]'
