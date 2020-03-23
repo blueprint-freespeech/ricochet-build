@@ -1,3 +1,14 @@
+Tor Browser 9.5a9 -- March 25 2020
+ * All Platforms
+   * Translations update
+   * Bump NoScript to 11.0.21
+   * Bug 33613: Disable Javascript on Safest security level
+   * Bug 33342: Avoid disconnect search addon error after removal
+ * Windows + OS X + Linux
+   * Bump Tor to 0.4.3.3-alpha
+   * Update Tor Launcher to 0.2.21.5
+     * Translations update
+
 Tor Browser 9.5a8 -- March 13 2020
  * All Platforms
    * Update Firefox to 68.6.0esr
