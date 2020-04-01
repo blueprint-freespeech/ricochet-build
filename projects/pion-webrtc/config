@@ -16,7 +16,6 @@ var:
     - pion-dtls
     - pion-ice
     - pion-logging
-    - pion-quic
     - pion-rtcp
     - pion-rtp
     - pion-sctp
@@ -39,8 +38,6 @@ input_files:
     project: pion-ice
   - name: pion-logging
     project: pion-logging
-  - name: pion-quic
-    project: pion-quic
   - name: pion-rtcp
     project: pion-rtcp
   - name: pion-rtp
