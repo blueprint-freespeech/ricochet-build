@@ -1,3 +1,7 @@
+Tor Browser 9.5a10 -- April XX 2020
+ * All Platforms
+   * Bump Https-Everywhere to 2020.3.16
+
 Tor Browser 9.5a9 -- March 25 2020
  * All Platforms
    * Translations update
