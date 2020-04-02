@@ -1,6 +1,11 @@
 Tor Browser 9.5a10 -- April XX 2020
  * All Platforms
    * Bump Https-Everywhere to 2020.3.16
+ * Android
+   * Translations update
+ * Windows + OS X + Linux
+   * Bug 33771: Update some existing licenses and add Libevent license
+   * Bug 33723: Bump openssl version to 1.1.1f
 
 Tor Browser 9.5a9 -- March 25 2020
  * All Platforms
