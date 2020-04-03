@@ -4,6 +4,7 @@ Tor Browser 9.5a10 -- April XX 2020
  * Android
    * Translations update
  * Windows + OS X + Linux
+   * Bug 33693: Bump Snowflake to ea01bf41c3
    * Bug 33771: Update some existing licenses and add Libevent license
    * Bug 33723: Bump openssl version to 1.1.1f
 
