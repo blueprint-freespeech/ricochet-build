@@ -32,7 +32,5 @@ input_files:
     project: '[% c("var/compiler") %]'
   - URL: 'https://www.openssl.org/source/openssl-[% c("version") %].tar.gz'
     sha256sum: 186c6bfe6ecfba7a5b48c47f8a1673d0f3b0e5ba2e25602dd23b629975da3f35
-  - filename: escape-openssldir.patch
-    enable: '[% c("var/windows") %]'
   - filename: use-SOURCE_DATE_EPOCH.patch
     enable: '[% c("var/windows") %]'
