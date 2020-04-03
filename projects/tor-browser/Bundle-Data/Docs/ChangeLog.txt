@@ -1,13 +1,19 @@
 Tor Browser 9.5a10 -- April XX 2020
  * All Platforms
    * Bump Https-Everywhere to 2020.3.16
+   * Bug 33342: Avoid disconnect search addon error after removal
+   * Bug 33482: Update about:tor donate string
  * Android
    * Translations update
  * Windows + OS X + Linux
+   * Bug 19251: Show improved error pages for onion service errors
+   * Bug 21952: Implement Onion-Location
+   * Bug 28005: Implement .onion alias urlbar rewrites
    * Bug 33693: Bump Snowflake to ea01bf41c3
-   * Bug 33771: Update some existing licenses and add Libevent license
+   * Bug 33707: Swap out onion icon in circuit display with new one
    * Bug 33723: Bump openssl version to 1.1.1f
    * Bug 33761: Remove unnecessary snowflake dependencies
+   * Bug 33771: Update some existing licenses and add Libevent license
 
 Tor Browser 9.5a9 -- March 25 2020
  * All Platforms
