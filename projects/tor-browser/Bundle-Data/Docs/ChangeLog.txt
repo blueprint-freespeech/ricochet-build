@@ -1,6 +1,9 @@
-Tor Browser 9.5a10 -- April XX 2020
+Tor Browser 9.5a11 -- April 8 2020
  * All Platforms
+   * Update Firefox to 68.7.0esr
    * Bump Https-Everywhere to 2020.3.16
+   * Bump NoScript to 11.0.23
+   * Translations update
    * Bug 33342: Avoid disconnect search addon error after removal
    * Bug 33482: Update about:tor donate string
    * Bug 33630: Remove noisebridge01 default bridge
@@ -15,6 +18,9 @@ Tor Browser 9.5a10 -- April XX 2020
    * Bug 33723: Bump openssl version to 1.1.1f
    * Bug 33761: Remove unnecessary snowflake dependencies
    * Bug 33771: Update some existing licenses and add Libevent license
+ * Build System
+   * Windows
+     * Bug 33805: Remove escape-openssldir.patch
 
 Tor Browser 9.5a9 -- March 25 2020
  * All Platforms
