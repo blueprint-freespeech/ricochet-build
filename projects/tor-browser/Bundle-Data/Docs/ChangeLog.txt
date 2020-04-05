@@ -6,7 +6,6 @@ Tor Browser 9.5a11 -- April 8 2020
    * Translations update
    * Bug 33342: Avoid disconnect search addon error after removal
    * Bug 33482: Update about:tor donate string
-   * Bug 33630: Remove noisebridge01 default bridge
  * Android
    * Translations update
  * Windows + OS X + Linux
