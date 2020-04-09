@@ -9,3 +9,5 @@ testsuite_git_commit: ea0942f9da2bdbaf3f140f3baaed1bb56ee9af69
 nightly_build_wwwdir: "/home/{{ nightly_build_user }}/www"
 nightly_build_nginx_enable: true
 nightly_build_nginx_listen: 127.0.0.1:80
+nightly_build_nginx_auth_basic_enable: true
+nightly_build_nginx_auth_basic_content: tor-guest:ezmjAG/jVTat.
