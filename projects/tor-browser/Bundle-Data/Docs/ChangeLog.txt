@@ -21,7 +21,23 @@ Tor Browser 9.5a11 -- April 8 2020
    * Windows
      * Bug 33805: Remove escape-openssldir.patch
 
+Tor Browser 9.0.9 -- April 7 2020
+ * All Platforms
+   * Update Firefox to 68.7.0esr
+   * Bump NoScript to 11.0.23
+   * Bug 33630: Remove noisebridge01 default bridge
+ * Windows + OS X + Linux
+   * Bug 33771: Update some existing licenses and add Libevent license
+   * Bug 33723: Bump openssl version to 1.1.1f
+ * Windows
+   * Bug 33805: Remove escape-openssldir.patch
+
 Tor Browser 9.5a10 -- April 5 2020
+ * All Platforms
+   * Mozilla Bug 1620818 - Release nsDocShell::mContentViewer properly
+   * Mozilla Bug 1626728 - Normalize shutdown
+
+Tor Browser 9.0.8 -- April 5 2020
  * All Platforms
    * Mozilla Bug 1620818 - Release nsDocShell::mContentViewer properly
    * Mozilla Bug 1626728 - Normalize shutdown
