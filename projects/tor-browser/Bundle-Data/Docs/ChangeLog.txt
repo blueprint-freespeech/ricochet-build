@@ -21,6 +21,11 @@ Tor Browser 9.5a11 -- April 8 2020
    * Windows
      * Bug 33805: Remove escape-openssldir.patch
 
+Tor Browser 9.5a10 -- April 5 2020
+ * All Platforms
+   * Mozilla Bug 1620818 - Release nsDocShell::mContentViewer properly
+   * Mozilla Bug 1626728 - Normalize shutdown
+
 Tor Browser 9.5a9 -- March 25 2020
  * All Platforms
    * Translations update
