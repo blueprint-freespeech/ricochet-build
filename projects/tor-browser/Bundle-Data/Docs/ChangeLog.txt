@@ -1,3 +1,7 @@
+Tor Browser 9.5a12 -- April XX 2020
+ * All Platforms
+   Bug 33630: Remove noisebridge01 default bridge
+
 Tor Browser 9.5a11 -- April 8 2020
  * All Platforms
    * Update Firefox to 68.7.0esr
