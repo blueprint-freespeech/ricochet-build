@@ -45,6 +45,11 @@ targets:
     var:
       expert_bundle: 1
       flag_mwindows: ''
+  android:
+    var:
+      configure_opt_project: --libdir=$ANDROID_NDK_HOME/[% c("var/toolchain_arch") %]/lib --enable-android --enable-static-openssl --enable-static-libevent --enable-zstd --disable-tool-name-check --disable-system-torrc --disable-system-torrc
+      arch_deps:
+        - libtinfo5
 
 input_files:
   - project: container-image
@@ -54,9 +59,12 @@ input_files:
     project: libevent
   - name: zlib
     project: zlib
-    enable: '[% c("var/windows") %]'
+    enable: '[% c("var/windows") || c("var/android") %]'
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
   - name: rust
     project: rust
     enable: '[% !c("var/android") && c("var/nightly") %]'
+  - name: zstd
+    project: zstd
+    enable: '[% c("var/android") %]'
