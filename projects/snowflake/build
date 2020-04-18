@@ -15,10 +15,6 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 
 mkdir -p "$GOPATH/src/git.torproject.org/pluggable-transports"
 ln -sf "$PWD" "$GOPATH/src/git.torproject.org/pluggable-transports/snowflake.git"
-
-# Remove go.mod and go.sum files until we can build using Go module versioning
-rm -f go.mod go.sum
-
 # Fix gopath location of versioned dependencies
 ln -sf "$GOPATH/src/github.com/pion/webrtc" "$GOPATH/src/github.com/pion/webrtc/v2"
 ln -sf "$GOPATH/src/github.com/pion/sdp" "$GOPATH/src/github.com/pion/sdp/v2"
