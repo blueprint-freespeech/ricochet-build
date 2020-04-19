@@ -15,7 +15,7 @@ mkdir -p builddir/mingw-w64/mingw-w64-headers32
 cd builddir/mingw-w64/mingw-w64-headers32
 /var/tmp/build/[% project %]-[% c("version") %]/mingw-w64-headers/configure \
                 --prefix=$distdir/[% c("arch") %]-w64-mingw32 --host=[% c("arch") %]-w64-mingw32 \
-                --enable-sdk=all --enable-secure-api --enable-idl
+                --enable-sdk=all --enable-idl
 make install
 
 cd /var/tmp/build

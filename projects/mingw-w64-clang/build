@@ -72,7 +72,6 @@ cd mingw-w64-headers
 mkdir build && cd build
 ../configure --host=[% c("arch") %]-w64-mingw32 \
              --enable-sdk=all \
-             --enable-secure-api \
              --enable-idl \
              --with-default-msvcrt=ucrt \
              --with-default-win32-winnt=$default_win32_winnt \
