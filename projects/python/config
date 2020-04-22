@@ -10,6 +10,7 @@ var:
     - python-all
     - zlib1g-dev
     - libssl-dev
+    - libsqlite3-dev
 
   setup: |
     mkdir -p /var/tmp/dist
