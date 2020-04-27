@@ -1,4 +1,4 @@
-This directory contains some ansible script that we use to setup some
+This directory contains some ansible script that we use to set up some
 machines that we use for Tor Browser development.
 
 To deploy some changes you need the ansible package to be installed on
@@ -9,7 +9,8 @@ You can then use one of the following makefile targets:
 
 ansible-tbb-build:
   Deploy changes to the machine used by Tor Browser team members to do
-  some Tor Browser builds.
+  some Tor Browser builds. See below for more details about adding,
+  removing and updating users on this machine.
 
 fpcentral:
   Deploy fpcentral to forrestii.torproject.org. To be able to run this
@@ -21,4 +22,37 @@ boklm-tbb-nightly-build:
   anybody else wants to set up their own nightly builds, it is possible to
   do it by adding a new host to the inventory file and making copies of
   group_vars/boklm-tbb-nightly/ and boklm-tbb-nightly-build.yml.
+  For more details, see also this ticket:
+  https://trac.torproject.org/projects/tor/ticket/33948
+
+
+Adding, removing, updating users on the Tor Browser team build machine
+======================================================================
+
+The tbb-build.yml playbook is used to set up the Tor Browser team build
+machine (build-sunet-a.torproject.net).
+
+To add a new user:
+
+ - add the new username to roles/tbb-team/defaults/main.yml
+ - add the ssh key file to roles/tbb-team/files/${username}.pub
+ - run "make ansible-tbb-build"
+
+To update the ssh key for an existing user:
+ - update roles/tbb-team/files/${username}.pub
+ - run "make ansible-tbb-build"
+
+To remove a user and their home directory from the build machine:
+ - in roles/tbb-team/defaults/main.yml, move the user from
+   tbb_team_members to tbb_team_alums
+ - remove roles/tbb-team/files/${username}.pub
+ - run "make ansible-tbb-build"
+
+To install additional packages you can add them to
+roles/tbb-builder/tasks/main.yml if they are necessary to build
+Tor Browser, or to roles/useful-packages/tasks/main.yml otherwise.
+
+If you don't want to apply the changes directly, but first want to check
+what would be the changes done by ansible, you can edit the ansible-playbook
+command in the Makefile to add the --check argument.
 
