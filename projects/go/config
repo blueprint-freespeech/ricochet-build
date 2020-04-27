@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 1.12.13
+version: 1.13.10
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 
 var:
@@ -17,6 +17,9 @@ var:
       export GOOS=[% c("var/GOOS") %]
       export GOARCH=[% c("var/GOARCH") %]
     [% END -%]
+    # Run in GOPATH mode: https://golang.org/cmd/go/#hdr-Module_support. (see:
+    # #32027)
+    export GO111MODULE=off
     export GOPATH=/var/tmp/dist/gopath
     export PATH=/var/tmp/dist/go/bin:/var/tmp/dist/gopath/bin:"$PATH"
     [% IF c("var/linux") -%]
@@ -50,6 +53,9 @@ var:
     do
       patch -p1 < $p
     done
+    # Run in GOPATH mode: https://golang.org/cmd/go/#hdr-Module_support. (see:
+    # #32027)
+    export GO111MODULE=off
     [% IF c("var/build_go_lib_pre"); GET c("var/build_go_lib_pre"); END; -%]
     [% IF c("var/go_lib_install") -%]
       [% FOREACH inst IN c("var/go_lib_install") %]
@@ -112,11 +118,9 @@ input_files:
     enable: '[% ! c("var/linux") %]'
   - URL: 'https://golang.org/dl/go[% c("version") %].src.tar.gz'
     name: go
-    sha256sum: 5383d3b8db4baa48284ffcb14606d9cad6f03e9db843fa6d835b94d63cccf5a7
+    sha256sum: eb9ccc8bf59ed068e7eff73e154e4f5ee7eec0a47a610fb864e3332a2fdc8b8c
   - URL: 'https://golang.org/dl/go[% c("var/go14_version") %].src.tar.gz'
     name: go14
     sha256sum: 9947fc705b0b841b5938c48b22dc33e9647ec0752bae66e50278df4f23f64959
   - filename: 0001-Use-fixed-go-build-tmp-directory.patch
-    enable: '[% c("var/android") %]'
-  - filename: 90a3ce02dc25adcf1598faf11a66b151ada3f637.patch
     enable: '[% c("var/android") %]'
