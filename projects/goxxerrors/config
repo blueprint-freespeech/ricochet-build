@@ -1,6 +1,6 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
-git_url: https://golang.org/x/xerrors
+git_url: https://go.googlesource.com/xerrors
 git_hash: 9bdfabe68543c54f90421aeb9a60ef8061b5b544
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
