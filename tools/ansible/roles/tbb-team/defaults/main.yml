@@ -1,11 +1,11 @@
 ---
 tbb_team_members:
     - boklm
-    - brade
     - cohosh
     - gk
-    - mcs
     - mikeperry
     - pospeselr
     - sukhbir
-tbb_team_alums: []
+tbb_team_alums:
+    - brade
+    - mcs
