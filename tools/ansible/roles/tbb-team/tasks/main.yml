@@ -13,3 +13,10 @@
       state: present
       key: "{{ lookup('file', item + '.pub') }}"
   with_items: "{{ tbb_team_members }}"
+
+- name: Remove tbb-team alums users
+  user:
+      name: "{{ item }}"
+      state: absent
+      remove: yes
+  with_items: "{{ tbb_team_alums }}"
