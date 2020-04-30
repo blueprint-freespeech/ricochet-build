@@ -26,12 +26,17 @@ patch -p1 < $rootdir/0001-Bug-33931-Filter-bridges-in-stream-by-type.patch
 # Extract obfs4proxy from TorBrowser/Tor/PluggableTransports/obfs4proxy
 tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/obfs4') %]
 
-# Overwrite the obfs4proxy binary provided by Pluto
+# Extract snowflake from TorBrowser/Tor/PluggableTransports/snowflake
+tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/snowflake') %]
+
+# Overwrite the obfs4proxy binary provided by Pluto and add Snowflake
 for d in external/pluto/bin/*; do
   cp obfs4proxy $d/
+  cp snowflake-client $d/
 done
 
 rm obfs4proxy
+rm snowflake-client
 
 # Build Android Libraries and Apps
 $GRADLE_HOME/gradle-4.10.2/bin/gradle --offline --no-daemon -P androidplugin=3.1.0 -Dmaven.repo.local=$gradle_repo assembleRelease -x lint

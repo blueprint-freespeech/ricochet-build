@@ -5,6 +5,13 @@ distdir=/var/tmp/dist/[% project %]
 [% c("var/set_PTDIR_DOCSDIR") -%]
 mkdir -p $PTDIR $DOCSDIR
 
+[% IF c("var/android") -%]
+  [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+  # We need to explicitly set CGO_ENABLED with Go 1.13.x as the Android build
+  # breaks otherwise.
+  export CGO_ENABLED=1
+[% END -%]
+
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/uniuri') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/goptlib') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/pion-webrtc') %]

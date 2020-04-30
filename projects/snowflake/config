@@ -22,3 +22,6 @@ input_files:
     project: kcp-go
   - name: smux
     project: smux
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+    enable: '[% c("var/android") %]'

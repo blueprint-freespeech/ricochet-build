@@ -70,7 +70,7 @@ input_files:
     enable: '[% ! c("var/android") %]'
   - project: snowflake
     name: snowflake
-    enable: '[% c("var/snowflake") %]'
+    enable: '[% c("var/snowflake") && ! c("var/android") %]'
   - filename: Bundle-Data
     enable: '[% ! c("var/android") %]'
   - URL: https://addons.cdn.mozilla.net/user-media/addons/722/noscript_security_suite-11.0.26-an+fx.xpi

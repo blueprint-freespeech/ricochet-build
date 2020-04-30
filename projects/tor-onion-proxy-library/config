@@ -21,6 +21,8 @@ input_files:
     project: '[% c("var/compiler") %]'
   - project: obfs4
     name: obfs4
+  - project: snowflake
+    name: snowflake
   - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
     name: gradle-dependencies
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
