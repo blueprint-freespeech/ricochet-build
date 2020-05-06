@@ -30,6 +30,13 @@ Tor Browser 9.5a12 -- May 6 2020
    * Windows
      * Bug 33802: --enable-secure-api is not supported anymore in mingw-w64
 
+Tor Browser 9.0.10 -- May 5 2020
+ * All Platforms
+   * Update Firefox to 68.8.0esr
+   * Bump NoScript to 11.0.25
+ * Windows + OS X + Linux
+   * Bug 34017: Bump openssl version to 1.1.1g
+
 Tor Browser 9.5a11 -- April 8 2020
  * All Platforms
    * Update Firefox to 68.7.0esr
@@ -38,8 +45,6 @@ Tor Browser 9.5a11 -- April 8 2020
    * Translations update
    * Bug 33342: Avoid disconnect search addon error after removal
    * Bug 33482: Update about:tor donate string
- * Android
-   * Translations update
  * Windows + OS X + Linux
    * Bug 19251: Show improved error pages for onion service errors
    * Bug 21952: Implement Onion-Location
@@ -49,6 +54,8 @@ Tor Browser 9.5a11 -- April 8 2020
    * Bug 33723: Bump openssl version to 1.1.1f
    * Bug 33761: Remove unnecessary snowflake dependencies
    * Bug 33771: Update some existing licenses and add Libevent license
+ * Android
+   * Translations update
  * Build System
    * Windows
      * Bug 33805: Remove escape-openssldir.patch
@@ -148,8 +155,6 @@ Tor Browser 9.5a5 -- February 12 2020
    * Bug 32414: Make Services.search.addEngine obey FPI
    * Bug 32948: Make referer behavior consistent regardless of private browing mode status
    * Bug 461204: Improve the random number generator for the boundaries in multipart/form-data
- * Android
-   * Bug 30767: Custom obfs4 bridge does not work on Tor Browser for Android
  * Windows + OS X + Linux
    * Update Tor to 0.4.3.2-alpha
    * Update Tor Launcher to 0.2.21.1
@@ -158,6 +163,8 @@ Tor Browser 9.5a5 -- February 12 2020
    * Bug 32870: Update version of pion-webrtc
    * Bug 32767: Remove Disconnect search
    * Bug 30237: Add v3 onion services client authentication prompt
+ * Android
+   * Bug 30767: Custom obfs4 bridge does not work on Tor Browser for Android
  * Build System
    * Linux
      * Bug 32976: Build and bundle geckodriver
