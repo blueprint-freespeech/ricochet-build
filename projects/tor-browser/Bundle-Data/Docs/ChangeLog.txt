@@ -1,14 +1,14 @@
-Tor Browser 9.5a12 -- May 6 2020
+Tor Browser 9.5a12 -- May 7 2020
  * All Platforms
    * Update Firefox to 68.8.0esr
    * Bump NoScript to 11.0.25
    * Bump Tor to 0.4.3.4-rc
    * Translations update
    * Bug 31499: Update libevent to 2.1.11-stable
+     * Bug 33877: Disable Samples and Regression tests For Libevent Build
    * Bug 33630: Remove noisebridge01 default bridge
    * Bug 33726: Fix patch for #23247: Communicating security expectations for .onion
    * Bug 34017: Bump openssl version to 1.1.1g
-     * Bug 33877: Disable Samples and Regression tests For Libevent Build
    * Bug 33698: Update "About Tor Browser" links in Tor Browser
  * Windows + OS X + Linux
    * Update Tor Launcher to 0.2.21.6
@@ -16,6 +16,7 @@ Tor Browser 9.5a12 -- May 6 2020
    * Bug 33573: Update pion-webrtc version to 2.2.3
    * Bug 32418: Allow updates to be disabled via an enterprise policy.
    * Bug 34032: Use Securedrop's Official https-everywhere ruleset
+   * Bug 29614: Use SHA-256 algorithm for Windows timestamping
  * Android
    * Bug 33359: Use latest Version of TOPL and Remove Patches
    * Bug 33931: obfs4 bridges are used instead of meek if meek is selected in Tor Browser for Android alpha
