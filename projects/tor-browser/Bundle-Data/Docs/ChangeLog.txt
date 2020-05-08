@@ -13,7 +13,7 @@ Tor Browser 9.5a12 -- May 7 2020
  * Windows + OS X + Linux
    * Update Tor Launcher to 0.2.21.6
      * Translations update
-   * Bug 33573: Update pion-webrtc version to 2.2.3
+   * Bug 33576: Update pion-webrtc version to 2.2.3
    * Bug 32418: Allow updates to be disabled via an enterprise policy.
    * Bug 34032: Use Securedrop's Official https-everywhere ruleset
  * Windows
