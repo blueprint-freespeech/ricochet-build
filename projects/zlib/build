@@ -11,8 +11,13 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 [% END -%]
 
 [% IF c("var/android") -%]
-  export CHOST=[% c("var/configure_host") %]
-  export CC="clang"
+  [% IF c("var/android-fenix") -%]
+    export CHOST=[% c("var/cross_prefix") %]
+    export CC=[% c("var/CC") %]
+  [% ELSE -%]
+    export CHOST=[% c("var/configure_host") %]
+    export CC="clang"
+  [% END -%]
   ./configure --prefix=$distdir
   make -j[% c("buildconf/num_procs") %]
   make -j[% c("buildconf/num_procs") %] install
