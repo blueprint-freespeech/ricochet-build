@@ -17,7 +17,7 @@ export CC='gcc -m32'
   patch -p1 < $rootdir/use-SOURCE_DATE_EPOCH.patch
 [% END -%]
 # OpenSSL expects the NDK home to include the pre-assembled architecture directory
-[% IF c("var/android") -%]
+[% IF c("var/android") && !c("var/android-fenix") -%]
   export ANDROID_NDK_HOME=$ANDROID_NDK_HOME/[% c("var/toolchain_arch") %]
 [% END -%]
 export SOURCE_DATE_EPOCH='[% c("timestamp") %]'

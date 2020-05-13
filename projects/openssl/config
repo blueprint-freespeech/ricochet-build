@@ -24,7 +24,7 @@ targets:
       configure_opts: --cross-compile-prefix=x86_64-apple-darwin11- darwin64-x86_64-cc enable-ec_nistp_64_gcc_128
   android:
     var:
-      configure_opts: CC=clang android-[% c("var/toolchain_arch") %] -no-shared
+      configure_opts: '[% IF c("var/android-fenix") %]CC=[% c("var/CC") %] android-[% c("var/toolchain_arch") %] -no-shared -D__ANDROID_API__=[% c("var/android_min_api") %][% ELSE %]CC=clang android-[% c("var/toolchain_arch") %] -no-shared[% END %]'
 
 input_files:
   - project: container-image
