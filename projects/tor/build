@@ -148,7 +148,11 @@ cd $distdir
 [% END %]
 
 [% IF c("var/android") %]
-  install -s --strip-program=[% c("var/configure_host") %]-strip $distdir/bin/tor $libsdir/libTor.so
+  [% IF c("var/android-fenix") %]
+    install -s --strip-program=[% c("var/cross_prefix") %]-strip $distdir/bin/tor $libsdir/libTor.so
+  [% ELSE %]
+    install -s --strip-program=[% c("var/configure_host") %]-strip $distdir/bin/tor $libsdir/libTor.so
+  [% END %]
 [% END %]
 
 mkdir -p [% dest_dir _ '/' _ c('filename') %]

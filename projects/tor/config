@@ -47,7 +47,7 @@ targets:
       flag_mwindows: ''
   android:
     var:
-      configure_opt_project: --libdir=$ANDROID_NDK_HOME/[% c("var/toolchain_arch") %]/lib --enable-android --enable-static-openssl --enable-static-libevent --enable-zstd --disable-tool-name-check --disable-system-torrc --disable-system-torrc
+      configure_opt_project: '[% IF !c("var/android-fenix") %]--libdir=$ANDROID_NDK_HOME/[% c("var/toolchain_arch") %]/lib [% END %]--enable-android --enable-static-openssl --enable-static-libevent --enable-zstd --disable-tool-name-check --disable-system-torrc --disable-system-torrc'
       arch_deps:
         - libtinfo5
 
