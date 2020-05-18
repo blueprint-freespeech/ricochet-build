@@ -39,17 +39,17 @@ pre: |
 targets:
   wheezy-amd64:
     var:
-      minimal_apt_version: '0.9.7.9+deb7u8'
+      minimal_apt_version: '0.9.7.9+deb7u9'
       # https://deb.freexian.com/extended-lts/updates/ela-76-1-apt/
       apt_packages_baseurl: http://deb.freexian.com/extended-lts/pool/main/a/apt
-      apt_package_filename: apt_0.9.7.9+deb7u8_amd64.deb
-      apt_package_sha256sum: 83dcdb3f9c11df28b30b85bbb9dec341effbf36ee881a04dece3390082080761
-      apt_utils_package_filename: apt-utils_0.9.7.9+deb7u8_amd64.deb
-      apt_utils_package_sha256sum: 91a4d0ec92a32f13e3acb37f71546d48c51a0df25f3b9eb6a96b73dfc93a11ed
-      libapt_inst_package_filename: libapt-inst1.5_0.9.7.9+deb7u8_amd64.deb
-      libapt_inst_package_sha256sum: 181c9c21e1b33496b251fc76ba8ed04acbb8e23006909d27795bbc287eddd027
-      libapt_pkg_package_filename: libapt-pkg4.12_0.9.7.9+deb7u8_amd64.deb
-      libapt_pkg_package_sha256sum: b360dfb5a65ac2f7b81a2551d8a520ba2265785537d6d669869a159888b81999
+      apt_package_filename: apt_0.9.7.9+deb7u9_amd64.deb
+      apt_package_sha256sum: b8a218da2ae21979323dd02551d983938d94308ac56930a2d238e822f062dc61
+      apt_utils_package_filename: apt-utils_0.9.7.9+deb7u9_amd64.deb
+      apt_utils_package_sha256sum: d635a166aae03b24cdabe277bb46d584156836637c0b9bef2220fb0bc0928e40
+      libapt_inst_package_filename: libapt-inst1.5_0.9.7.9+deb7u9_amd64.deb
+      libapt_inst_package_sha256sum: 332083172e00d39e55dec4c7078c3522989e45e12b0a1306889e90b8e2c0a0db
+      libapt_pkg_package_filename: libapt-pkg4.12_0.9.7.9+deb7u9_amd64.deb
+      libapt_pkg_package_sha256sum: c3ae83c4ea691074250bf6fb175e71042c4bb7418bf19779ceda0a53eea0a257
 
       container:
         suite: wheezy
