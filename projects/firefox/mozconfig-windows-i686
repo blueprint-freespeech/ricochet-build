@@ -35,6 +35,7 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-maintenance-service
 ac_add_options --enable-proxy-bypass-protection
 ac_add_options --disable-webrtc # Bug 1393901
+ac_add_options --disable-parental-controls
 ac_add_options --disable-tests
 
 # Disable telemetry

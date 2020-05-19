@@ -41,6 +41,7 @@ ac_add_options --disable-debug
 ac_add_options --disable-rust-debug
 ac_add_options --disable-crashreporter
 ac_add_options --disable-webrtc
+ac_add_options --disable-parental-controls
 
 ac_add_options --without-google-play-services
 
