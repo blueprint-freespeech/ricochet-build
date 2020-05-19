@@ -1,6 +1,5 @@
 Tor Browser 9.5a13 -- May 20 2020
  * All Platforms
-   * Update Firefox to 68.8.1esr
    * Bump NoScript to 11.0.26
    * Bump Tor to 0.4.3.5
    * Translations update
