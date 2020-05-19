@@ -1,3 +1,22 @@
+Tor Browser 9.5a13 -- May 20 2020
+ * All Platforms
+   * Update Firefox to 68.8.1esr
+   * Bump NoScript to 11.0.26
+   * Bump Tor to 0.4.3.5
+   * Translations update
+   * Bug 34157: Backport fix for Mozilla Bug 1511941
+ * Windows + OS X + Linux
+   * Update Tor Launcher to 0.2.21.7
+     * Translations update
+   * Bug 34196: Update site info URL with the onion name
+   * Bug 34043: Update snowflake to persist sessions across proxies
+ * Windows
+   * Bug 33113: Bump NSIS version to 3.05
+ * Build System
+   * All Platforms
+     * Bump Go to 1.13.11
+     * Bug 34242: Fix creation of Linux containers
+
 Tor Browser 9.5a12 -- May 7 2020
  * All Platforms
    * Update Firefox to 68.8.0esr
