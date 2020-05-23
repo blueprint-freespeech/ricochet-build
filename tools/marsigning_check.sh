@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2019, The Tor Project, Inc.
+# Copyright (c) 2020, The Tor Project, Inc.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -33,9 +33,20 @@
 # Usage:
 # 1) Let SIGNMAR point to your signmar binary
 # 2) Let LD_LIBRARY_PATH point to the mar-tools directory
-# 3) Change into the directory containing the MAR files and the
+# 3) Let NSS_DB_DIR point to the directory containing the database with the
+#    signing certificate to check against.
+#
+#    To create the database to use for signature checking import the
+#    release*.der certificate of your choice found in
+#    toolkit/mozapps/update/updater by issuing the following commands:
+#
+#    mkdir nssdb
+#    certutil -d nssdb -N --empty-password
+#    certutil -A -n "marsigner" -t,, -d nssdb -i /path/to/.der
+#
+# 4) Change into the directory containing the MAR files and the
 #    sha256sums-unsigned-build.txt/sha256sums-unsigned-build.incrementals.txt.
-# 4) Run /path/to/marsigning_check.sh
+# 5) Run /path/to/marsigning_check.sh
 
 if [ -z "$SIGNMAR" ]
 then
@@ -49,60 +60,104 @@ then
   exit 1
 fi
 
-UNSIGNED_MARS=0
-BADSIGNED_MARS=0
+if [ -z "$NSS_DB_DIR" ]
+then
+  echo "The path to your nssdb directory is missing!"
+  exit 1
+fi
+
+unsigned_mars=0
+badsigned_mars=0
+not_reproduced_mars=0
+# XXX: Stripping the signature of signed macOS MAR files is currently not
+# expected to be reproducible, see: #20254.
+not_reproduced_mars_expected=0
 
 mkdir tmp
 
-for f in `ls *.mar`; do
+for f in *.mar; do
   case $f in
-    *.incremental.mar) SHA256_TXT=`grep "$f" \
-      sha256sums-unsigned-build.incrementals.txt`;;
-    *) SHA256_TXT=`grep "$f" sha256sums-unsigned-build.txt`;;
+    *.incremental.mar) sha256_txt=$(grep "$f" \
+      sha256sums-unsigned-build.incrementals.txt);;
+    *) sha256_txt=$(grep "$f" sha256sums-unsigned-build.txt);;
   esac
 
-  # Test 1: Is the .mar file still unsigned? I.e. does its SHA-256 sum still
-  # match the one we had before we signed it? If so, notify us later and exit.
-  if [ "$SHA256_TXT" = "`sha256sum $f`" ]
+  # Test 1: Is the MAR file correctly signed?
+  echo "Verifying the MAR signature of $f..."
+  if ! $SIGNMAR -d "$NSS_DB_DIR" -n marsigner -v "$f"
   then
-    echo "$f has still the SHA-256 sum of the unsigned MAR file!"
-    UNSIGNED_MARS=`expr $UNSIGNED_MARS + 1`
+    # Something went wrong. Let's figure out what.
+    if [ "$sha256_txt" = "$(sha256sum "$f")" ]
+    then
+      echo "$f has still the SHA-256 sum of the unsigned MAR file!"
+      unsigned_mars=$((unsigned_mars + 1))
+    else
+      echo "$f is either signed with the wrong key or the signature is" \
+           "corrupted!"
+      badsigned_mars=$((badsigned_mars +1))
+    fi
   fi
 
-  # Test 2: Do we get the old SHA-256 sum after stripping the MAR signature? If
-  # not, notify us later and exit.
-  if [ "$UNSIGNED_MARS" = "0" ]
+  # Test 2: Do we get the old SHA-256 sum after stripping the MAR signature? We
+  # want to have a test for that to be sure we've the signed MAR files in front
+  # of us which we actually want to ship to our users.
+  if [ "$unsigned_mars" = "0" ] && [ "$badsigned_mars" = "0" ]
   then
-    # At least we seem to have attempted to sign the MAR file. Let's see if we
-    # succeeded by stripping the signature. This behavior is reproducible.
-    # Thus, we know if we don't get the same SHA-256 sum we did not sign the
-    # bundle correctly.
-    echo "Trying to strip the MAR signature of $f..."
-    ${SIGNMAR} -r $f tmp/$f
-    cd tmp
-    if ! [ "$SHA256_TXT" = "`sha256sum $f`" ]
+    # At least we seem to have succeeded in signing the MAR file. Let's see if
+    # it is the expected one.
+    echo "Checking the SHA-256 sum of the stripped $f..."
+    ${SIGNMAR} -r "$f" tmp/"$f"
+    cd tmp || exit 1
+    if ! [ "$sha256_txt" = "$(sha256sum "$f")" ]
     then
-      echo "$f does not have the SHA-256 sum of the unsigned MAR file!"
-      BADSIGNED_MARS=`expr $BADSIGNED_MARS + 1`
+      not_reproduced_mars=$((not_reproduced_mars + 1))
+      case "$f" in
+        *osx64*)
+          not_reproduced_mars_expected=$((not_reproduced_mars_expected + 1))
+          ;;
+        *) echo "$f does not have the SHA-256 sum of the unsigned MAR file!"
+          ;;
+      esac
     fi
-    rm $f
+    rm "$f"
     cd ..
   fi
+  echo ""
 done
 
 rm -rf tmp/
 
-if ! [ "$UNSIGNED_MARS" = "0" ]
+if ! [ "$unsigned_mars" = "0" ] || ! [ "$badsigned_mars" = "0" ]
 then
-  echo "We got $UNSIGNED_MARS unsigned MAR file(s), exiting..."
+  echo "We got:"
+  if ! [ "$unsigned_mars" = "0" ]
+  then
+    echo "$unsigned_mars unsigned MAR file(s)"
+  fi
+  if ! [ "$badsigned_mars" = "0" ]
+  then
+    echo "$badsigned_mars badly signed MAR file(s)"
+  fi
+  echo "exiting..."
   exit 1
 fi
 
-if ! [ "$BADSIGNED_MARS" = "0" ]
+if ! [ "$not_reproduced_mars" = "0" ]
 then
-  echo "We got $BADSIGNED_MARS badly signed MAR file(s), exiting..."
-  exit 1
+  echo "We got $not_reproduced_mars non-matching, signed MAR files."
+  if [ "$not_reproduced_mars" -eq "$not_reproduced_mars_expected" ]
+  then
+    echo "This is currently expected as we got the same amount of" \
+         "non-matching macOS MAR files."
+    echo "The signatures and non-macOS MAR files are fine."
+    exit 0
+  else
+    echo "This is currently unexpected as we only got" \
+         "$not_reproduced_mars_expected non-matching macOS MAR files," \
+         "exiting..."
+    exit 1
+  fi
+else
+  echo "The signatures and MAR files are fine."
+  exit 0
 fi
-
-echo "The signatures are fine."
-exit 0
