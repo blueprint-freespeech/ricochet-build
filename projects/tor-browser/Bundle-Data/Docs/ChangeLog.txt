@@ -14,6 +14,7 @@ Tor Browser 9.5a13 -- May 20 2020
  * Build System
    * All Platforms
      * Bump Go to 1.13.11
+   * Linux
      * Bug 34242: Fix creation of Linux containers
 
 Tor Browser 9.5a12 -- May 7 2020
@@ -174,7 +175,7 @@ Tor Browser 9.5a5 -- February 12 2020
    * Bug 32470: Backport fix for bug 1590538
    * Bug 32414: Make Services.search.addEngine obey FPI
    * Bug 32948: Make referer behavior consistent regardless of private browing mode status
-   * Bug 461204: Improve the random number generator for the boundaries in multipart/form-data
+   * Bug 22919: Improve the random number generator for the boundaries in multipart/form-data
  * Windows + OS X + Linux
    * Update Tor to 0.4.3.2-alpha
    * Update Tor Launcher to 0.2.21.1
