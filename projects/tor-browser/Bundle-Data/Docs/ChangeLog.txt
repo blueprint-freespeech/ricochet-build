@@ -249,6 +249,7 @@ Tor Browser 9.0.3 -- January 7 2020
    * Bump Tor to 0.4.2.5
    * Update Tor Launcher to 0.2.20.5
      * Bug 32636: Clean up locales shipped with Tor Launcher
+     * Revert bug 30786, 30787, and 30788
  * Android
    * Bug 32405: Crash immediately after bootstrap on Android
  * Build System
