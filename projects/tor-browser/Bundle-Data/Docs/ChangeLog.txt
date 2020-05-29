@@ -1,3 +1,25 @@
+Tor Browser 10.0a1 -- June 2 2020
+ * All Platforms
+   * Update Firefox to 68.9.0esr
+   * Update HTTPS-Everywhere to 2020.5.20
+   * Translations update
+ * Windows + OS X + Linux
+   * Update Tor Launcher to 0.2.21.8
+     * Translations update
+   * Bug 34321: Add Learn More onboarding item
+ * Linux
+   * Bug 34315: Avoid reading policies from /etc/firefox on Linux
+ * Android
+   * Bug 30318: Integrate snowflake into mobile Tor Browser
+   * Bug 34219: Enable ZSTD support properly for Android
+ * Build System
+   * Windows
+     * Bug 31128: Move Windows containers to Debian 10
+   * Mac OS X
+     * Bug 31129: Move macOS containers to Debian 10
+   * Android
+     * Bug 28672: Android reproducible build of Snowflake
+
 Tor Browser 9.5a13 -- May 20 2020
  * All Platforms
    * Bump NoScript to 11.0.26
