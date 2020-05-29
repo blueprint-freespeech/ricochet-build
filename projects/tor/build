@@ -8,6 +8,10 @@ mkdir -p /var/tmp/build
   TORCONFIGDIR="$distdir/assets/common"
   libsdir=$distdir/jniLibs/[% c("var/abi") %]
   mkdir -p $libsdir $TORCONFIGDIR "$distdir/Tor"
+  # We need to make sure our ZSTD dependencey is properly picked up.
+  # --enable-zstd is not enough.
+  export ZSTD_CFLAGS=-I/var/tmp/dist/zstd/include
+  export ZSTD_LIBS=/var/tmp/dist/zstd/lib/libzstd.a
 [% END %]
 
 [% IF c("var/linux") || c("var/windows") %]
