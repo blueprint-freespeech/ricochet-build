@@ -28,3 +28,4 @@ input_files:
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
   - filename: gradle.patch
   - filename: 0001-Bug-33931-Filter-bridges-in-stream-by-type.patch
+  - filename: 0001-Bug-30318-Add-snowflake-support.patch

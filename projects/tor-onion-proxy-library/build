@@ -22,6 +22,7 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 patch -p1 < $rootdir/gradle.patch
 
 patch -p1 < $rootdir/0001-Bug-33931-Filter-bridges-in-stream-by-type.patch
+patch -p1 < $rootdir/0001-Bug-30318-Add-snowflake-support.patch
 
 # Extract obfs4proxy from TorBrowser/Tor/PluggableTransports/obfs4proxy
 tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/obfs4') %]
