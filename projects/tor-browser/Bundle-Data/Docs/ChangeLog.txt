@@ -7,6 +7,7 @@ Tor Browser 10.0a1 -- June 2 2020
    * Update Tor Launcher to 0.2.21.8
      * Translations update
    * Bug 34321: Add Learn More onboarding item
+   * Bug 34347: The Tor Network part on the onboarding is not new anymore
  * Linux
    * Bug 34315: Avoid reading policies from /etc/firefox on Linux
  * Android
