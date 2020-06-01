@@ -75,6 +75,14 @@
       mode: 0644
       owner: "{{ nightly_build_user }}"
 
+- name: create tbb-nightly-build.auth_basic_user_file
+  template:
+        src: tbb-nightly-build.auth_basic_user_file
+        dest: /etc/nginx/tbb-nightly-build.auth_basic_user_file
+        mode: 0644
+        owner: root
+  when: nightly_build_nginx_auth_basic_enable
+
 - name: install nginx
   apt:
       name: nginx
