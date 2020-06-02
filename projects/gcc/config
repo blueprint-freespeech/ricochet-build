@@ -3,7 +3,7 @@ filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 # Note: When updating the gcc version, if this includes a libstdc++
 # ABI change we should also update projects/firefox/abicheck.cc to
 # require the new version.
-version: 8.3.0
+version: 9.3.0
 var:
   container:
     use_container: 1
@@ -54,4 +54,4 @@ targets:
 input_files:
   - project: container-image
   - URL: 'https://ftp.gnu.org/gnu/gcc/gcc-[% c("version") %]/gcc-[% c("version") %].tar.xz'
-    sha256sum: 64baadfe6cc0f4947a84cb12d7f0dfaf45bb58b7e92461639596c21e02d97d2c
+    sha256sum: 71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1
