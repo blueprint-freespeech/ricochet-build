@@ -95,7 +95,7 @@ Tor Browser 9.5 -- June 2 2020
    * Bug 33931: obfs4 bridges are used instead of meek if meek is selected in Tor Browser for Android alpha
  * Build System
    * All Platforms
-     * Go to 1.13.11
+     * Bump Go to 1.13.11
      * Bug 33380: Add *.json to sha256sums-unsigned-build.txt
    * Windows
      * Bug 33802: --enable-secure-api is not supported anymore in mingw-w64
