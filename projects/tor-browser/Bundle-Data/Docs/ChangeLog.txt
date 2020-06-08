@@ -296,6 +296,8 @@ Tor Browser 9.5a5 -- February 12 2020
    * Bug 32870: Update version of pion-webrtc
    * Bug 32767: Remove Disconnect search
    * Bug 30237: Add v3 onion services client authentication prompt
+ * Linux
+   * Bug 27903: Tor Browser 8 does not respect gtk3 settings
  * Android
    * Bug 30767: Custom obfs4 bridge does not work on Tor Browser for Android
  * Build System
