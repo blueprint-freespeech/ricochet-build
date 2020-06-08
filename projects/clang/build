@@ -10,11 +10,13 @@ export PATH="/var/tmp/dist/cmake/bin:$PATH"
   [% pc('gcc', 'var/setup', { compiler_tarfile => c('input_files_by_name/gcc'),
                               hardened_gcc => 0 }) %]
   ln -s gcc /var/tmp/dist/gcc/bin/cc
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/binutils') %]
+  export PATH="/var/tmp/dist/binutils/bin:$PATH"
 [% END -%]
 mkdir -p /var/tmp/build
 cd /var/tmp/build
 tar -xf $rootdir/[% c('input_files_by_name/llvm') %]
-tar -xf $rootdir/[% c('input_files_by_name/cfe') %]
+tar -xf $rootdir/[% c('input_files_by_name/clang') %]
 tar -xf $rootdir/[% c('input_files_by_name/libcxx') %]
 tar -xf $rootdir/[% c('input_files_by_name/libcxxabi') %]
 tar -xf $rootdir/[% c('input_files_by_name/lld') %]
@@ -22,26 +24,19 @@ tar -xf $rootdir/[% c('input_files_by_name/compiler-rt') %]
 mv llvm-* llvm
 # LLVM has reproducibility issues when optimizing bitcode, which we need to
 # patch. See: #32053 for more details.
-patch -p1 < $rootdir/42574.patch
 patch -p1 < $rootdir/43909.patch
-mv cfe-* llvm/tools/clang
+mv clang-* llvm/tools/clang
 mv libcxx-* llvm/projects/libcxx
 mv libcxxabi-* llvm/projects/libcxxabi
 mv lld-* llvm/tools/lld
 mv compiler-rt-* llvm/projects/compiler-rt
-[% IF c("var/windows") -%]
-  # Patch order is important here
-  for i in {1..12}
-    do git apply $rootdir/win-patches/llvm-objcopy-$i.patch
-  done
-  patch -p1 -d llvm/tools/lld < $rootdir/timestamp.patch
-[% END %]
 cd llvm
 export LLVM_HOME=$(pwd)
 mkdir build
 cd build
 cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$distdir \
                              -DCMAKE_BUILD_TYPE:STRING=Release \
+     [% IF c("var/linux") -%]-DCOMPILER_RT_BUILD_CRT=OFF \[% END -%]
      [% IF c("var/rlbox") -%]-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly \[% END -%]
                              $LLVM_HOME
 make -j[% c("buildconf/num_procs") %]

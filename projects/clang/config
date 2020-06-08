@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 8.0.1
+version: 9.0.1
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 gpg_keyring: clang.gpg
 sig_ext: sig
@@ -8,26 +8,21 @@ var:
   container:
     use_container: 1
 
-targets:
-  windows:
-    var:
-      arch_deps:
-        # We use git to apply patches
-        - git
-
-
 input_files:
   - project: container-image
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
+    enable: '[% c("var/linux") %]'
+  - name: binutils
+    project: binutils
     enable: '[% c("var/linux") %]'
   - project: cmake
     name: cmake
   - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/llvm-[% c("version") %].src.tar.xz'
     name: llvm
     file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/cfe-[% c("version") %].src.tar.xz'
-    name: cfe
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/clang-[% c("version") %].src.tar.xz'
+    name: clang
     file_gpg_id: 1
   - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/libcxx-[% c("version") %].src.tar.xz'
     name: libcxx
@@ -41,9 +36,4 @@ input_files:
   - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/compiler-rt-[% c("version") %].src.tar.xz'
     name: compiler-rt
     file_gpg_id: 1
-  - filename: win-patches
-    enable: '[% c("var/windows") %]'
-  - filename: timestamp.patch
-    enable: '[% c("var/windows") %]'
-  - filename: 42574.patch
   - filename: 43909.patch
