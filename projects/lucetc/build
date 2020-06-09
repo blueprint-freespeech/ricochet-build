@@ -13,11 +13,12 @@ tar -C /var/tmp/dist -xf [% c('input_files_by_name/wasi-sysroot') %]
 export PATH="/var/tmp/dist/cmake/bin:/var/tmp/dist/clang/bin:/var/tmp/dist/binutils/bin:/var/tmp/dist/rust/bin:$PATH"
 export CC=$distdir/clang/bin/clang
 export CFLAGS="-L$distdir/clang/lib"
-export CXXFLAGS=$CFLAGS
 export CXX=$distdir/clang/bin/clang++
+export CXXFLAGS=$CFLAGS
 export AR=$distdir/clang/bin/llvm-ar
 export RUSTFLAGS="-C linker=$CXX -C link-arg=$CXXFLAGS"
 export LUCET_PREFIX=$distdir/[% project %]
+# XXX: Why do we need that when Mozilla doesn't? See: taskcluster/scripts/misc/build-lucetc.sh
 export WASI_SYSROOT=$distdir/wasi-sysroot
 
 mkdir -p /var/tmp/build
@@ -39,6 +40,7 @@ directory = "/var/tmp/build/lucetc/vendor"
 EOF
 
 make -j[% c("buildconf/num_procs") %] build
+# XXX: Should not be needed, just the lucetc binary, see: taskcluster/scripts/misc/build-lucetc.sh
 make install
 
 cd $distdir

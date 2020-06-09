@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %]'
 version: '[% c("abbrev") %]'
-git_hash: 5c22392b5b1aaa60e915c75e92b57391e1e61e6d
+git_hash: a0a1ce981638109f1f76cd1eecf17a0436a20055
 git_url: https://github.com/PLSysSec/lucet_sandbox_compiler/
 git_submodule: 1
 
@@ -23,13 +23,9 @@ input_files:
     project: binutils
   - name: rust
     project: rust
-    input_file_var:
-      # lucetc needs Rust >= 1.36.0
-      rust_version: 1.36.0
-      prev_version: 1.35.0
   - name: wasi-sysroot
     project: wasi-sysroot
   # `cargo vendor vendor` in the `lucetc-sandbox-compiler` directory has vendored
   # the sources.
   - URL: https://people.torproject.org/~gk/mirrors/sources/lucetc-vendor.tar.bz2
-    sha256sum: 5a7802834d0d4b9210f323cf69cc305946f22dba4ddaf2c4c0eb6d3621da2c2a
+    sha256sum: 12ba97fca12177e7ed5b5409fcfdbd31dc7db2e82282768d99dee5bcb1b1246a

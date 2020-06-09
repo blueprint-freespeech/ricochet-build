@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %]'
 version: '[% c("abbrev") %]'
-git_hash: 87b7a019472770f08d49cf3b558867dc76ea74eb
+git_hash: 5225b05436ce57f01fe649f411f3ff701246628b
 git_url: https://github.com/CraneStation/wasi-sdk
 git_submodule: 1
 

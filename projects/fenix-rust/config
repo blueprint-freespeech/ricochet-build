@@ -2,8 +2,8 @@
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 version: '[% c("input_file_var/rust_version") %]'
 
-# those values can be changed from the input_files section of other
-# projects. See projects/lucetc/config and bug 32436.
+# Those values can be changed from the input_files section of other
+# projects. See bug 32436.
 input_file_var:
   rust_version: 1.43.0
   prev_version: 1.42.0
