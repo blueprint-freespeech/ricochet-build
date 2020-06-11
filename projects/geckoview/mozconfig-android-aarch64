@@ -1,0 +1,37 @@
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-aarch64-linux-android
+mk_add_options MOZ_APP_DISPLAYNAME="Tor Browser"
+export MOZILLA_OFFICIAL=1
+CC="clang"
+CXX="clang++"
+
+ac_add_options --with-android-min-sdk=21
+
+ac_add_options --enable-optimize
+ac_add_options --enable-official-branding
+
+ac_add_options --enable-application=mobile/android
+ac_add_options --target=aarch64-linux-android
+ac_add_options --with-android-ndk=/var/tmp/dist/fenix-android-toolchain/android-ndk/android-ndk-r20
+ac_add_options --with-android-sdk=/var/tmp/dist/fenix-android-toolchain/android-sdk-linux
+ac_add_options --with-gradle=/var/tmp/dist/fenix-android-toolchain/gradle/gradle-5.1.1/bin/gradle
+
+# We do not use Tor Launcher on Android:
+ac_add_options --disable-tor-launcher
+
+ac_add_options --disable-tor-browser-update
+ac_add_options --disable-verify-mar
+
+# We only use beta GeckoView for now
+ac_add_options --enable-update-channel=beta
+
+ac_add_options --enable-strip
+ac_add_options --disable-tests
+ac_add_options --disable-debug
+ac_add_options --disable-rust-debug
+ac_add_options --disable-crashreporter
+ac_add_options --disable-webrtc
+
+ac_add_options --enable-proxy-bypass-protection
+
+# Disable telemetry
+ac_add_options MOZ_TELEMETRY_REPORTING=

@@ -1,0 +1,58 @@
+# vim: filetype=yaml sw=2
+version: '[% c("abbrev") %]'
+filename: 'geckoview-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+git_hash: 'tor-browser-[% c("var/geckoview_version") %]-[% c("var/torbrowser_branch") %]-1-build2'
+tag_gpg_id: 1
+git_url: https://git.torproject.org/tor-browser.git
+git_submodule: 1
+gpg_keyring: torbutton.gpg
+
+var:
+  geckoview_version: '78.0b[% c("var/beta_version") %]'
+  beta_version: 5
+  torbrowser_branch: 10
+  copyright_year: '[% exec("git show -s --format=%ci").remove("-.*") %]'
+  deps:
+    - build-essential
+    - unzip
+    - zip
+    - autoconf2.13
+    - yasm
+    # We are building our own version of Python 3.6, which is required
+    # for the build. However mach still requires Python 2.7, so we
+    # install this version using the package.
+    - python
+    - pkg-config
+  container:
+    use_container: 1
+  # this should be updated when the list of gradle dependencies is changed
+  gradle_dependencies_version: 1
+
+targets:
+  nightly:
+    git_hash: 'tor-browser-[% c("var/geckoview_version") %]-[% c("var/torbrowser_branch") %]-1'
+    tag_gpg_id: 0
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - filename: 'mozconfig-[% c("var/osname") %]'
+    name: mozconfig
+  - project: binutils
+    name: binutils
+  - project: fenix-rust
+    name: rust
+  - project: fenix-cbindgen
+    name: cbindgen
+  - project: fenix-node
+    name: node
+  - project: nasm
+    name: nasm
+  - project: python
+    name: python
+  - project: fenix-clang
+    name: clang
+  - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
+    name: gradle-dependencies
+    exec: '[% INCLUDE "fetch-gradle-dependencies" %]'

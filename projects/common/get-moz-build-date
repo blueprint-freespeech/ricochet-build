@@ -1,0 +1,27 @@
+#!/usr/bin/perl -w
+# Generate a MOZ_BUILD_DATE based on Tor Browser version number
+
+use strict;
+
+die "wrong number of arguments" unless @ARGV == 2;
+my ($year, $version) = @ARGV;
+my $date;
+if ($version =~ m/^tbb-nightly\.([^\.]+)\.([^\.]+)\.([^\.]+)$/) {
+  $date = sprintf("%d%02d%02d010101", $1, $2, $3);
+} elsif ($version eq 'testbuild') {
+  # There is no need for an increasing build date in test builds. Just hardcode
+  # it.
+  $date = 20010101010101;
+} else {
+  my @v = split(/[\.ab]/, $version);
+  push @v, '0' if @v < 4;
+  push @v, '0' if @v < 4;
+  # When MOZ_BUILD_DATE was based on the firefox version, with
+  # Tor Browser 8.0.6 and firefox 60.5.1 it was 20190204060201
+  # We can remove 5 from the month, while keeping it increasing.
+  my $month = $v[0] - 5;
+  $date = 1010101 + $year * 10000000000 + $month * 100000000
+             + $v[1] * 1000000 + $v[2] * 10000 + $v[3];
+  $date += 1000000 unless $version =~ m/[ab]/;
+}
+print "export MOZ_BUILD_DATE=$date\n";
