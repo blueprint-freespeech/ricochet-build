@@ -1,0 +1,105 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("input_file_var/rust_version") %]'
+
+# those values can be changed from the input_files section of other
+# projects. See projects/lucetc/config and bug 32436.
+input_file_var:
+  rust_version: 1.43.0
+  prev_version: 1.42.0
+
+var:
+  prev_version: '[% c("input_file_var/prev_version") %]'
+  container:
+    use_container: 1
+
+targets:
+  android:
+    var:
+      arch_deps:
+        - libssl-dev
+        - pkg-config
+        - zlib1g-dev
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=[% c("var/cross_prefix") %] --set=target.[% c("var/cross_prefix") %].cc=[% c("var/CC") %] --set=target.[% c("var/cross_prefix") %].ar=[% c("var/cross_prefix") %]-ar
+
+  android-armv7:
+    var:
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=thumbv7neon-linux-androideabi --set=target.thumbv7neon-linux-androideabi.cc=[% c("var/CC") %] --set=target.thumbv7neon-linux-androideabi.ar=[% c("var/cross_prefix") %]-ar
+
+  linux:
+    var:
+      deps:
+        - libc6-dev-i386
+        - lib32stdc++6
+        - build-essential
+        - python
+        - automake
+        - libssl-dev
+        - pkg-config
+        - hardening-wrapper
+      # We use
+      # `--enable-local-rust` to avoid downloading the required compiler during
+      # build time
+      #
+      # `--enable-vendor` to avoid downloading crates during build time and just
+      # use the ones which are shipped with the source
+      #
+      # `--enable-extended` to build not only rustc but cargo as well
+      #
+      # `--enable-llvm-static-stdccp` to take a libstdc++ on Wheezy into account
+      # which is too old and if used gives undefined reference errors
+      #
+      # `--release-channel=stable` to just include stable features in the
+      # compiler
+      #
+      # `--sysconfdir=etc` to avoid install failures as |make install| wants to
+      # write to /etc otherwise
+      #
+      # the `target` triple to explicitly specify the architecture and platform
+      # for the compiler/std lib. Ideally, it should not be needed unless one is
+      # cross-compiling, but compiling `alloc_jemalloc` fails without that in a
+      # 32bit container. "--host=x86_64-unknown-linux-gnu" is used in its
+      # configure script in this case.
+      # `--set=` to explicitly specify the C compiler. We need to compile the
+      # bundled LLVM and it wants to use `cc`. However, we don't have that in
+      # our compiled GCC resulting in weird errors due to C and C++ compiler
+      # version mismatch. We avoid that with this configure option. We need to
+      # build our own GCC in the first place as 4.7.2 is too old to get all the
+      # Rust pieces compiled.
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --enable-llvm-static-stdcpp --release-channel=stable --sysconfdir=etc --target=x86_64-unknown-linux-gnu,i686-unknown-linux-gnu --set=target.x86_64-unknown-linux-gnu.cc=gcc --set=target.i686-unknown-linux-gnu.cc=gcc
+
+  osx-x86_64:
+    var:
+      arch_deps:
+        - libssl-dev
+        - pkg-config
+        - zlib1g-dev
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=x86_64-apple-darwin --set=target.x86_64-apple-darwin.cc=x86_64-apple-darwin-clang
+
+  windows:
+    var:
+      arch_deps:
+        - libssl-dev
+        - pkg-config
+        - zlib1g-dev
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=[% c("arch") %]-pc-windows-gnu
+
+input_files:
+  - project: container-image
+  - project: cmake
+    name: cmake
+  - project: '[% c("var/compiler") %]'
+    name: '[% c("var/compiler") %]'
+  - URL: 'https://static.rust-lang.org/dist/rustc-[% c("version") %]-src.tar.gz'
+    name: rust
+    sig_ext: asc
+    file_gpg_id: 1
+    gpg_keyring: rust.gpg
+  - URL: 'https://static.rust-lang.org/dist/rust-[% c("var/prev_version") %]-x86_64-unknown-linux-gnu.tar.xz'
+    name: prev_rust
+    sig_ext: asc
+    file_gpg_id: 1
+    gpg_keyring: rust.gpg
+  - filename: unwind.patch
+    enable: '[% c("var/windows-i686") %]'
+  - filename: 43909.patch
