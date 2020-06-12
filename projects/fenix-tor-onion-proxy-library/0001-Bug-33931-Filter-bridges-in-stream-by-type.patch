@@ -1,0 +1,76 @@
+From 9a2048f02d602cab7bd937c66a4d3f9c35fbfa9e Mon Sep 17 00:00:00 2001
+From: Matthew Finkel <sysrqb@torproject.org>
+Date: Thu, 30 Apr 2020 15:40:25 +0000
+Subject: [PATCH] Bug 33931 - Filter bridges in stream by type
+
+The InputStream contains a first-byte that indicates the format of the
+following datastream. If the first-byte is 1, then the following stream
+is a string of bridges that are separated by the '\n' byte. If the
+first-byte is not 1, then the following data stream is default bridges
+and that list should be filtered such that only the requested bridge
+type is used.
+---
+ .../thali/toronionproxy/TorConfigBuilder.java | 35 ++++++++++++++++---
+ 1 file changed, 31 insertions(+), 4 deletions(-)
+
+diff --git a/universal/src/main/java/com/msopentech/thali/toronionproxy/TorConfigBuilder.java b/universal/src/main/java/com/msopentech/thali/toronionproxy/TorConfigBuilder.java
+index ab11948..2405097 100644
+--- a/universal/src/main/java/com/msopentech/thali/toronionproxy/TorConfigBuilder.java
++++ b/universal/src/main/java/com/msopentech/thali/toronionproxy/TorConfigBuilder.java
+@@ -535,9 +535,32 @@ public final class TorConfigBuilder {
+     TorConfigBuilder addBridgesFromResources() throws IOException {
+         if(settings.hasBridges()) {
+             InputStream bridgesStream = context.getInstaller().openBridgesStream();
+-            int formatType = bridgesStream.read();
+-            if (formatType == 0) {
+-                addBridges(bridgesStream);
++            // The first byte encodes the type of bridges contained within the
++            // following data stream. Currently, it may contain either default bridges
++            // or user-provided bridges.
++            int bridgesType = bridgesStream.read();
++
++            // When bridgesType is 0x01, then the following stream is
++            // user-provided (custom) bridges.
++            // When bridgesType is one of: 0x02 or 0x03, then the Stream
++            // consists of default PT bridges. That list must be filtered, after
++            // parsing each bridge line, such that only the requested bridge type
++            // is used.
++            if (bridgesType != 1) {
++                // Terrible hack. Must keep in sync with tas::CustomTorInstaller::openBridgesStream
++                // and transports defined by TorConfigBuilder::transportPlugin().
++                String reqBridgeType;
++                switch (bridgesType) {
++                    case 2:
++                        reqBridgeType = "obfs4";
++                        break;
++                    case 3:
++                        reqBridgeType = "meek_lite";
++                        break;
++                    default:
++                        throw new IOException("Requested unknown transport type: " + bridgesType);
++                }
++                addBridges(bridgesStream, reqBridgeType);
+             } else {
+                 addCustomBridges(bridgesStream);
+             }
+@@ -548,12 +571,16 @@ public final class TorConfigBuilder {
+     /**
+      * Add bridges from bridges.txt file.
+      */
+-    private void addBridges(InputStream input) {
++    private void addBridges(InputStream input, String bridgeType) {
+         if (input == null) {
+             return;
+         }
+         List<Bridge> bridges = readBridgesFromStream(input);
+         for (Bridge b : bridges) {
++            if (!b.type.equals(bridgeType)) {
++                // This is not the transport we're looking for.
++                continue;
++            }
+             bridge(b.type, b.config);
+         }
+     }
+-- 
+2.20.1
+
