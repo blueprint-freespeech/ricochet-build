@@ -54,7 +54,6 @@ cd /var/tmp/build/rustc-[% c('version') %]-src
 # LLVM has reproducibility issues when optimizing bitcode, which we need to
 # patch. See: #32053 for more details.
 cd src/llvm-project
-patch -p1 < $rootdir/42574.patch
 patch -p1 < $rootdir/43909.patch
 cd ../../
 
