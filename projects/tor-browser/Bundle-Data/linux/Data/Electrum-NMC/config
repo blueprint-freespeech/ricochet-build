@@ -1,4 +1,5 @@
 {
+    "pause_network": true,
     "proxy": "socks5:127.0.0.1:9150::",
     "rpcpassword": "password",
     "rpcport": 8336,

@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 git_url: https://github.com/namecoin/StemNS.git
-git_hash: '32ed59be344d6bb949faa4a2bf70ae058bfe4d21'
+git_hash: '68d437491c0308545e149181768cd98e45c1ac82'
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 var:
   container:
