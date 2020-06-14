@@ -47,7 +47,7 @@ steps:
 
       tar -C $distdir -xf [% c('input_files_by_name/node') %]
       tar -C $distdir -xf [% c('input_files_by_name/python') %]
-      export PATH="/var/tmp/dist/fenix-node/bin:/var/tmp/dist/python/bin:$PATH"
+      export PATH="/var/tmp/dist/node/bin:/var/tmp/dist/python/bin:$PATH"
 
       tar -C $builddir -xf [% c('input_files_by_name/geckoview_armv7') %]
       tar -C $builddir -xf [% c('input_files_by_name/geckoview_aarch64') %]
@@ -97,7 +97,7 @@ steps:
       - name: '[% c("var/compiler") %]'
         project: '[% c("var/compiler") %]'
         pkg_type: build
-      - project: fenix-node
+      - project: node
         name: node
         pkg_type: build
       - project: python
@@ -147,7 +147,7 @@ input_files:
     name: rust
   - project: fenix-cbindgen
     name: cbindgen
-  - project: fenix-node
+  - project: node
     name: node
   - project: nasm
     name: nasm

@@ -10,8 +10,8 @@
   export PATH="/var/tmp/dist/binutils/bin:$PATH"
 [% END -%]
 distdir=/var/tmp/dist/[% project %]
-tar -xf [% project %]-[% c('version') %].tar.xz
-cd [% project %]-[% c('version') %]
+tar -xf [% c('input_files_by_name/node') %]
+cd node-[% c('version') %]
 
 ./configure --prefix=$distdir
 make -j[% c("buildconf/num_procs") %]

@@ -20,7 +20,7 @@ tar -C /var/tmp/dist -xf [% c('input_files_by_name/node') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
 export LLVM_CONFIG="/var/tmp/dist/clang/bin/llvm-config"
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/binutils') %]
-export PATH="/var/tmp/dist/fenix-rust/bin:/var/tmp/dist/fenix-cbindgen:/var/tmp/dist/nasm/bin:/var/tmp/dist/python/bin:/var/tmp/dist/fenix-node/bin:/var/tmp/dist/fenix-clang/bin:/var/tmp/dist/binutils/bin:$PATH"
+export PATH="/var/tmp/dist/fenix-rust/bin:/var/tmp/dist/fenix-cbindgen:/var/tmp/dist/nasm/bin:/var/tmp/dist/python/bin:/var/tmp/dist/node/bin:/var/tmp/dist/fenix-clang/bin:/var/tmp/dist/binutils/bin:$PATH"
 
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 
