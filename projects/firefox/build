@@ -39,6 +39,20 @@ export LLVM_CONFIG="/var/tmp/dist/clang/bin/llvm-config"
   [% END -%]
 [% END -%]
 
+[% IF c("var/rlbox") -%]
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/wasi-sysroot') %]
+  # XXX: We need the libclang_rt.builtins-wasm32.a in our clang lib directory.
+  # Copy it over.
+  # https://searchfox.org/mozilla-central/source/build/build-clang/build-clang.py#890,
+  # include it directly in our clang
+  mkdir /var/tmp/dist/clang/lib/clang/[% pc("clang", "version") %]/lib/wasi
+  cp /var/tmp/dist/wasi-sysroot/lib/clang/9.0.0/lib/wasi/libclang_rt.builtins-wasm32.a /var/tmp/dist/clang/lib/clang/[% pc("clang", "version") %]/lib/wasi
+  tar -C /var/tmp/dist -xf [% c('input_files_by_name/lucetc') %]
+  export PATH="/var/tmp/dist/lucetc/bin:$PATH"
+  export WASM_SANDBOXED_LIBRARIES=graphite,ogg
+  export WASI_SYSROOT=/var/tmp/dist/wasi-sysroot/share/wasi-sysroot
+[% END -%]
+
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 
 [% IF c("var/osx") %]
