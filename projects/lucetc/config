@@ -11,16 +11,18 @@ var:
 
 input_files:
   - project: container-image
+  - name: binutils
+    project: binutils
+    enable: '[% c("var/linux") %]'
   # Our clang still needs GCC parts (libstdc++ for instance) so we include that
   # one here even though compilation gets done solely by clang.
-  - name: '[% c("var/compiler") %]'
-    project: '[% c("var/compiler") %]'
+  - project: '[% c("var/compiler") %]'
+    name: '[% c("var/compiler") %]'
+    enable: '[% c("var/linux") %]'
   - name: cmake
     project: cmake
   - name: clang
     project: clang
-  - name: binutils
-    project: binutils
   - name: rust
     project: rust
   - name: wasi-sysroot

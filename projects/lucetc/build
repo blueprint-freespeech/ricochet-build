@@ -1,16 +1,24 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
-[% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+# XXX: Do we need the GCC part here if we set CC to clang anyway?
+[% IF c("var/linux") %]
+  # We need a link to our GCC, otherwise the system cc gets used which points to
+  # /usr/bin/gcc.
+  [% pc('gcc', 'var/setup', { compiler_tarfile => c('input_files_by_name/gcc'),
+                              hardened_gcc => 0 }) %]
+  ln -s gcc /var/tmp/dist/gcc/bin/cc
+  tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/binutils') %]
+  export PATH="/var/tmp/dist/binutils/bin:$PATH"
+[% END -%]
 distdir=/var/tmp/dist
 builddir=/var/tmp/build/[% project %]
 
 mkdir -p $distdir
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/binutils') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/rust') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/wasi-sysroot') %]
-export PATH="/var/tmp/dist/cmake/bin:/var/tmp/dist/clang/bin:/var/tmp/dist/binutils/bin:/var/tmp/dist/rust/bin:$PATH"
+export PATH="/var/tmp/dist/cmake/bin:/var/tmp/dist/clang/bin:/var/tmp/dist/rust/bin:$PATH"
 export CC=$distdir/clang/bin/clang
 export CFLAGS="-L$distdir/clang/lib"
 export CXX=$distdir/clang/bin/clang++
