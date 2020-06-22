@@ -37,7 +37,7 @@ Tor Browser 9.5 -- June 2 2020
    * Bug 30787: Add lt locale
    * Bug 30788: Add ms locale
    * Bug 30851: Move default preferences to 000-tor-browser.js
-   * Bug 30888: move torbutton_util.js to modules/utils.js
+   * Bug 30888: Move torbutton_util.js to modules/utils.js
    * Bug 31134: Govern graphite again by security settings
    * Bug 31395: Remove inline script in aboutTor.xhtml
    * Bug 31499: Update libevent to 2.1.11-stable
