@@ -1,3 +1,20 @@
+Tor Browser 10.0a2 -- June 30 2020
+ * All Platforms
+   * Update Firefox to 68.10.0esr
+   * Update NoScript to 11.0.32
+   * Update Tor to 0.4.4.1-alpha
+   * Translations update
+   * Bug 34209: about:tor and about:tbupdate fail to load in debug build
+   * Bug 34250: Only listen to 'started' in noscript-control.js
+   * Bug 34383: Accept request if GetHost() in mixed content blocking check fails
+ * Windows + OS X + Linux
+   * Bug 34361: "Prioritize .onion sites when known" appears under General
+   * Bug 34362: Improve Onion Service Authentication prompt
+   * Bug 34369: Fix learn more link in Onion Auth prompt
+   * Bug 34379: Fix learn more for Onion-Location
+ * Android
+   * Bug 34372: Disable GeckoNetworkManager
+
 Tor Browser 10.0a1 -- June 2 2020
  * All Platforms
    * Update Firefox to 68.9.0esr
