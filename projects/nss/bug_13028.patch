@@ -1,0 +1,79 @@
+From 2f0888c348561249d3083555db33c5619840dbfa Mon Sep 17 00:00:00 2001
+From: Mike Perry <mikeperry-git@torproject.org>
+Date: Mon, 29 Sep 2014 14:30:19 -0700
+Subject: [PATCH] Bug 13028: Prevent potential proxy bypass cases.
+
+It looks like these cases should only be invoked in the NSS command line
+tools, and not the browser, but I decided to patch them anyway because there
+literally is a maze of network function pointers being passed around, and it's
+very hard to tell if some random code might not pass in the proper proxied
+versions of the networking code here by accident.
+
+diff --git a/security/nss/lib/certhigh/ocsp.c b/security/nss/lib/certhigh/ocsp.c
+index cea8456606bf..86fa971cfbef 100644
+--- a/security/nss/lib/certhigh/ocsp.c
++++ b/security/nss/lib/certhigh/ocsp.c
+@@ -2932,6 +2932,14 @@ ocsp_ConnectToHost(const char *host, PRUint16 port)
+     PRNetAddr addr;
+     char *netdbbuf = NULL;
+ 
++    // XXX: Do we need a unittest ifdef here? We don't want to break the tests, but
++    // we want to ensure nothing can ever hit this code in production.
++#if 1
++    printf("Tor Browser BUG: Attempted OSCP direct connect to %s, port %u\n", host,
++            port);
++    goto loser;
++#endif
++
+     sock = PR_NewTCPSocket();
+     if (sock == NULL)
+         goto loser;
+diff --git a/security/nss/lib/libpkix/pkix_pl_nss/module/pkix_pl_socket.c b/security/nss/lib/libpkix/pkix_pl_nss/module/pkix_pl_socket.c
+index e8698376b5be..85791d84a932 100644
+--- a/security/nss/lib/libpkix/pkix_pl_nss/module/pkix_pl_socket.c
++++ b/security/nss/lib/libpkix/pkix_pl_nss/module/pkix_pl_socket.c
+@@ -1334,6 +1334,13 @@ pkix_pl_Socket_Create(
+                     plContext),
+                     PKIX_COULDNOTCREATESOCKETOBJECT);
+ 
++        // XXX: Do we need a unittest ifdef here? We don't want to break the tests, but
++        // we want to ensure nothing can ever hit this code in production.
++#if 1
++        printf("Tor Browser BUG: Attempted pkix direct socket connect\n");
++        PKIX_ERROR(PKIX_PRNEWTCPSOCKETFAILED);
++#endif
++
+         socket->isServer = isServer;
+         socket->timeout = timeout;
+         socket->clientSock = NULL;
+@@ -1433,6 +1440,13 @@ pkix_pl_Socket_CreateByName(
+ 
+         localCopyName = PL_strdup(serverName);
+ 
++        // XXX: Do we need a unittest ifdef here? We don't want to break the tests, but
++        // we want to ensure nothing can ever hit this code in production.
++#if 1
++        printf("Tor Browser BUG: Attempted pkix direct connect to %s\n", serverName);
++        PKIX_ERROR(PKIX_PRNEWTCPSOCKETFAILED);
++#endif
++
+         sepPtr = strchr(localCopyName, ':');
+         /* First strip off the portnum, if present, from the end of the name */
+         if (sepPtr) {
+@@ -1582,6 +1596,13 @@ pkix_pl_Socket_CreateByHostAndPort(
+         PKIX_ENTER(SOCKET, "pkix_pl_Socket_CreateByHostAndPort");
+         PKIX_NULLCHECK_THREE(hostname, pStatus, pSocket);
+ 
++        // XXX: Do we need a unittest ifdef here? We don't want to break the tests, but
++        // we want to ensure nothing can ever hit this code in production.
++#if 1
++        printf("Tor Browser BUG: Attempted pkix direct connect to %s, port %u\n", hostname,
++                portnum);
++        PKIX_ERROR(PKIX_PRNEWTCPSOCKETFAILED);
++#endif
+ 
+         prstatus = PR_GetHostByName(hostname, buf, sizeof(buf), &hostent);
+ 
+-- 
+2.27.0
+

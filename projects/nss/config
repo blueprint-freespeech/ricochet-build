@@ -1,0 +1,27 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+# The required versions for application-services can be found at the respective
+# commit in libs/build-all.sh
+version: 3.54
+# XXX: maybe that's extractable automatically from `version` somehow?
+version_path: 3_54
+nspr_version: 4.26
+var:
+  container:
+    use_container: 1
+  deps:
+    - build-essential
+    - gyp
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: ninja
+    project: ninja
+  - URL: 'https://ftp.mozilla.org/pub/security/nss/releases/NSS_[% c("version_path") %]_RTM/src/nss-[% c("version") %]-with-nspr-[% c("nspr_version") %].tar.gz'
+    name: nss
+    sha256sum: e0e81f0ff264d810f130d3cd9334722f7f883c752430483131d1ca5ac62d3f70
+  - filename: configure.patch
+  - filename: config.patch
+  - filename: bug_13028.patch

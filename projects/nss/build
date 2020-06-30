@@ -1,0 +1,139 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+[% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+distdir=/var/tmp/dist/nss
+builddir=/var/tmp/build/[% project %]
+mkdir /var/tmp/build
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/ninja') %]
+export PATH=/var/tmp/dist/ninja:$PATH
+
+# application-services uses a newer NDK, 21d, than all the other projects...
+export ANDROID_NDK_API_VERSION=[% pc("fenix-android-toolchain", "var/android_ndk_version") %][% pc('fenix-android-toolchain', 'var/android_ndk_revision') %]
+export ANDROID_NDK_HOME=/var/tmp/dist/[% c('var/compiler') %]/android-ndk/android-ndk-r$ANDROID_NDK_API_VERSION
+# We need to add the new path to our build tools to PATH
+export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
+export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
+export NDK_HOST_TAG=linux-x86_64
+
+nspr_64=""
+[% IF c("var/configure_host") == "arm-linux-androideabi" -%]
+  gyp_arch="arm"
+[% ELSIF c("var/configure_host") == "i686-linux-android" -%]
+  gyp_arch="ia32"
+[% ELSIF c("var/configure_host") == "x86_64-linux-android" -%]
+  gyp_arch="x64"
+  nspr_64="--enable-64bit"
+[% ELSIF c("var/configure_host") == "aarch64-linux-android" -%]
+  gyp_arch="arm64"
+  nspr_64="--enable-64bit"
+[% END -%]
+
+export AR="[% c('var/cross_prefix') %]-ar"
+# XXX: Mozilla really uses the NDK_API_VERSION here, which is weird.
+export CC="[% c('var/cross_prefix') %][% pc('fenix-android-toolchain', 'var/android_ndk_version') %]-clang"
+export CXX="[% c('var/cross_prefix') %][% pc('fenix-android-toolchain', 'var/android_ndk_version') %]-clang++"
+export LD="[% c('var/cross_prefix') %]-ld"
+export NM="[% c('var/cross_prefix') %]-nm"
+export RANLIB="[% c('var/cross_prefix') %]-ranlib"
+export READELF="[% c('var/cross_prefix') %]-readelf"
+
+tar -C /var/tmp/build -xf [% c('input_files_by_name/nss') %]
+mv /var/tmp/build/[% project %]-[% c('version') %] $builddir
+cd $builddir
+# Early return hack to prevent NSPR Android setup
+# which does not work with ndk unified headers and clang. See:
+# application-services/libs/build-all.sh
+cat $rootdir/configure.patch | patch nspr/configure
+# Some NSS symbols clash with OpenSSL symbols, rename them using
+# C preprocessor define macros. See:
+# application-services/libs/build-all.sh
+patch -p2 < $rootdir/config.patch
+# Let's apply our proxy bypass defense-in-depth here as well to be on the safe
+# side.
+patch -p2 < $rootdir/bug_13028.patch
+
+# Building NSPR
+mkdir $builddir/nspr_build
+cd $builddir/nspr_build
+../nspr/configure \
+  $nspr_64 \
+  --target=[% c("var/configure_host") %] \
+  --disable-debug \
+  --enable-optimize
+make
+cd ..
+
+# Building NSS
+mkdir $builddir/nss_build
+gyp -f ninja-android "$builddir/nss/nss.gyp" \
+  --depth "$builddir/nss/" \
+  --generator-output=. \
+  -DOS=android \
+  -Dnspr_lib_dir="$builddir/nspr_build/dist/lib" \
+  -Dnspr_include_dir="$builddir/nspr_build/dist/include/nspr" \
+  -Dnss_dist_dir="$builddir/nss_build" \
+  -Dnss_dist_obj_dir="$builddir/nss_build" \
+  -Dhost_arch="$gyp_arch" \
+  -Dtarget_arch="$gyp_arch" \
+  -Dstatic_libs=1 \
+  -Ddisable_dbm=1 \
+  -Dsign_libs=0 \
+  -Denable_sslkeylogfile=0 \
+  -Ddisable_tests=1 \
+  -Ddisable_libpkix=1
+
+gendir="$builddir/nss/out/Release"
+ninja -C "$gendir"
+
+mkdir -p $distdir/include/nss
+mkdir -p $distdir/lib
+cp -p -L "$builddir/nss_build/lib/libcertdb.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libcerthi.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libcryptohi.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libfreebl_static.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libnss_static.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libnssb.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libnssdev.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libnsspki.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libnssutil.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libpk11wrap_static.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libpkcs12.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libpkcs7.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libsmime.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libsoftokn_static.a" "$distdir/lib"
+cp -p -L "$builddir/nss_build/lib/libssl.a" "$distdir/lib"
+
+# HW specific.
+# https://searchfox.org/nss/rev/08c4d05078d00089f8d7540651b0717a9d66f87e/lib/freebl/freebl.gyp#278-296
+[% IF c("var/configure_host") == "i686-linux-android" || c("var/configure_host") == "x86_64-linux-android"-%]
+  cp -p -L "$builddir/nss_build/lib/libgcm-aes-x86_c_lib.a" "$distdir/lib"
+[% END %]
+[% IF c("var/configure_host") == "arm-linux-androideabi" || c("var/configure_host") == "aarch64-linux-android"-%]
+  cp -p -L "$builddir/nss_build/lib/libarmv8_c_lib.a" "$distdir/lib"
+[% END %]
+[% IF c("var/configure_host") == "aarch64-linux-android" -%]
+  cp -p -L "$builddir/nss_build/lib/libgcm-aes-aarch64_c_lib.a" "$distdir/lib"
+[% END %]
+[% IF c("var/configure_host") == "arm-linux-androideabi" -%]
+  cp -p -L "$builddir/nss_build/lib/libgcm-aes-arm32-neon_c_lib.a" "$distdir/lib"
+[% END %]
+# https://searchfox.org/nss/rev/08c4d05078d00089f8d7540651b0717a9d66f87e/lib/freebl/freebl.gyp#315-324
+# https://searchfox.org/nss/rev/08c4d05078d00089f8d7540651b0717a9d66f87e/lib/freebl/freebl.gyp#43-47
+[% IF c("var/configure_host") == "x86_64-linux-android"-%]
+  cp -p -L "$builddir/nss_build/lib/libintel-gcm-wrap_c_lib.a" "$distdir/lib"
+  cp -p -L "$builddir/nss_build/lib/libintel-gcm-s_lib.a" "$distdir/lib"
+  cp -p -L "$builddir/nss_build/lib/libhw-acc-crypto-avx.a" "$distdir/lib"
+  cp -p -L "$builddir/nss_build/lib/libhw-acc-crypto-avx2.a" "$distdir/lib"
+[% END %]
+cp -p -L "$builddir/nspr_build/dist/lib/libplc4.a" "$distdir/lib"
+cp -p -L "$builddir/nspr_build/dist/lib/libplds4.a" "$distdir/lib"
+cp -p -L "$builddir/nspr_build/dist/lib/libnspr4.a" "$distdir/lib"
+
+cp -p -L -R "$builddir/nss_build/public/nss/"* "$distdir/include/nss"
+cp -p -L -R "$builddir/nspr_build/dist/include/nspr/"* "$distdir/include/nss"
+
+cd /var/tmp/dist
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

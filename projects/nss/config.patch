@@ -1,0 +1,37 @@
+From c11dc3a73349fc7d8fa451f9e3a4e3952aa54fd2 Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Wed, 1 Jul 2020 09:57:01 +0000
+Subject: [PATCH] Patch for building NSS for application-services
+
+See: application-services/libs/build-all.sh
+
+diff --git a/security/nss/coreconf/config.gypi b/security/nss/coreconf/config.gypi
+index 62d3cc71ecaf..dd30de079081 100644
+--- a/security/nss/coreconf/config.gypi
++++ b/security/nss/coreconf/config.gypi
+@@ -144,6 +144,23 @@
+       '<(nspr_include_dir)',
+       '<(nss_dist_dir)/private/<(module)',
+     ],
++    'defines': [
++      'HMAC_Update=NSS_HMAC_Update',
++      'HMAC_Init=NSS_HMAC_Init',
++      'CMAC_Update=NSS_CMAC_Update',
++      'CMAC_Init=NSS_CMAC_Init',
++      'MD5_Update=NSS_MD5_Update',
++      'SHA1_Update=NSS_SHA1_Update',
++      'SHA256_Update=NSS_SHA256_Update',
++      'SHA224_Update=NSS_SHA224_Update',
++      'SHA512_Update=NSS_SHA512_Update',
++      'SHA384_Update=NSS_SHA384_Update',
++      'SEED_set_key=NSS_SEED_set_key',
++      'SEED_encrypt=NSS_SEED_encrypt',
++      'SEED_decrypt=NSS_SEED_decrypt',
++      'SEED_ecb_encrypt=NSS_SEED_ecb_encrypt',
++      'SEED_cbc_encrypt=NSS_SEED_cbc_encrypt',
++    ],
+     'conditions': [
+       [ 'mozpkix_only==1 and OS=="linux"', {
+         'include_dirs': [
+--
+2.27.0
