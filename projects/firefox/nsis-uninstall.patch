@@ -1,13 +1,9 @@
-From e338a77c64c0afb72e857c7daa63346d35ad3891 Mon Sep 17 00:00:00 2001
+From 67c1d7d66d99494102832e12059a84fa439c88e0 Mon Sep 17 00:00:00 2001
 From: Sukhbir Singh <sukhbir@torproject.org>
 Date: Tue, 12 Jun 2018 21:58:24 -0400
-Subject: [PATCH 1/1] Bug 26205: Don't build the uninstaller for Windows during
+Subject: [PATCH] Bug 26205: Don't build the uninstaller for Windows during
  Firefox compilation
 
----
- browser/Makefile.in           | 4 ----
- browser/installer/Makefile.in | 4 ----
- 2 files changed, 8 deletions(-)
 
 diff --git a/browser/Makefile.in b/browser/Makefile.in
 index 2eb9e708f68e..0c9442183942 100644
@@ -25,7 +21,7 @@ index 2eb9e708f68e..0c9442183942 100644
  	$(MAKE) -C installer/windows maintenanceservice_installer
  endif
 diff --git a/browser/installer/Makefile.in b/browser/installer/Makefile.in
-index 1bf11252ee06..dee6d5434106 100644
+index 0325f0ffab9a..a5a9488623a3 100644
 --- a/browser/installer/Makefile.in
 +++ b/browser/installer/Makefile.in
 @@ -98,10 +98,6 @@ ifdef NECKO_WIFI
@@ -36,9 +32,9 @@ index 1bf11252ee06..dee6d5434106 100644
 -DEFINES += -DHAVE_MAKENSISU=1
 -endif
 -
- ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
- MOZ_PKG_MAC_DSSTORE=$(topsrcdir)/$(MOZ_BRANDING_DIRECTORY)/dsstore
- MOZ_PKG_MAC_BACKGROUND=$(topsrcdir)/$(MOZ_BRANDING_DIRECTORY)/background.png
+ ifdef MOZ_DEFAULT_BROWSER_AGENT
+ DEFINES += -DMOZ_DEFAULT_BROWSER_AGENT=1
+ endif
 -- 
-2.18.0.rc2
+2.27.0
 

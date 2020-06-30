@@ -172,7 +172,6 @@ make -j[% c("buildconf/num_procs") %] VERBOSE=1
 
 # libcxx
 cd $builddir/libcxx
-patch -p1 < $rootdir/sort.patch
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=$distdir/[% c("arch") %]-w64-mingw32 \

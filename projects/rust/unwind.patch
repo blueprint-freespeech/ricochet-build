@@ -1,4 +1,4 @@
-From b3bea7008ece7a5bdf9b5a5dcc95e82febad1854 Mon Sep 17 00:00:00 2001
+From 212ea02a0743a3bd4fcab1288682d3d780da960b Mon Sep 17 00:00:00 2001
 From: Bjorn Neergaard <bjorn@neersighted.com>
 Date: Sat, 9 Feb 2019 19:39:23 +0000
 Subject: [PATCH] Fix cross-compiling i686-pc-windows-gnu from Linux
@@ -32,61 +32,58 @@ rethinking of how iOS is special-cased above, to avoid further
 duplication. Input on how to best structure this file is requested.
 
 diff --git a/src/bootstrap/compile.rs b/src/bootstrap/compile.rs
-index 249a183189..df08d6eb0c 100644
+index 831053bc0f7..13ec5da3e3d 100644
 --- a/src/bootstrap/compile.rs
 +++ b/src/bootstrap/compile.rs
-@@ -162,7 +162,12 @@ pub fn std_cargo(builder: &Builder<'_>,
-             .arg("--features")
-             .arg("compiler-builtins-mem");
-     } else {
--        let features = builder.std_features();
-+        let mut features = builder.std_features();
-+
+@@ -208,6 +208,11 @@ pub fn std_cargo(builder: &Builder<'_>,
+         let mut features = builder.std_features();
+         features.push_str(&compiler_builtins_c_feature);
+ 
 +        // FIXME: Temporary detection of SJLJ MinGW compilers.
 +        if builder.config.build.contains("linux") && target == "i686-pc-windows-gnu" {
 +            features.push_str(" sjlj_eh");
 +        }
- 
++
          if compiler.stage != 0 && builder.config.sanitizers {
              // This variable is used by the sanitizer runtime crates, e.g.
+             // rustc_lsan, to build the sanitizer runtime from C code
 diff --git a/src/libstd/Cargo.toml b/src/libstd/Cargo.toml
-index 7d60a17042..d876d0b89a 100644
+index a22e162bbff..e1c8f164916 100644
 --- a/src/libstd/Cargo.toml
 +++ b/src/libstd/Cargo.toml
-@@ -71,3 +71,4 @@ wasm-bindgen-threads = []
- # https://github.com/rust-lang-nursery/stdsimd/blob/master/crates/std_detect/Cargo.toml
+@@ -78,6 +78,7 @@ panic_immediate_abort = ["core/panic_immediate_abort"]
+ # https://github.com/rust-lang/stdarch/blob/master/crates/std_detect/Cargo.toml
  std_detect_file_io = []
  std_detect_dlsym_getauxval = []
 +sjlj_eh = ["unwind/sjlj_eh"]
+ 
+ [package.metadata.fortanix-sgx]
+ # Maximum possible number of threads when testing
+diff --git a/src/libtest/Cargo.toml b/src/libtest/Cargo.toml
+index 170fbb984cf..b1b0be71067 100644
+--- a/src/libtest/Cargo.toml
++++ b/src/libtest/Cargo.toml
+@@ -29,3 +29,4 @@ llvm-libunwind = ["std/llvm-libunwind"]
+ panic-unwind = ["std/panic_unwind"]
+ panic_immediate_abort = ["std/panic_immediate_abort"]
+ profiler = ["std/profiler"]
++sjlj_eh = ["std/sjlj_eh"]
 diff --git a/src/libunwind/Cargo.toml b/src/libunwind/Cargo.toml
-index 2378b0a315..0b5979ed62 100644
+index 77bcfffd506..9d9fc5fbff5 100644
 --- a/src/libunwind/Cargo.toml
 +++ b/src/libunwind/Cargo.toml
-@@ -16,3 +16,6 @@ doc = false
- core = { path = "../libcore" }
- libc = { version = "0.2.43", features = ['rustc-dep-of-std'], default-features = false }
- compiler_builtins = "0.1.0"
-+
-+[features]
+@@ -26,3 +26,4 @@ cc = { version = "1.0.1" }
+ 
+ [features]
+ llvm-libunwind = []
 +sjlj_eh = []
 diff --git a/src/libunwind/libunwind.rs b/src/libunwind/libunwind.rs
-index 339b554ed6..ec2f93ed60 100644
+index 0b39503c0d0..ec8681c2985 100644
 --- a/src/libunwind/libunwind.rs
 +++ b/src/libunwind/libunwind.rs
-@@ -1,10 +1,5 @@
- #![allow(nonstandard_style)]
- 
--macro_rules! cfg_if {
--    ( $( if #[cfg( $meta:meta )] { $($it1:item)* } else { $($it2:item)* } )* ) =>
--        ( $( $( #[cfg($meta)] $it1)* $( #[cfg(not($meta))] $it2)* )* )
--}
--
- use libc::{c_int, c_void, uintptr_t};
- 
- #[repr(C)]
-@@ -73,8 +68,8 @@ pub enum _Unwind_Context {}
- pub type _Unwind_Exception_Cleanup_Fn = extern "C" fn(unwind_code: _Unwind_Reason_Code,
-                                                       exception: *mut _Unwind_Exception);
+@@ -74,8 +74,8 @@ pub type _Unwind_Exception_Cleanup_Fn = extern "C" fn(unwind_code: _Unwind_Reaso
+                any(target_os = "fuchsia", target_os = "linux")),
+            link(name = "unwind", kind = "static"))]
  extern "C" {
 -    #[unwind(allowed)]
 -    pub fn _Unwind_Resume(exception: *mut _Unwind_Exception) -> !;
@@ -95,15 +92,15 @@ index 339b554ed6..ec2f93ed60 100644
      pub fn _Unwind_DeleteException(exception: *mut _Unwind_Exception);
      pub fn _Unwind_GetLanguageSpecificData(ctx: *mut _Unwind_Context) -> *mut c_void;
      pub fn _Unwind_GetRegionStart(ctx: *mut _Unwind_Context) -> _Unwind_Ptr;
-@@ -206,26 +201,52 @@ if #[cfg(all(any(target_os = "ios", target_os = "netbsd", not(target_arch = "arm
-         pc
-     }
- }
-+} // cfg_if!
+@@ -216,32 +216,50 @@ if #[cfg(all(any(target_os = "ios", target_os = "netbsd", not(target_arch = "arm
+ } // cfg_if!
  
+ cfg_if::cfg_if! {
 -if #[cfg(not(all(target_os = "ios", target_arch = "arm")))] {
 -    // Not 32-bit iOS
-+cfg_if! {
+-    #[cfg_attr(all(feature = "llvm-libunwind",
+-                   any(target_os = "fuchsia", target_os = "linux")),
+-               link(name = "unwind", kind = "static"))]
 +if #[cfg(all(target_os = "ios", target_arch = "arm"))] {
 +    // 32-bit iOS uses SjLj and does not provide _Unwind_Backtrace()
      extern "C" {
@@ -132,6 +129,9 @@ index 339b554ed6..ec2f93ed60 100644
      }
 -} else {
 -    // 32-bit iOS uses SjLj and does not provide _Unwind_Backtrace()
+-    #[cfg_attr(all(feature = "llvm-libunwind",
+-                   any(target_os = "fuchsia", target_os = "linux")),
+-               link(name = "unwind", kind = "static"))]
 -    extern "C" {
 -        #[unwind(allowed)]
 -        pub fn _Unwind_SjLj_RaiseException(e: *mut _Unwind_Exception) -> _Unwind_Reason_Code;
@@ -157,6 +157,7 @@ index 339b554ed6..ec2f93ed60 100644
 +    }
  }
  } // cfg_if!
+ 
 -- 
-2.23.0.rc0
+2.27.0
 
