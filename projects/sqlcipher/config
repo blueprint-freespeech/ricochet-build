@@ -1,0 +1,21 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+# The required versions for application-services can be found at the respective
+# commit in libs/build-all.sh
+version: 4.4.0
+var:
+  container:
+    use_container: 1
+  deps:
+    - build-essential
+    - tcl
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: nss
+    project: nss
+  - URL: 'https://github.com/sqlcipher/sqlcipher/archive/v[% c("version") %].tar.gz'
+    name: sqlcipher
+    sha256sum: 0924b2ae1079717954498bda78a30de20ce2a6083076b16214a711567821d148
