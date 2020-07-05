@@ -102,11 +102,6 @@ targets:
     var:
       arch_deps:
         - wine
-      pre_pkginst: |
-        [% IF c("var/windows-i686") -%]
-          # We need this to install wine32
-          dpkg --add-architecture i386
-        [% END -%]
       compiler: mingw-w64-clang
 
   windows-i686:
@@ -152,6 +147,8 @@ input_files:
   - project: fxc2
     name: fxc2
     enable: '[% c("var/windows") %]'
+    target_prepend:
+      - torbrowser-windows-x86_64
   - name: mingw-w64
     project: mingw-w64
     enable: '[% c("var/windows") %]'

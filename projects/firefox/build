@@ -9,12 +9,6 @@ mkdir -p [% dest_dir _ '/' _ c('filename') %]
   # Setting up fxc2
   tar -C /var/tmp/dist -xf [% c('input_files_by_name/fxc2') %]
   export PATH="/var/tmp/dist/fxc2/bin:$PATH"
-  # fxc2 requires Wine.
-  export WINEARCH=[% IF c("var/windows-x86_64") %]win64[% ELSE %]win32[% END %]
-  export HOME=/var/tmp/home
-  mkdir -p $HOME
-  WINEROOT=$HOME/.wine/drive_c
-  wine wineboot -i
   # Setting up stack protector support
   tar -C /var/tmp/dist -xf [% c('input_files_by_name/mingw-w64') %]
   cp /var/tmp/dist/mingw-w64/gcclibs/{libssp.a,libssp_nonshared.a} /var/tmp/dist/mingw-w64-clang/[% c("arch") %]-w64-mingw32/lib/
@@ -192,7 +186,11 @@ rm -f js/src/configure
 
 [% IF c("var/windows") %]
   cp -a obj-*/dist/firefox/* $distdir/Browser/
-  cp -a /var/tmp/dist/fxc2/bin/d3dcompiler_47.dll $distdir/Browser
+  [% IF c("var/windows-i686") %]
+    cp -a /var/tmp/dist/fxc2/bin/d3dcompiler_47_32.dll $distdir/Browser/d3dcompiler_47.dll
+  [% ELSE %]
+    cp -a /var/tmp/dist/fxc2/bin/d3dcompiler_47.dll $distdir/Browser
+  [% END %]
 [% END %]
 
 # Make MAR-based update tools available for use during the bundle phase.
