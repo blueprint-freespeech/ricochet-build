@@ -5,6 +5,9 @@ all: release
 release: submodule-update
 	$(rbm) build release --target release --target torbrowser-all
 
+release-android: submodule-update
+	$(rbm) build release --target release --target torbrowser-all-android
+
 release-android-armv7: submodule-update
 	$(rbm) build release --target release --target torbrowser-android-armv7
 
@@ -40,6 +43,9 @@ release-src: submodule-update
 
 alpha: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-all
+
+alpha-android: submodule-update
+	$(rbm) build release --target alpha --target torbrowser-all-android
 
 alpha-android-armv7: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-android-armv7
@@ -77,6 +83,9 @@ alpha-src: submodule-update
 nightly: submodule-update
 	$(rbm) build release --target nightly --target torbrowser-all
 
+nightly-android: submodule-update
+	$(rbm) build release --target nightly --target torbrowser-all-android
+
 nightly-android-armv7: submodule-update
 	$(rbm) build release --target nightly --target torbrowser-android-armv7
 
@@ -112,6 +121,9 @@ nightly-src: submodule-update
 
 testbuild: submodule-update
 	$(rbm) build release --target testbuild --target torbrowser-all
+
+testbuild-android: submodule-update
+	$(rbm) build release --target testbuild --target torbrowser-all-android
 
 testbuild-android-armv7: submodule-update
 	$(rbm) build release --target testbuild --target torbrowser-android-armv7
