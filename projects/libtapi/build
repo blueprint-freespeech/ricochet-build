@@ -1,0 +1,48 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+builddir=/var/tmp/build/[% project %]-[% c('version') %]
+distdir=/var/tmp/dist/[% project %]
+mkdir -p /var/tmp/dist
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/ninja') %]
+
+# We don't export the path to clang here to follow Mozilla's build script at
+# taskcluster/scripts/misc/build-cctools-port.sh more closely.
+export PATH="/var/tmp/dist/cmake/bin:/var/tmp/dist/ninja:$PATH"
+export CLANG_DIR=/var/tmp/dist/clang
+mkdir -p /var/tmp/build
+tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+export CC=$CLANG_DIR/bin/clang
+export CXX=$CLANG_DIR/bin/clang++
+# We also need this LD_LIBRARY_PATH at build time, since tapi builds bits of
+# clang build tools, and then executes those tools.
+export LD_LIBRARY_PATH=$CLANG_DIR/lib
+
+cd $builddir
+mkdir build
+cd build
+# Values taken from build.sh
+TAPI_REPOSITORY=tapi-1000.10.8
+TAPI_VERSION=10.0.0
+
+INCLUDE_FIX="-I $builddir/src/llvm/projects/clang/include -I $PWD/projects/clang/include"
+
+cmake $builddir/src/llvm \
+      -GNinja \
+      -DCMAKE_CXX_FLAGS="$INCLUDE_FIX" \
+      -DLLVM_INCLUDE_TESTS=OFF \
+      -DCMAKE_BUILD_TYPE=RELEASE \
+      -DCMAKE_INSTALL_PREFIX=$distdir \
+      -DLLVM_TARGETS_TO_BUILD="X86;ARM;AArch64" \
+      -DTAPI_REPOSITORY_STRING=$TAPI_REPOSITORY \
+      -DTAPI_FULL_VERSION=$TAPI_VERSION
+
+ninja clangBasic
+ninja libtapi install-libtapi install-tapi-headers
+
+cd /var/tmp/dist
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

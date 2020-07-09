@@ -1,0 +1,20 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("abbrev") %]'
+# This can be found in
+# taskcluster/ci/fetch/toolchains.yml
+git_hash: 3efb201881e7a76a21e0554906cf306432539cef
+git_url: https://github.com/tpoechtrager/apple-libtapi
+
+var:
+  container:
+    use_container: 1
+
+input_files:
+  - project: container-image
+  - name: clang
+    project: clang
+  - name: cmake
+    project: cmake
+  - name: ninja
+    project: ninja
