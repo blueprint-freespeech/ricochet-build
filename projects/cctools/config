@@ -2,8 +2,8 @@
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 version: '[% c("abbrev") %]'
 # This can be found in
-# browser/config/tooltool-manifest/macosx64/clang.manifest
-git_hash: 8e9c3f2506b51cf56725eaa60b6e90e240e249ca
+# taskcluster/ci/fetch/toolchains.yml
+git_hash: f2890afb8a52944dd8265e489a0691c7b0afdd54
 git_url: https://github.com/tpoechtrager/cctools-port
 
 var:
@@ -14,3 +14,5 @@ input_files:
   - project: container-image
   - name: clang
     project: clang
+  - name: libtapi
+    project: libtapi

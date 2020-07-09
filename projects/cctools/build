@@ -1,20 +1,35 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 distdir=/var/tmp/dist/[% project %]
-mkdir -p /var/tmp/dist
+mkdir -p $distdir
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
-export PATH="/var/tmp/dist/clang/bin:$PATH"
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/libtapi') %]
+mv /var/tmp/dist/libtapi/* $distdir
+export CLANG_DIR=/var/tmp/dist/clang
 mkdir -p /var/tmp/build
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 cd /var/tmp/build/[% project %]-[% c('version') %]/cctools
 
-export CC=clang
-export CXX=clang++
+export CC=$CLANG_DIR/bin/clang
+export CXX=$CLANG_DIR/bin/clang++
+export LDFLAGS="-lpthread -Wl,-rpath-link,$CLANG_DIR/lib -Wl,-rpath,\\\$\$ORIGIN/../lib,-rpath,\\\$\$ORIGIN/../../clang/lib"
+# Force re-libtoolization to overwrite files with the new libtool bits.
+perl -pi -e 's/(LIBTOOLIZE -c)/\1 -f/' autogen.sh
 ./autogen.sh
-./configure --prefix=$distdir --target=x86_64-apple-darwin11 --with-llvm-config=llvm-config
-export LDFLAGS=-lpthread
+./configure \
+    --prefix=$distdir \
+    --target=x86_64-apple-darwin \
+    --with-llvm-config=$CLANG_DIR/bin/llvm-config \
+    --enable-lto-support \
+    --enable-tapi-support \
+    --with-libtapi=$distdir
 
 make -j[% c("buildconf/num_procs") %] install
+strip $distdir/bin/*
+# cctools doesn't include dsymutil but clang will need to find it.
+cp $CLANG_DIR/bin/dsymutil $distdir/bin/x86_64-apple-darwin-dsymutil
+# various build scripts based on cmake want to find `lipo` without a prefix
+cp $distdir/bin/x86_64-apple-darwin-lipo $distdir/bin/lipo
 
 cd /var/tmp/dist
 [% c('tar', {
