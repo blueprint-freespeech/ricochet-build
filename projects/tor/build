@@ -90,8 +90,6 @@ openssldir=/var/tmp/dist/openssl/openssl
 
 [% IF c("var/osx") %]
   cp $libeventdir/lib/libevent-*.dylib $TORBINDIR/
-  # The target version needs to be set before the configure step.
-  export MACOSX_DEPLOYMENT_TARGET=[% c("var/macosx_deployment_target") %]
 [% END %]
 
 cd /var/tmp/build/[% project %]-[% c('version') %]
@@ -122,7 +120,7 @@ cp $distdir/share/tor/geoip6 $TORCONFIGDIR
   cd $distdir
   cp bin/tor $TORBINDIR/
   cd $TORBINDIR/
-  x86_64-apple-darwin11-install_name_tool -change $libeventdir/lib/$LIBEVENT_FILE @executable_path/$LIBEVENT_FILE tor
+  x86_64-apple-darwin-install_name_tool -change $libeventdir/lib/$LIBEVENT_FILE @executable_path/$LIBEVENT_FILE tor
 [% END %]
 
 cd $distdir

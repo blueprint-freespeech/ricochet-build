@@ -14,6 +14,7 @@ var:
     export LD_LIBRARY_PATH=/var/tmp/dist/[% project %]/clang/lib
     export CC="$clangdir/bin/clang [% c('var/FLAGS') %]"
     export LDFLAGS="[% c('var/LDFLAGS') %]"
+    export MACOSX_DEPLOYMENT_TARGET=[% c("var/macosx_deployment_target") %]
 
 input_files:
   - project: container-image
@@ -21,6 +22,8 @@ input_files:
     project: clang
   - name: cctools
     project: cctools
+  # Instructions on how to create the SDK tarball can be found at:
+  # build/macosx/cross-mozconfig.common
   - name: SDK
     URL: https://people.torproject.org/~gk/mirrors/sources/MacOSX10.11.sdk.tar.bz2
     sha256sum: d11e410d757d023be66d2fe7eaa85a1d232da3ac04f177eff3d8b8275cd9ffca
