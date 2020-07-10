@@ -182,3 +182,9 @@ input_files:
     # TorButton patch authored by Arthur Edelstein, from https://github.com/arthuredelstein/torbutton/ branch 2.1.10-namecoin
   - filename: namecoin-etld.patch
     enable: '[% c("var/namecoin") %]'
+    # The library is extracted from Mozilla's officially used Clang, downloaded
+    # from https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/TYTqgyybSLmp0O0GcIl8Xw/artifacts/public/build/clang.tar.zst.
+    # Its SHA-256 sum is 7b0a6e60f102d3dbf618ae9e25d990d4dc72c76eb5accb5974ec70c11ff7e049.
+  - URL: https://people.torproject.org/~gk/mirrors/sources/libclang_rt.osx.a
+    sha256sum: 33541fb054e7dc372b5e9708bbcc175561d7fdbc9b00bf964e0c60b82bd8165a
+    enable: '[% c("var/osx") %]'
