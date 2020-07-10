@@ -22,7 +22,5 @@ steps:
 targets:
   nightly:
     version: '[% c("abbrev") %]'
-    # Hardcode the commit for now so we can start landing ESR 78 patches without
-    # breaking nightly builds.
-    git_hash: b4838d339a84c5ebebd91a0ba6b22d44ecda97b1
+    git_hash: master
     tag_gpg_id: 0
