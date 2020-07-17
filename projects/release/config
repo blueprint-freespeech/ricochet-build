@@ -19,6 +19,13 @@ targets:
     - torbrowser-android-x86_64
     - torbrowser-android-aarch64
     - torbrowser-src
+  torbrowser-all-desktop:
+    - torbrowser-linux-x86_64
+    - torbrowser-linux-i686
+    - torbrowser-windows-i686
+    - torbrowser-windows-x86_64
+    - torbrowser-osx-x86_64
+    - torbrowser-src
   torbrowser-all-android:
     - torbrowser-android-armv7
     - torbrowser-android-x86
@@ -67,6 +74,7 @@ targets:
     - release
     - torbrowser-all
     - torbrowser-all-android
+    - torbrowser-all-desktop
 
   noversiondir:
     var:

@@ -81,7 +81,7 @@ alpha-src: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-src
 
 nightly: submodule-update
-	$(rbm) build release --target nightly --target torbrowser-all
+	$(rbm) build release --target nightly --target torbrowser-all-desktop
 
 nightly-android: submodule-update
 	$(rbm) build release --target nightly --target torbrowser-all-android
