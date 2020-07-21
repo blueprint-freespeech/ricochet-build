@@ -262,7 +262,10 @@ cd $distdir
 [% IF c("var/build_mar") -%]
   # Create full MAR file and compressed package.
   [% SET mar_file = 'tor-browser-' _ c("var/mar_osname") _ '-' _ c("var/torbrowser_version") _ '_${PKG_LOCALE}.mar' %]
-  MAR=$MARTOOLS/mar MBSDIFF=$MARTOOLS/mbsdiff $MARTOOLS/make_full_update.sh -q $OUTDIR/[% mar_file %] "$TBDIR"
+  MAR=$MARTOOLS/mar \
+  MOZ_PRODUCT_VERSION=[% c("var/torbrowser_version") %] \
+  MAR_CHANNEL_ID=torbrowser-torproject-[% c("var/channel") %] \
+  $MARTOOLS/make_full_update.sh -q $OUTDIR/[% mar_file %] "$TBDIR"
 [% END -%]
 
 [% IF c("var/linux") %]
@@ -377,7 +380,10 @@ cp $rootdir/[% c('input_files_by_name/firefox') %]/mar-tools-*.zip "$OUTDIR"/
 
       [% IF build_mar -%]
         # Create full MAR file and compressed package for this locale.
-        MAR=$MARTOOLS/mar MBSDIFF=$MARTOOLS/mbsdiff $MARTOOLS/make_full_update.sh -q $OUTDIR/[% mar_file %] "[% browserdir %]"
+        MAR=$MARTOOLS/mar \
+        MOZ_PRODUCT_VERSION=[% c("var/torbrowser_version") %] \
+        MAR_CHANNEL_ID=torbrowser-torproject-[% c("var/channel") %] \
+        $MARTOOLS/make_full_update.sh -q $OUTDIR/[% mar_file %] "[% browserdir %]"
       [% END -%]
 
       [% IF c("var/linux") %]
