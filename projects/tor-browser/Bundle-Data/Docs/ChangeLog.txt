@@ -2,6 +2,10 @@ Tor Browser 10.0a3 -- July 7 2020
  * Android
    * Update Firefox to 68.10.1esr
 
+Tor Browser 9.5.2 -- July 7 2020
+ * Android
+   * Update Firefox to 68.10.1esr
+
 Tor Browser 10.0a2 -- June 30 2020
  * All Platforms
    * Update Firefox to 68.10.0esr
