@@ -190,7 +190,7 @@ sub mar_filename {
 }
 
 sub create_incremental_mar {
-    my ($config, $pm, $from_version, $new_version, $os, $lang) = @_;
+    my ($config, $pm, $from_version, $new_version, $os, $lang, $channel) = @_;
     my $appname = $config->{appname_marfile};
     my $mar_file = "$appname-$os-${from_version}-${new_version}_$lang.incremental.mar";
     my $mar_file_path = version_dir($config, $new_version) . '/' . $mar_file;
@@ -230,6 +230,8 @@ sub create_incremental_mar {
             exit_error "Missing code signature while creating $mar_file";
         }
     }
+    $ENV{MOZ_PRODUCT_VERSION} = $new_version;
+    $ENV{MAR_CHANNEL_ID} = "torbrowser-torproject-$channel";
     my ($out, $err, $success) = capture_exec('make_incremental_update.sh',
                                    $mar_file_path, "$tmpdir/A", "$tmpdir/B");
     if (!$success) {
@@ -240,7 +242,7 @@ sub create_incremental_mar {
 }
 
 sub create_incremental_mars_for_version {
-    my ($config, $version) = @_;
+    my ($config, $version, $channel) = @_;
     my $pm = Parallel::ForkManager->new(get_nbprocs);
     $pm->run_on_finish(sub { $_[2]->(@_) });
     my $v = $config->{versions}{$version};
@@ -251,7 +253,7 @@ sub create_incremental_mars_for_version {
         foreach my $os (keys %{$v->{files}}) {
             foreach my $lang (keys %{$v->{files}{$os}}) {
                 next unless defined $from_v->{files}{$os}{$lang}{complete};
-                create_incremental_mar($config, $pm, $from_version, $version, $os, $lang);
+                create_incremental_mar($config, $pm, $from_version, $version, $os, $lang, $channel);
             }
         }
     }
@@ -640,10 +642,11 @@ my %actions = (
     },
     gen_incrementals => sub {
         my ($config) = @_;
-        foreach my $version (channel_to_version($config, @ARGV)) {
+        foreach my $channel (@ARGV) {
+            my ($version) = channel_to_version($config, $channel);
             extract_martools($config, $version);
             get_version_files($config, $version);
-            create_incremental_mars_for_version($config, $version);
+            create_incremental_mars_for_version($config, $version, $channel);
         }
     },
     download_missing_versions => sub {
