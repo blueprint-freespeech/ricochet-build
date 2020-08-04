@@ -1,17 +1,100 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
+builddir=/var/tmp/build
+mkdir $builddir
 distdir="/var/tmp/dist/[% project %]"
 mkdir -p "$distdir"
-tar xjf [% c('input_files_by_name/SDK') %]
-mv MacOSX10.11.sdk "$distdir/"
-tar xf [% c('input_files_by_name/clang') %]
-mv clang "$distdir/clang"
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/ninja') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang_compiler') %]
+tar -C $builddir -xf [% c('input_files_by_name/llvm') %]
+tar -C $builddir -xf [% c('input_files_by_name/clang') %]
+tar -C $builddir -xf [% c('input_files_by_name/libcxx') %]
+tar -C $builddir -xf [% c('input_files_by_name/libcxxabi') %]
+tar -C $builddir -xf [% c('input_files_by_name/lld') %]
+tar -C $builddir -xf [% c('input_files_by_name/compiler-rt') %]
+tar -C $distdir -xf [% c('input_files_by_name/SDK') %]
 tar -C $distdir -xf [% c('input_files_by_name/cctools') %]
-cd $distdir/cctools/bin
+
+clangdir=/var/tmp/dist/clang/bin
+cctoolsdir=$distdir/cctools/bin
+sysrootdir=$distdir/MacOSX10.11.sdk/
+# We still need to put the cctoolsdir on the path. That's because of `lipo`. See
+# the respective comment in the cctools build script.
+export PATH="/var/tmp/dist/ninja:/var/tmp/dist/cmake/bin:$cctoolsdir:$PATH"
+export MACOSX_DEPLOYMENT_TARGET=[% c("var/macosx_deployment_target") %]
+
+cd $builddir
+mv llvm-* llvm
+# LLVM has reproducibility issues when optimizing bitcode, which we need to
+# patch. See: #32053 for more details.
+patch -p1 < $rootdir/43909.patch
+mv clang-* llvm/tools/clang
+mv libcxx-* llvm/projects/libcxx
+mv libcxxabi-* llvm/projects/libcxxabi
+mv lld-* llvm/tools/lld
+mv compiler-rt-* compiler-rt
+patch -p1 < $rootdir/compiler-rt-cross-compile.patch
+patch -p1 < $rootdir/compiler-rt-no-codesign.patch
+mv compiler-rt llvm/projects
+mkdir build
+cd build
+# We follow quite closely Mozilla's build/build-clang/build-clang.py with the
+# clang-macosx64.json flavor. This currently implies disabling Xray as it
+# requires an OSX 10.12 SDK (see: https://bugs.llvm.org/show_bug.cgi?id=38959).
+cmake -GNinja \
+      -DCMAKE_C_COMPILER=$clangdir/clang \
+      -DCMAKE_CXX_COMPILER=$clangdir/clang++ \
+      -DCMAKE_ASM_COMPILER=$clangdir/clang \
+      -DCMAKE_LINKER=$clangdir/clang \
+      -DCMAKE_AR=$cctoolsdir/x86_64-apple-darwin-ar \
+      -DCMAKE_C_FLAGS="[% c('var/FLAGS') %] -I$sysrootdir/usr/include -iframework $sysrootdir/System/Library/Frameworks" \
+      -DCMAKE_CXX_FLAGS="-stdlib=libc++ [% c('var/FLAGS') %] -I$sysrootdir/usr/include -iframework $sysrootdir/System/Library/Frameworks" \
+      -DCMAKE_ASM_FLAGS="[% c('var/FLAGS') %] -I$sysrootdir/usr/include -iframework $sysrootdir/System/Library/Frameworks" \
+      -DCMAKE_EXE_LINKER_FLAGS="[% c('var/LDFLAGS') %]" \
+      -DCMAKE_SHARED_LINKER_FLAGS="[% c('var/LDFLAGS') %]" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=$distdir/clang \
+      -DLLVM_TARGETS_TO_BUILD="X86;ARM;AArch64" \
+      -DLLVM_ENABLE_ASSERTIONS=OFF \
+      -DPYTHON_EXECUTABLE=/usr/bin/python2.7 \
+      -DLLVM_TOOL_LIBCXX_BUILD=ON \
+      -DLLVM_ENABLE_BINDINGS=OFF \
+      -DLLVM_ENABLE_LIBXML2=FORCE_ON \
+      -DLLVM_LINK_LLVM_DYLIB=ON \
+      -DCMAKE_RANLIB=$cctoolsdir/x86_64-apple-darwin-ranlib \
+      -DCMAKE_LIBTOOL=$cctoolsdir/x86_64-apple-darwin-libtool \
+      -DCMAKE_SYSTEM_NAME=Darwin \
+      -DCMAKE_SYSTEM_VERSION=10.10 \
+      -DLLVM_ENABLE_THREADS=OFF \
+      -DCOMPILER_RT_BUILD_XRAY=OFF \
+      -DLIBCXXABI_LIBCXX_INCLUDES=$builddir/llvm/projects/libcxx/include \
+      -DCMAKE_OSX_SYSROOT=$sysrootdir \
+      -DCMAKE_FIND_ROOT_PATH=$sysrootdir \
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+      -DCMAKE_MACOSX_RPATH=ON \
+      -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+      -DDARWIN_osx_ARCHS=x86_64 \
+      -DDARWIN_osx_SYSROOT=$sysrootdir \
+      -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-apple-darwin $builddir/llvm
+ninja install -v
+
+# We now have a native macosx64 toolchain.
+# What we want is a native linux64 toolchain which can target macosx64.
+# Overlay the linux64 toolchain that we used for this build. Note: we don't do
+# any ASan builds for macOS (yet). Once we do we need to preserve at least
+# `llvm-symbolizer` as that one seems to get shipped with sanitizer builds (at
+# least that's what Mozilla claims).
+cd $distdir
+cp --remove-destination -lr /var/tmp/dist/clang/* clang/
+
+cd cctools/bin
 ln -s ../../clang/bin/clang x86_64-apple-darwin-clang
 ln -s ../../clang/bin/clang++ x86_64-apple-darwin-clang++
 
-cd "/var/tmp/dist"
+cd /var/tmp/dist
 [% c('tar', {
    tar_src => [ project ],
    tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
