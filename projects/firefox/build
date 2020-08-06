@@ -14,11 +14,6 @@ mkdir -p [% dest_dir _ '/' _ c('filename') %]
   cp /var/tmp/dist/mingw-w64/gcclibs/{libssp.a,libssp_nonshared.a} /var/tmp/dist/mingw-w64-clang/[% c("arch") %]-w64-mingw32/lib/
 [% END -%]
 
-[% IF c("var/osx") %]
-  mkdir -p /var/tmp/dist/macosx-toolchain/clang/lib/clang/[% pc("clang", "version") %]/lib/darwin
-  mv libclang_rt.osx.a /var/tmp/dist/macosx-toolchain/clang/lib/clang/[% pc("clang", "version") %]/lib/darwin
-[% END -%]
-
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/rust') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/cbindgen') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/nasm') %]
