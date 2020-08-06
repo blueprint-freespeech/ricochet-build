@@ -1,3 +1,9 @@
+Tor Browser 9.5.3 -- July 28 2020
+ * All Platforms
+   * Update Firefox to 68.11.0esr
+   * Update NoScript to 11.0.34
+   * Update Tor to 0.4.3.6
+
 Tor Browser 10.0a3 -- July 7 2020
  * Android
    * Update Firefox to 68.10.1esr
