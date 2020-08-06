@@ -1,3 +1,11 @@
+Tor Browser 10.0a4 -- July 28 2020
+ * All Platforms
+   * Update Firefox to 68.11.0esr
+   * Update NoScript to 11.0.34
+   * Update Tor to 0.4.4.2-alpha
+ * Windows + OS X + Linux
+   * Bug 40019: Onion-Location should not be processed on .onion webpages [tor-browser]
+
 Tor Browser 9.5.3 -- July 28 2020
  * All Platforms
    * Update Firefox to 68.11.0esr
