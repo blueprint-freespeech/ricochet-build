@@ -40,3 +40,4 @@ ac_add_options --disable-tests
 
 # Disable telemetry
 ac_add_options MOZ_TELEMETRY_REPORTING=
+ac_add_options --disable-default-browser-agent
