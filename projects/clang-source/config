@@ -1,0 +1,32 @@
+# vim: filetype=yaml sw=2
+version: 9.0.1
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+gpg_keyring: clang.gpg
+sig_ext: sig
+
+input_files:
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/llvm-[% c("version") %].src.tar.xz'
+    name: llvm
+    file_gpg_id: 1
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/clang-[% c("version") %].src.tar.xz'
+    name: clang
+    file_gpg_id: 1
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/clang-tools-extra-[% c("version") %].src.tar.xz'
+    name: clang-tools-extra
+    file_gpg_id: 1
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/libcxx-[% c("version") %].src.tar.xz'
+    name: libcxx
+    file_gpg_id: 1
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/libcxxabi-[% c("version") %].src.tar.xz'
+    name: libcxxabi
+    file_gpg_id: 1
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/lld-[% c("version") %].src.tar.xz'
+    name: lld
+    file_gpg_id: 1
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/compiler-rt-[% c("version") %].src.tar.xz'
+    name: compiler-rt
+    file_gpg_id: 1
+  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("version") %]/libunwind-[% c("version") %].src.tar.xz'
+    name: libunwind
+    file_gpg_id: 1
+  - filename: 43909.patch
