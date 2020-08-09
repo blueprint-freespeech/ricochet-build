@@ -1,8 +1,6 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 version: 10.11-1
-gpg_keyring: clang.gpg
-sig_ext: sig
 var:
   container:
     use_container: 1
@@ -20,7 +18,7 @@ var:
 
 input_files:
   - project: container-image
-  - name: clang_compiler
+  - name: clang
     project: clang
   - name: cctools
     project: cctools
@@ -33,24 +31,7 @@ input_files:
   - name: SDK
     URL: https://people.torproject.org/~gk/mirrors/sources/MacOSX10.11.sdk.tar.bz2
     sha256sum: d11e410d757d023be66d2fe7eaa85a1d232da3ac04f177eff3d8b8275cd9ffca
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% pc("clang", "version") %]/llvm-[% pc("clang", "version") %].src.tar.xz'
-    name: llvm
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% pc("clang", "version") %]/clang-[% pc("clang", "version") %].src.tar.xz'
-    name: clang
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% pc("clang", "version") %]/libcxx-[% pc("clang", "version") %].src.tar.xz'
-    name: libcxx
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% pc("clang", "version") %]/libcxxabi-[% pc("clang", "version") %].src.tar.xz'
-    name: libcxxabi
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% pc("clang", "version") %]/lld-[% pc("clang", "version") %].src.tar.xz'
-    name: lld
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% pc("clang", "version") %]/compiler-rt-[% pc("clang", "version") %].src.tar.xz'
-    name: compiler-rt
-    file_gpg_id: 1
+  - name: clang-source
+    project: clang-source
   - filename: compiler-rt-cross-compile.patch
   - filename: compiler-rt-no-codesign.patch
-  - filename: 43909.patch

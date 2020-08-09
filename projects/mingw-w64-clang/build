@@ -11,14 +11,7 @@ mkdir -p $builddir
 cd $builddir
 tar -xf $rootdir/mingw-w64-clang-[% c('version') %].tar.gz
 mv mingw-w64-clang-[% c('version') %] mingw-w64-clang
-tar -xf $rootdir/[% c('input_files_by_name/libcxx') %]
-mv libcxx-* libcxx
-tar -xf $rootdir/[% c('input_files_by_name/libcxxabi') %]
-mv libcxxabi-* libcxxabi
-tar -xf $rootdir/[% c('input_files_by_name/libunwind') %]
-mv libunwind-* libunwind
-tar -xf $rootdir/[% c('input_files_by_name/compiler-rt') %]
-mv compiler-rt-* compiler-rt
+tar -xf $rootdir/[% c('input_files_by_name/clang-source') %]
 tar -xf $rootdir/[% c('input_files_by_name/llvm-mingw') %]
 
 # Adding the wrappers and symlinks we need
@@ -98,9 +91,8 @@ make -j[% c("buildconf/num_procs") %]
 make -j[% c("buildconf/num_procs") %] install
 
 # compiler-rt
-cd $builddir/compiler-rt
+cd $builddir/clang-source/projects/compiler-rt
 mkdir build && cd build
-CLANG_VERSION=$(basename $(dirname $(dirname $(dirname $($CC --print-libgcc-file-name -rtlib=compiler-rt)))))
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_COMPILER=$CC \
       -DCMAKE_SYSTEM_NAME=Windows \
@@ -109,13 +101,14 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_COMPILER_WORKS=1 \
       -DCMAKE_C_COMPILER_TARGET=$compiler_rt_machine-windows-gnu \
       -DCOMPILER_RT_DEFAULT_TARGET_ONLY=TRUE \
-      $builddir/compiler-rt/lib/builtins
+      $builddir/clang-source/projects/compiler-rt/lib/builtins
   make -j[% c("buildconf/num_procs") %]
-  mkdir -p $distdir/lib/clang/$CLANG_VERSION/lib/windows
-  cp lib/windows/libclang_rt.builtins-$compiler_rt_machine.a $distdir/lib/clang/$CLANG_VERSION/lib/windows/
+  rtdir=$distdir/lib/clang/[% pc("clang-source", "version") %]/lib/windows
+  mkdir -p $rtdir
+  cp lib/windows/libclang_rt.builtins-$compiler_rt_machine.a $rtdir/
 
 # libunwind
-cd $builddir/libunwind
+cd $builddir/clang-source/libunwind
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=$distdir/[% c("arch") %]-w64-mingw32 \
@@ -136,14 +129,14 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       -DLIBUNWIND_ENABLE_THREADS=TRUE \
       -DLIBUNWIND_ENABLE_SHARED=FALSE \
       -DLIBUNWIND_ENABLE_CROSS_UNWINDING=FALSE \
-      -DCMAKE_CXX_FLAGS="-Wno-dll-attribute-on-redeclaration -nostdinc++ -I$builddir/libcxx/include -DPSAPI_VERSION=2" \
+      -DCMAKE_CXX_FLAGS="-Wno-dll-attribute-on-redeclaration -nostdinc++ -I$builddir/clang-source/projects/libcxx/include -DPSAPI_VERSION=2" \
       -DCMAKE_C_FLAGS="-Wno-dll-attribute-on-redeclaration" \
-      $builddir/libunwind
+      $builddir/clang-source/libunwind
 make -j[% c("buildconf/num_procs") %]
 make -j[% c("buildconf/num_procs") %] install
 
 # libcxxabi
-cd $builddir/libcxxabi
+cd $builddir/clang-source/projects/libcxxabi
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=$distdir/[% c("arch") %]-w64-mingw32 \
@@ -162,16 +155,16 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       -DLIBCXXABI_ENABLE_THREADS=ON \
       -DLIBCXXABI_TARGET_TRIPLE=[% c("arch") %]-w64-mingw32 \
       -DLIBCXXABI_ENABLE_SHARED=OFF \
-      -DLIBCXXABI_LIBCXX_INCLUDES=$builddir/libcxx/include \
+      -DLIBCXXABI_LIBCXX_INCLUDES=$builddir/clang-source/projects/libcxx/include \
       -DLLVM_NO_OLD_LIBSTDCXX=TRUE \
       -DCXX_SUPPORTS_CXX11=TRUE \
       -DCXX_SUPPORTS_CXX_STD=True \
       -DCMAKE_CXX_FLAGS="-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -D_LIBCPP_HAS_THREAD_API_WIN32" \
-      $builddir/libcxxabi
+      $builddir/clang-source/projects/libcxxabi
 make -j[% c("buildconf/num_procs") %] VERBOSE=1
 
 # libcxx
-cd $builddir/libcxx
+cd $builddir/clang-source/projects/libcxx
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=$distdir/[% c("arch") %]-w64-mingw32 \
@@ -197,10 +190,10 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       -DLIBCXX_ENABLE_FILESYSTEM=OFF \
       -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=TRUE \
       -DLIBCXX_CXX_ABI=libcxxabi \
-      -DLIBCXX_CXX_ABI_INCLUDE_PATHS=$builddir/libcxxabi/include \
-      -DLIBCXX_CXX_ABI_LIBRARY_PATH=$builddir/libcxxabi/build/lib \
+      -DLIBCXX_CXX_ABI_INCLUDE_PATHS=$builddir/clang-source/projects/libcxxabi/include \
+      -DLIBCXX_CXX_ABI_LIBRARY_PATH=$builddir/clang-source/projects/libcxxabi/build/lib \
       -DCMAKE_CXX_FLAGS="-D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS" \
-      $builddir/libcxx
+      $builddir/clang-source/projects/libcxx
 make -j[% c("buildconf/num_procs") %] VERBOSE=1
 make -j[% c("buildconf/num_procs") %] install
 
