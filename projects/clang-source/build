@@ -1,0 +1,31 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+tar -xf $rootdir/[% c('input_files_by_name/llvm') %]
+tar -xf $rootdir/[% c('input_files_by_name/clang') %]
+tar -xf $rootdir/[% c('input_files_by_name/clang-tools-extra') %]
+tar -xf $rootdir/[% c('input_files_by_name/libcxx') %]
+tar -xf $rootdir/[% c('input_files_by_name/libcxxabi') %]
+tar -xf $rootdir/[% c('input_files_by_name/lld') %]
+tar -xf $rootdir/[% c('input_files_by_name/compiler-rt') %]
+tar -xf $rootdir/[% c('input_files_by_name/libunwind') %]
+
+mv llvm-[% c("version") %].src llvm
+# LLVM has reproducibility issues when optimizing bitcode, which we need to
+# patch. See: #32053 for more details.
+patch -p1 < $rootdir/43909.patch
+mv clang-[% c("version") %].src llvm/tools/clang
+# Having clang-tidy available seems like a good idea
+mv clang-tools-extra-[% c("version") %].src llvm/tools/clang/tools/extra
+mv libcxx-[% c("version") %].src llvm/projects/libcxx
+mv libcxxabi-[% c("version") %].src llvm/projects/libcxxabi
+mv lld-[% c("version") %].src llvm/tools/lld
+mv compiler-rt-[% c("version") %].src llvm/projects/compiler-rt
+# We need libunwind only for mingw-w64-clang, don't include it as tightly by
+# putting it into projects/
+mv libunwind-[% c("version") %].src llvm/libunwind
+mv llvm [% project %]
+
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

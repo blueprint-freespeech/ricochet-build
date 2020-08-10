@@ -15,22 +15,8 @@ export PATH="/var/tmp/dist/cmake/bin:$PATH"
 [% END -%]
 mkdir -p /var/tmp/build
 cd /var/tmp/build
-tar -xf $rootdir/[% c('input_files_by_name/llvm') %]
-tar -xf $rootdir/[% c('input_files_by_name/clang') %]
-tar -xf $rootdir/[% c('input_files_by_name/libcxx') %]
-tar -xf $rootdir/[% c('input_files_by_name/libcxxabi') %]
-tar -xf $rootdir/[% c('input_files_by_name/lld') %]
-tar -xf $rootdir/[% c('input_files_by_name/compiler-rt') %]
-mv llvm-* llvm
-# LLVM has reproducibility issues when optimizing bitcode, which we need to
-# patch. See: #32053 for more details.
-patch -p1 < $rootdir/43909.patch
-mv clang-* llvm/tools/clang
-mv libcxx-* llvm/projects/libcxx
-mv libcxxabi-* llvm/projects/libcxxabi
-mv lld-* llvm/tools/lld
-mv compiler-rt-* llvm/projects/compiler-rt
-cd llvm
+tar -xf $rootdir/[% c('input_files_by_name/clang-source') %]
+cd clang-source
 export LLVM_HOME=$(pwd)
 mkdir build
 cd build

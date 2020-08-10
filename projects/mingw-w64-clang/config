@@ -3,9 +3,6 @@ filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 git_url: https://git.code.sf.net/p/mingw-w64/mingw-w64
 git_hash: 1b373beec6d07478ffba33726bb3bb21f32e4411
 version: '[% c("abbrev") %]'
-llvm_version: 9.0.1
-gpg_keyring: clang.gpg
-sig_ext: sig
 
 var:
   container:
@@ -21,18 +18,8 @@ input_files:
     name: clang
   - project: cmake
     name: cmake
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/libcxx-[% c("llvm_version") %].src.tar.xz'
-    name: libcxx
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/libcxxabi-[% c("llvm_version") %].src.tar.xz'
-    name: libcxxabi
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/libunwind-[% c("llvm_version") %].src.tar.xz'
-    name: libunwind
-    file_gpg_id: 1
-  - URL: 'https://github.com/llvm/llvm-project/releases/download/llvmorg-[% c("llvm_version") %]/compiler-rt-[% c("llvm_version") %].src.tar.xz'
-    name: compiler-rt
-    file_gpg_id: 1
+  - project: clang-source
+    name: clang-source
   - project: llvm-mingw
     name: llvm-mingw
   - filename: mingw-winrt.patch
