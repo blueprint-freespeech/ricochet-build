@@ -8,9 +8,9 @@ git_submodule: 1
 gpg_keyring: torbutton.gpg
 
 var:
-  geckoview_version: '78.0b[% c("var/beta_version") %]'
-  beta_version: 5
-  torbrowser_branch: 10
+  geckoview_version: '80.0b[% c("var/beta_version") %]'
+  beta_version: 2
+  torbrowser_branch: 10.0
   copyright_year: '[% exec("git show -s --format=%ci").remove("-.*") %]'
   deps:
     - build-essential
@@ -26,7 +26,7 @@ var:
   container:
     use_container: 1
   # this should be updated when the list of gradle dependencies is changed
-  gradle_dependencies_version: 1
+  gradle_dependencies_version: 2
 
 steps:
   merge_aars:
