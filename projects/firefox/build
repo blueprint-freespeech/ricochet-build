@@ -277,7 +277,7 @@ END;
 %]
 
 [% IF c("var/linux") %]
-  /var/tmp/dist/gcc/bin/g++ $rootdir/abicheck.cc -o Browser/abicheck
+  /var/tmp/dist/gcc/bin/g++ $rootdir/abicheck.cc -o Browser/abicheck -std=c++17
 [% END %]
 
 [% c('tar', {
