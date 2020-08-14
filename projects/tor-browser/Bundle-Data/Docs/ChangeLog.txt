@@ -12,13 +12,17 @@ Tor Browser 10.0a5 -- August 18 2020
      * Bug 34206: Tor Launcher button labels are missing (Firefox 76)
      * Translations update
    * Update NoScript to 11.0.37
+   * Bug 11154: Disable TLS 1.0 (and 1.1) by default
    * Bug 16931: Sanitize the add-on blocklist update URL
+   * Bug 17374: Disable 1024-DH Encryption by default
    * Bug 30682: Disable Intermediate CA Preloading
    * Bug 30812: Exempt about: pages from Resist Fingerprinting
    * Bug 31918+33533+40024+40037: Rebase Tor Browser esr68 patches for ESR 78 [tor-browser]
    * Bug 32612: Update MAR_CHANNEL_ID for the alpha
+   * Bug 32886: Separate treatment of @media interaction features for desktop and android
    * Bug 33534: Review FF release notes from FF69 to latest (FF78)
    * Bug 33697: Use old search config based on list.json
+   * Bug 33721: PDF Viewer is not working in the safest security level
    * Bug 33734: Set MOZ_NORMANDY to False
    * Bug 33737: Fix aboutDialog.js error for Firefox nightlies
    * Bug 33848: Disable Enhanced Tracking Protection
@@ -50,6 +54,8 @@ Tor Browser 10.0a5 -- August 18 2020
  * Windows
    * Bug 33855: Don't use site's icon as window icon in Windows in private mode
    * Bug 40061: Omit the Windows default browser agent from the build [tor-browser]
+ * OS X
+   * Bug 32252: Tor Browser does not display correctly in VMWare Fusion on macOS (mojave)
  * Build System
    * All Platforms
      * Bug 31845: Bump GCC version for Linux to 9.3.0
