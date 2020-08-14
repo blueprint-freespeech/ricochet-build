@@ -42,7 +42,7 @@ release-src: submodule-update
 	$(rbm) build release --target release --target torbrowser-src
 
 alpha: submodule-update
-	$(rbm) build release --target alpha --target torbrowser-all
+	$(rbm) build release --target alpha --target torbrowser-all-desktop
 
 alpha-android: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-all-android
