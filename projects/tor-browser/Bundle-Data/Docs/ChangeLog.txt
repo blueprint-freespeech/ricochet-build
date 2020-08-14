@@ -1904,6 +1904,7 @@ Tor Browser 8.0 -- September 5 2018
    * Bug 21607: Disable WebVR for now until it is properly audited
    * Bug 21549: Disable wasm for now until it is properly audited
    * Bug 26614: Disable Web Authentication API until it is properly audited
+   * Bug 18598: Disable WebSpeech API
    * Bug 27281: Enable Reader View mode again
    * Bug 26114: Don't expose navigator.mozAddonManager to websites
    * Bug 21850: Update about:tbupdate handling for e10s
@@ -1917,6 +1918,7 @@ Tor Browser 8.0 -- September 5 2018
    * Bug 25215: Revert bug 18619 (we are not disabling IndexedDB any longer)
    * Bug 19910: Rip out optimistic data socks handshake variant (#3875)
    * Bug 22564: Hide Firefox Sync
+   * Bug 21484: Hide "What's New" link from About dialog
    * Bug 25090: Disable updater telemetry
    * Bug 26127: Make sure Torbutton and Tor Launcher are not treated as legacy extensions
    * Bug 13575: Disable randomised Firefox HTTP cache decay user tests
@@ -2103,7 +2105,9 @@ Tor Browser 8.0a9 -- June 27 2018
    * Bug 22756: Show Canvas prompt only after user interaction
    * Bug 26045: Add new MAR signing keys
    * Bug 22564: Hide Firefox Sync
+   * Bug 21484: Hide "What's New" link from About dialog
    * Bug 25090: Disable updater telemetry
+   * Bug 18598: Disable WebSpeech API
    * Bug 26127: Make sure Torbutton and Tor Launcher are not treated as legacy extensions
    * Bug 26073: Migrate general.useragent.locale to intl.locale.requested
    * Bug 20628: Make Tor Browser available in da, he, sv-SE, and zh-TW
