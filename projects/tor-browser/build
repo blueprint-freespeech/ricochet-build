@@ -301,7 +301,7 @@ cp $rootdir/[% c('input_files_by_name/firefox') %]/mar-tools-*.zip "$OUTDIR"/
 [% END -%]
 
 # Create a tarball with all Linux x86_64 language packs (Bug 32676)
-[% IF c("var/release") && c("var/linux-x86_64") && ! c("var/multi_lingual") && ! c("var/testbuild") -%]
+[% IF c("var/linux-x86_64") && ! c("var/multi_lingual") && ! c("var/testbuild") -%]
   pushd $rootdir/[% c('input_files_by_name/firefox-langpacks') %]
   [% c('tar', {
            tar_src => [ '.' ],
