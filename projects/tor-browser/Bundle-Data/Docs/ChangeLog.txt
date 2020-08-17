@@ -43,12 +43,12 @@ Tor Browser 10.0a5 -- August 18 2020
    * Bug 40017: Audit Firefox 68-78 diff for proxy issues [tor-browser]
    * Bug 40022: Update new icons in Tor Browser branding [tor-browser]
    * Bug 40025: Revert add-on permissions due to Mozilla's 1560059 [tor-browser]
-   * Bug 40036: Remove product version/updatce channel from #13379 patch [tor-browser]
+   * Bug 40036: Remove product version/update channel from #13379 patch [tor-browser]
    * Bug 40038: Review RemoteSettings for ESR 78 [tor-browser]
    * Bug 40048: Disable various ESR78 features via prefs [tor-browser]
-   * Bug 40059: Verify our external helper patch is sill working [tor-browser]
+   * Bug 40059: Verify our external helper patch is still working [tor-browser]
    * Bug 40066: Update existing prefs for ESR 78 [tor-browser]
-   * Bug 40073: Disable remote Public Suffic List fetching [tor-browser]
+   * Bug 40073: Disable remote Public Suffix List fetching [tor-browser]
    * Bug 40078: Backport patches for bug 1651680 for now [tor-browser]
    * Translations update
  * Windows
