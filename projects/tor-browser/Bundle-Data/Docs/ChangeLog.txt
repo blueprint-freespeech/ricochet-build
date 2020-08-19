@@ -58,7 +58,7 @@ Tor Browser 10.0a5 -- August 18 2020
    * Bug 32252: Tor Browser does not display correctly in VMWare Fusion on macOS (mojave)
  * Build System
    * Windows + OS X + Linux
-     * Bug 31845: Bump GCC version for Linux to 9.3.0
+     * Bug 31845: Bump GCC version to 9.3.0
      * Bug 34011: Bump clang to 9.0.1
      * Bug 34014: Enable sqlite3 support in Python
      * Bug 34390: Don't copy DBM libraries anymore
