@@ -57,7 +57,7 @@ Tor Browser 10.0a5 -- August 18 2020
  * OS X
    * Bug 32252: Tor Browser does not display correctly in VMWare Fusion on macOS (mojave)
  * Build System
-   * All Platforms
+   * Windows + OS X + Linux
      * Bug 31845: Bump GCC version for Linux to 9.3.0
      * Bug 34011: Bump clang to 9.0.1
      * Bug 34014: Enable sqlite3 support in Python
@@ -74,7 +74,7 @@ Tor Browser 10.0a5 -- August 18 2020
      * Bug 34230: Update Windows toolchain for Firefox 78 ESR
      * Bug 40015: Use only 64bit fxc2 [tor-browser-build]
      * Bug 40017: Enable stripping again on Windows [tor-browser-build]
-     * Bug 40061: Omit the Windows default browser agent from the build [tor-browser-build]
+     * Bug 40061: Omit the Windows default browser agent from the build [tor-browser]
    * OS X
      * Bug 34229: Update macOS toolchain for Firefox 78 ESR
      * Bug 40003: Update cctools version for Firefox 78 ESR [tor-browser-build]
