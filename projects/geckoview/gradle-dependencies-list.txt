@@ -140,6 +140,10 @@ dfbfd6ffe2a784ca9817c46365aa7f8a578320b805bde39d6f55a0b09d8aa8ca | https://jcent
 321668fc474a73140eb9cc73c779f1ebb9f60948aade3beddee082ecefcf0259 | https://jcenter.bintray.com/org/bouncycastle/bcpkix-jdk15on/1.56/bcpkix-jdk15on-1.56.pom
 963e1ee14f808ffb99897d848ddcdb28fa91ddda867eb18d303e82728f878349 | https://jcenter.bintray.com/org/bouncycastle/bcprov-jdk15on/1.56/bcprov-jdk15on-1.56.jar
 8fdc3336e7b01873193ba9c48b87de7d788dc0954d1eb45c322492627a4b5c6e | https://jcenter.bintray.com/org/bouncycastle/bcprov-jdk15on/1.56/bcprov-jdk15on-1.56.pom
+8940f7e0a2d740d3003e7b86865d5057f024dba04b5d4f8ac63ab9696d12162d | https://jcenter.bintray.com/org/checkerframework/checker-compat-qual/2.5.0/checker-compat-qual-2.5.0.jar
+f386894973959e8f2cd02baa8742ff29f166cc9bd0be22282ccfe756ad22ebc2 | https://jcenter.bintray.com/org/checkerframework/checker-compat-qual/2.5.0/checker-compat-qual-2.5.0.pom
+b414cd03e2256d201cf7f8531d8512497330d2dcc1d54c30167f2c12b94d9e6c | https://jcenter.bintray.com/org/checkerframework/checker-qual/2.5.0/checker-qual-2.5.0.jar
+fb3c42e5c956d0d37b070a27183a96f917c63dff4574ca7bff7a9abd24827b43 | https://jcenter.bintray.com/org/checkerframework/checker-qual/2.5.0/checker-qual-2.5.0.pom
 64b02691c8b9d4e7700f8ee2e742dce7ea2c6e81e662b7522c9ee3bf568c040a | https://jcenter.bintray.com/org/checkerframework/checker-qual/2.5.2/checker-qual-2.5.2.jar
 dc4cd438a36462d013c2338c8e206d102a322a00f33729e8955ee219859c9ede | https://jcenter.bintray.com/org/checkerframework/checker-qual/2.5.2/checker-qual-2.5.2.pom
 6b87237de8c2e1740cf80627c7f3ce3e15de1930bb250c55a1eca94fa3e014df | https://jcenter.bintray.com/org/codehaus/codehaus-parent/4/codehaus-parent-4.pom
@@ -173,6 +177,8 @@ affb7c85a3c87bdcf69ff1dbb84de11f63dc931293934bc08cd7ab18de083601 | https://jcent
 d83267404f53b7d95995cfac7723991e4761e702ae41a88703b1bd202bfcfa21 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-android-extensions/1.3.41/kotlin-android-extensions-1.3.41.pom
 980965a550c50f424a2c6306dec7d5a0ac94a21e1aa8dbe87f7224774d44113c | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-annotation-processing-gradle/1.3.41/kotlin-annotation-processing-gradle-1.3.41.jar
 f00bc1f5e8d853238d7225ef503f3cc931d91dd1b37007d360f2c2d1b1eaad27 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-annotation-processing-gradle/1.3.41/kotlin-annotation-processing-gradle-1.3.41.pom
+bf99f7935f6f9ad36339f04e22a4ca3725203036c018a86344271ec762e935f1 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-annotations-jvm/1.3.70/kotlin-annotations-jvm-1.3.70.jar
+321458df7237ec2080a88fae01facd27a517f2d654c8ff549740d51844b5e912 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-annotations-jvm/1.3.70/kotlin-annotations-jvm-1.3.70.pom
 602766a64424203122e9657545da958718f6dbda019081a4cd75047404d32363 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-build-common/1.3.41/kotlin-build-common-1.3.41.jar
 fc33d0df31e9bbe6b67ff20dc211f396ac55dc350202834b85ecba0df81242e2 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-build-common/1.3.41/kotlin-build-common-1.3.41.pom
 ea6ab03286a534ab24f123b845a107c7a53b679f6ee56bdc34b5dd1b0fd7b6f4 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-compiler-embeddable/1.3.41/kotlin-compiler-embeddable-1.3.41.jar
@@ -273,8 +279,8 @@ c4e4be66c1b2f0abec593571454e1de14013f7e0f96bf2a9f212931a48cae550 | https://maven
 c7a7d3c2a9d6c21d8b6d470933b9472c733a4799b3ff702081b608adf1c7e592 | https://maven.google.com/android/arch/lifecycle/runtime/1.1.1/runtime-1.1.1.pom
 7de29cfaba77d6b5d5be234c57f6812d0150d087e63941af22ba1d1f8e2bc96a | https://maven.google.com/android/arch/lifecycle/viewmodel/1.1.1/viewmodel-1.1.1.aar
 deae2518ee1d17db319fbaf4055e32d591d58569eb9ccad53d8d323cf1840555 | https://maven.google.com/android/arch/lifecycle/viewmodel/1.1.1/viewmodel-1.1.1.pom
-0baae9755f7caf52aa80cd04324b91ba93af55d4d1d17dcc9a7b53d99ef7c016 | https://maven.google.com/androidx/annotation/annotation/1.0.0/annotation-1.0.0.jar
-a179c12db43d9c0300c9db63f4811db496504be5401b951d422b78490ad1e5b4 | https://maven.google.com/androidx/annotation/annotation/1.0.0/annotation-1.0.0.pom
+d38d63edb30f1467818d50aaf05f8a692dea8b31392a049bfa991b159ad5b692 | https://maven.google.com/androidx/annotation/annotation/1.1.0/annotation-1.1.0.jar
+2e9372ba7780ef44952adbf86b66e1f08682c1e5277c926185f6564a13799efe | https://maven.google.com/androidx/annotation/annotation/1.1.0/annotation-1.1.0.pom
 52886c0ef6cfa492d07b40c3952201d6d2f0cfc680144fbefc69d2d5cb786c25 | https://maven.google.com/androidx/databinding/databinding-common/3.4.2/databinding-common-3.4.2.jar
 fb5c804e2d81186e9e63e45b7e97eec54aa6f5d502b763abfbb0c57b62b86b4c | https://maven.google.com/androidx/databinding/databinding-common/3.4.2/databinding-common-3.4.2.pom
 770b6a82da0684f93d037ed5d241248cb25862ed14ecd7d9ec8c756153266051 | https://maven.google.com/androidx/databinding/databinding-compiler-common/3.4.2/databinding-compiler-common-3.4.2.jar
@@ -475,5 +481,5 @@ c7786e12c89c77e4daea2ebb991491821f90364cd5e06a02b56371a42084b3c0 | https://maven
 7031d2d09683996ac126074be3de6df9b3de80f7e0f10b80a6e8754f69c80028 | https://maven.google.com/com/android/tools/sdklib/26.2.1/sdklib-26.2.1.pom
 ebec9d8e0a140b376aade276b08572cb1f8cf954249b469bee6dce6fd5a45cd4 | https://maven.google.com/com/android/tools/sdklib/26.4.2/sdklib-26.4.2.jar
 768b365f2486e344d012d5b4b9b195fde8bfb442c23dca89d258a7766cdba5c8 | https://maven.google.com/com/android/tools/sdklib/26.4.2/sdklib-26.4.2.pom
-42ebde4e470b5c09c8ef19d452fad3d70459a7a4a8f06ce20114a081343e7e0e | https://plugins.gradle.org/m2/org/mozilla/apilint/apilint/0.2.7/apilint-0.2.7.jar
-f1efc89ead9ef1636f072654111abd650f3cb8ce7bb817ce99f15cd969ac3f6c | https://plugins.gradle.org/m2/org/mozilla/apilint/apilint/0.2.7/apilint-0.2.7.pom
+ce1754a344bc0a38408b1c7310db652d3ec2aa97df42669cd9da167c6c9c7f7b | https://plugins.gradle.org/m2/org/mozilla/apilint/apilint/0.3.0/apilint-0.3.0.jar
+e27acceb1ab0a6a490b91bf6112ff31605181db4255bed2039c98a965c5336f4 | https://plugins.gradle.org/m2/org/mozilla/apilint/apilint/0.3.0/apilint-0.3.0.pom
