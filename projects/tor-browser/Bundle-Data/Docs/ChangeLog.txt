@@ -1,3 +1,23 @@
+Tor Browser 10.0a6 -- August 26 2020
+ * Windows + OS X + Linux
+   * Update Firefox to 78.2.0esr
+   * Update Tor Launcher to 0.2.23
+     * Translations update
+	 * Bug 40002: After rebasing to 80.0b2 moat is broken [tor-launcher]
+   * Update NoScript to 11.0.39
+   * Bug 21601: Remove unused media.webaudio.enabled pref
+   * Bug 40002: Remove about:pioneer [tor-browser]
+   * Bug 40082: Let JavaScript on safest setting handled by NoScript again [tor-browser]
+   * Bug 40088: Moat "Submit" button does not work
+   * Bug 40090: Disable v3 add-on blocklist for now [tor-browser]
+ * OS X
+   * Bug 40015: Tor Browser broken on MacOS 11 Big Sur
+ * Build System
+   * Windows + OS X + Linux
+     * Bump Go to 1.13.15
+   * Linux
+     * Bug 40053: Also create the langpacks tarball for non-release builds [tor-browser-build]
+
 Tor Browser 10.0a5 -- August 18 2020
  * Windows + OS X + Linux
    * Update Firefox to 78.1.0esr
