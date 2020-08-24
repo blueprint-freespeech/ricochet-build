@@ -1,0 +1,49 @@
+# vim: filetype=yaml sw=2
+version: 10.0a6
+filename: 'fenix-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-1-build1'
+git_url: https://gitlab.torproject.org/tpo/applications/fenix.git
+tag_gpg_id: 1
+gpg_keyring: torbutton.gpg
+gecko_flavor: 'GeckoBeta'
+fenix_flavor: 'FennecProduction'
+build_flavor: '[% c("gecko_flavor") %][% c("fenix_flavor") %]'
+
+var:
+  fenix_version: '80.0b[% c("var/beta_version") %]'
+  beta_version: 6
+  torbrowser_branch: 10
+  container:
+    use_container: 1
+  # This should be updated when the list of gradle dependencies is changed.
+  gradle_dependencies_version: 1
+  # Switch to make it easier to grab all dependencies during a dry-run.
+  fetch_gradle_dependencies: 0
+
+targets:
+  nightly:
+    git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-1'
+    tag_gpg_id: 0
+    version: '[% c("abbrev") %]'
+    fenix_flavor: 'Debug'
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: android-components
+    project: android-components
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - name: application-services
+    project: application-services
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - name: geckoview
+    project: geckoview
+    pkg_type: merge_aars
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
+    name: gradle-dependencies
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+    exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
+  - filename: mavenLocal.patch
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'

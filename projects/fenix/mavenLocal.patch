@@ -1,0 +1,71 @@
+From e4dea681f8b458415dc19343c1a5298d5268ae34 Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Tue, 21 Apr 2020 11:03:13 +0000
+Subject: [PATCH] Bug 33927: Use local maven repository for gradle dependencies
+
+
+diff --git a/build.gradle b/build.gradle
+index 9f00fff0f..e503efbf2 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -5,6 +5,7 @@ import org.mozilla.fenix.gradle.tasks.GithubDetailsTask
+ buildscript {
+     // This logic is duplicated in the allprojects block: I don't know how to fix that.
+     repositories {
++        mavenLocal()
+         maven {
+             name "Mozilla Nightly"
+             url "https://nightly.maven.mozilla.org/maven2"
+@@ -78,6 +79,7 @@ plugins {
+ allprojects {
+     // This logic is duplicated in the buildscript block: I don't know how to fix that.
+     repositories {
++        mavenLocal()
+         maven {
+             name "Mozilla Nightly"
+             url "https://nightly.maven.mozilla.org/maven2"
+diff --git a/buildSrc/build.gradle b/buildSrc/build.gradle
+index 508a8d43d..a402f4767 100644
+--- a/buildSrc/build.gradle
++++ b/buildSrc/build.gradle
+@@ -1,11 +1,11 @@
+ /* This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+-
+ plugins {
+     id "org.gradle.kotlin.kotlin-dsl" version "1.3.6"
+ }
+ 
+ repositories {
++    mavenLocal()
+     jcenter()
+ }
+diff --git a/buildSrc/settings.gradle b/buildSrc/settings.gradle
+new file mode 100644
+index 000000000..a7066edcb
+--- /dev/null
++++ b/buildSrc/settings.gradle
+@@ -0,0 +1,5 @@
++pluginManagement {
++  repositories {
++    mavenLocal()
++  }
++}
+diff --git a/settings.gradle b/settings.gradle
+index 8440fc306..d2e8ba475 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -1,3 +1,9 @@
++pluginManagement {
++  repositories {
++    mavenLocal()
++  }
++}
++
+ include ':app'
+ 
+ include ':mozilla-detekt-rules'
+-- 
+2.28.0
+
