@@ -3,15 +3,18 @@
 sha256sum | url
 d1bc9842455c2e534415d88c44df4d52413b478db9093a1ba36324f705f44c3d | https://dl.google.com/dl/android/maven2/androidx/activity/activity/1.0.0/activity-1.0.0.aar
 27a4be7462629c312da0b831a0978d2076fc34074145fb61dd4e86d7c8469b82 | https://dl.google.com/dl/android/maven2/androidx/activity/activity/1.0.0/activity-1.0.0.pom
+d38d63edb30f1467818d50aaf05f8a692dea8b31392a049bfa991b159ad5b692 | https://dl.google.com/dl/android/maven2/androidx/annotation/annotation/1.1.0/annotation-1.1.0.jar
 2e9372ba7780ef44952adbf86b66e1f08682c1e5277c926185f6564a13799efe | https://dl.google.com/dl/android/maven2/androidx/annotation/annotation/1.1.0/annotation-1.1.0.pom
 8d7299bca44cb3bdf17f5595766acbf459fc81fee223e8686cc6acd3a42ab5c0 | https://dl.google.com/dl/android/maven2/androidx/appcompat/appcompat/1.1.0/appcompat-1.1.0.aar
 340d617121f8ef8e02a6680c8f357aa3e542276d0c8a1cdcb6fd98984b2cb7b9 | https://dl.google.com/dl/android/maven2/androidx/appcompat/appcompat/1.1.0/appcompat-1.1.0.pom
 19944d32b46551a17c347e21894b95837fbd7baaafc9e2082794344f222f7361 | https://dl.google.com/dl/android/maven2/androidx/appcompat/appcompat-resources/1.1.0/appcompat-resources-1.1.0.aar
 046011e16cb01b6f14842565661551110ef1b6427483f5d9068493f4c49690f2 | https://dl.google.com/dl/android/maven2/androidx/appcompat/appcompat-resources/1.1.0/appcompat-resources-1.1.0.pom
+fe1237bf029d063e7f29fe39aeaf73ef74c8b0a3658486fc29d3c54326653889 | https://dl.google.com/dl/android/maven2/androidx/arch/core/core-common/2.1.0/core-common-2.1.0.jar
 83bbb3960eaabc600ac366c94cb59414e441532a1d6aa9388b0b8bfface5cf01 | https://dl.google.com/dl/android/maven2/androidx/arch/core/core-common/2.1.0/core-common-2.1.0.pom
 dd77615bd3dd275afb11b62df25bae46b10b4a117cd37943af45bdcbf8755852 | https://dl.google.com/dl/android/maven2/androidx/arch/core/core-runtime/2.1.0/core-runtime-2.1.0.aar
 c0c4ed0160cd2ca18390015de8b392b697c173327c6b2c0947d4e62f6958c05d | https://dl.google.com/dl/android/maven2/androidx/arch/core/core-runtime/2.1.0/core-runtime-2.1.0.pom
 a7913a5275ad68e555d2612ebe8c14c367b153e14ca48a1872a64899020e54ef | https://dl.google.com/dl/android/maven2/androidx/collection/collection/1.0.0/collection-1.0.0.pom
+632a0e5407461de774409352940e292a291037724207a787820c77daf7d33b72 | https://dl.google.com/dl/android/maven2/androidx/collection/collection/1.1.0/collection-1.1.0.jar
 67e9066ca4acfdc6e3cc508293c31ba0398057ff118e4f70b1e1813c9a3456d1 | https://dl.google.com/dl/android/maven2/androidx/collection/collection/1.1.0/collection-1.1.0.pom
 524b8b88ceb6a74a7e44e6b567a135660f211799904cb218bfee5be1166820b2 | https://dl.google.com/dl/android/maven2/androidx/core/core/1.2.0/core-1.2.0.aar
 3d1f4e37b77dd92353879a040ab4ce2f706798bcbdf066147491c3642b3f79a6 | https://dl.google.com/dl/android/maven2/androidx/core/core/1.2.0/core-1.2.0.pom
@@ -32,6 +35,7 @@ a14c8b8f2153f128e800fbd266a6beab1c283982a29ec570d2cc05d307d81496 | https://dl.go
 ef78eb27ac02ddf3545d5f8a3857c73a2837a01853f8d5fcf77251011db52544 | https://dl.google.com/dl/android/maven2/androidx/fragment/fragment/1.1.0/fragment-1.1.0.pom
 33193135a64fe21fa2c35eec6688f1a76e512606c0fc83dc1b689e37add7732a | https://dl.google.com/dl/android/maven2/androidx/interpolator/interpolator/1.0.0/interpolator-1.0.0.aar
 0ddc07cc39699f48ecd9ec894b5830c0f09e22e82959294edf37217224c88b7b | https://dl.google.com/dl/android/maven2/androidx/interpolator/interpolator/1.0.0/interpolator-1.0.0.pom
+76db6be533bd730fb361c2feb12a2c26d9952824746847da82601ef81f082643 | https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-common/2.1.0/lifecycle-common-2.1.0.jar
 692c2a60437a95220c8fbb6e8943196f255f535d1a7c58714e6c46530782f276 | https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-common/2.1.0/lifecycle-common-2.1.0.pom
 bd53c64b038585215b4959c1a388437a3ad525608a31c58e4283c3e371727d4d | https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-extensions/2.1.0/lifecycle-extensions-2.1.0.aar
 510e33b8b6ca33d2fcb3b7615a4528e338b438de398f3ee8de119c26508a5fdd | https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-extensions/2.1.0/lifecycle-extensions-2.1.0.pom
@@ -49,6 +53,7 @@ ba55fb7ac1b2828d5327cda8acf7085d990b2b4c43ef336caa67686249b8523d | https://dl.go
 29aa72e339c3e227e74c973a4c85c7b79c926f0d37b61ed94f4d99a137c9a4b4 | https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-viewmodel/2.1.0/lifecycle-viewmodel-2.1.0.pom
 11f735cb3b55c458d470bed9e25254375b518b4b1bad6926783a7026db0f5025 | https://dl.google.com/dl/android/maven2/androidx/loader/loader/1.0.0/loader-1.0.0.aar
 c978d550808b47434aa49a63164110a50b55b0bcc6160a93a2e37d5110df8c5e | https://dl.google.com/dl/android/maven2/androidx/loader/loader/1.0.0/loader-1.0.0.pom
+388d33ff503d8c3d010a5dd7ecfe0e44bb19afcc28fd1e6336755d00ef7ad3c6 | https://dl.google.com/dl/android/maven2/androidx/room/room-common/2.1.0/room-common-2.1.0.jar
 831d4e3c7e5481e73f37c1cb2e08f24e27306976d3c83916f89b00b28857998b | https://dl.google.com/dl/android/maven2/androidx/room/room-common/2.1.0/room-common-2.1.0.pom
 175efd0a722810272098282819ebd52d6d0fa0aa5f9bfb25ac54268e1daa041e | https://dl.google.com/dl/android/maven2/androidx/room/room-runtime/2.1.0/room-runtime-2.1.0.aar
 ce8566bc008cc900268c07a4acb8840e4b54cdc404f73081a0986906f205fd7c | https://dl.google.com/dl/android/maven2/androidx/room/room-runtime/2.1.0/room-runtime-2.1.0.pom
@@ -175,6 +180,7 @@ bd99d75006131ae25c9860a1d63e84e36371f112fdb0c2fe3d5d6ab38e9eb271 | https://jcent
 f8698ab46ca996ce889c1afc8ca4f25eb8ac6b034dc898d4583742360016cc04 | https://jcenter.bintray.com/com/google/guava/guava-parent/26.0-android/guava-parent-26.0-android.pom
 317e88291262e0cf2805e956c18850f1d4565c85c2e1112f5d9d08ab1732e696 | https://jcenter.bintray.com/com/google/guava/guava-parent/27.0.1-jre/guava-parent-27.0.1-jre.pom
 d3610165c6de2b4d8d6418487717b63c52b5a39c5e35a553e24873ecb60e0628 | https://jcenter.bintray.com/com/google/guava/guava-parent/27.1-jre/guava-parent-27.1-jre.pom
+e4ad7607e5c0477c6f890ef26a49cb8d1bb4dffb650bab4502afee64644e3069 | https://jcenter.bintray.com/com/google/guava/listenablefuture/1.0/listenablefuture-1.0.jar
 53873caf26bc1ed8a567ea6c939ab2aaa3f47a5e32d5cade95ddf5080d23238a | https://jcenter.bintray.com/com/google/guava/listenablefuture/1.0/listenablefuture-1.0.pom
 b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99 | https://jcenter.bintray.com/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar
 18d4b1db26153d4e55079ce1f76bb1fe05cdb862ef9954a88cbcc4ff38b8679b | https://jcenter.bintray.com/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.pom
@@ -372,9 +378,11 @@ f6837401cbd13a8a31f126a9e22430ab9861602d91a4c310a47805453690f76d | https://jcent
 ab2b2bd3304dcd40562a2930c53002b1e2d80fb21d0d9cc7d6448a83b9ae6b0b | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-util-io/1.3.71/kotlin-util-io-1.3.71.pom
 51f7f966cd071ff412df49849bdd0a6a651f800c8816defaa29fcd106eedcdac | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-util-klib/1.3.71/kotlin-util-klib-1.3.71.jar
 fae43f08052e63bf49cbcda0ade70c05381c4093521e20f31dd564947c1b7105 | https://jcenter.bintray.com/org/jetbrains/kotlin/kotlin-util-klib/1.3.71/kotlin-util-klib-1.3.71.pom
+cedeb99d252f51190e4cbf84e788fbe6d64e42216c42786aac029bfc4f1e2d65 | https://jcenter.bintray.com/org/jetbrains/kotlinx/kotlinx-coroutines-android/1.3.5/kotlinx-coroutines-android-1.3.5.jar
 fa64623d47d5f03553b4b9dc7902d30943c65c334487029681a03045fb13172c | https://jcenter.bintray.com/org/jetbrains/kotlinx/kotlinx-coroutines-android/1.3.5/kotlinx-coroutines-android-1.3.5.pom
 7177ed4629704537e0252537629886f5409526ecd041d8d8e308e20624b14394 | https://jcenter.bintray.com/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.2.1/kotlinx-coroutines-core-1.2.1.jar
 6f7523ea8a56d7f12d11a004cfe5a4577bfba3ed6c84cc5ac48b72d54975552c | https://jcenter.bintray.com/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.2.1/kotlinx-coroutines-core-1.2.1.pom
+6d3ddc759cd2094b1495198a8501e22a51c4c3d011ec801f5fc45a2cd25b8f11 | https://jcenter.bintray.com/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.3.5/kotlinx-coroutines-core-1.3.5.jar
 f4a306487c17b8cdca8d3e5da50369a2e5ac7c665200516d427726dff5a56f92 | https://jcenter.bintray.com/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.3.5/kotlinx-coroutines-core-1.3.5.pom
 1917871c8deb468307a584680c87a44572f5a8b0b98c6d397fc0f5f86596dbe7 | https://jcenter.bintray.com/org/jetbrains/trove4j/trove4j/20160824/trove4j-20160824.jar
 5c415a9d8585200de4be1947e15291cc79f599b06249375f5c9ea22d4b2d090f | https://jcenter.bintray.com/org/jetbrains/trove4j/trove4j/20160824/trove4j-20160824.pom
