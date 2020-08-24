@@ -19,16 +19,12 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 rm -fR service/src/main/jniLibs/*
 tar -C service/src/main -xf $rootdir/[% c('input_files_by_name/tor') %]/tor.tar.gz
 
-# Patch native build. Then remove native files, otherwise build will fail after gradle.patch
-patch -p1 < $rootdir/remove-native-build.patch
-rm -fR service/src/main/jni
-
 # Replace libraries with the config dependencies
 rm service/libs/*
 cp $rootdir/[% c('input_files_by_name/topl') %]/*{.aar,.jar} service/libs/
 
 # Build Android Libraries and Apps
-$GRADLE_HOME/gradle-4.10.2/bin/gradle --offline --no-daemon -P androidplugin=3.1.0 -P appcompatVersion=28.0.0 -P compileVersion=28 -P targetVersion=28 -P minVersion=16 -Dmaven.repo.local=$gradle_repo assembleRelease -x lint
+gradle --offline --no-daemon -P androidplugin=3.6.0 -P appcompatVersion=28.0.0 -P compileVersion=29 -P targetVersion=29 -P minVersion=16 -Dmaven.repo.local=$gradle_repo assembleRelease -x lint
 
 # Package
 cp jsocksAndroid/build/outputs/aar/* service/build/outputs/aar/* $output_dir

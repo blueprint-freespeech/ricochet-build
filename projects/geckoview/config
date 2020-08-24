@@ -112,22 +112,22 @@ steps:
         project: geckoview
         pkg_type: build
         target_prepend:
-          - torbrowser-android-fenix-armv7
+          - torbrowser-android-armv7
       - name: geckoview_aarch64
         project: geckoview
         pkg_type: build
         target_prepend:
-          - torbrowser-android-fenix-aarch64
+          - torbrowser-android-aarch64
       - name: geckoview_x86
         project: geckoview
         pkg_type: build
         target_prepend:
-          - torbrowser-android-fenix-x86
+          - torbrowser-android-x86
       - name: geckoview_x86_64
         project: geckoview
         pkg_type: build
         target_prepend:
-          - torbrowser-android-fenix-x86_64
+          - torbrowser-android-x86_64
 
 
 targets:

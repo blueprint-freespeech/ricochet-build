@@ -11,7 +11,7 @@ var:
   firefox_platform_version: 78.2.0
   firefox_version: '[% c("var/firefox_platform_version") %]esr'
   torbrowser_branch: 10.0
-  branding_directory: '[% IF c("var/android") %]mobile/android[% ELSE %]browser[% END %]/branding/alpha'
+  branding_directory: 'browser/branding/alpha'
   copyright_year: '[% exec("git show -s --format=%ci").remove("-.*") %]'
   deps:
     - build-essential
@@ -46,13 +46,13 @@ steps:
 targets:
   release:
     var:
-      branding_directory: '[% IF c("var/android") %]mobile/android[% ELSE %]browser[% END %]/branding/official'
+      branding_directory: 'browser/branding/official'
 
   nightly:
     git_hash: 'tor-browser-[% c("var/firefox_version") %]-[% c("var/torbrowser_branch") %]-1'
     tag_gpg_id: 0
     var:
-      branding_directory: '[% IF c("var/android") %]mobile/android[% ELSE %]browser[% END %]/branding/nightly'
+      branding_directory: 'browser/branding/nightly'
 
   linux:
     var:
@@ -121,7 +121,7 @@ input_files:
     name: mozconfig
   - project: binutils
     name: binutils
-    enable: '[% c("var/linux") || c("var/android") %]'
+    enable: '[% c("var/linux") %]'
   - filename: fix-info-plist.py
     enable: '[% c("var/osx") %]'
   - filename: nsis-uninstall.patch
@@ -158,23 +158,6 @@ input_files:
     enable: '[% c("var/linux") %]'
   - project: tor-launcher
     name: tor-launcher
-    enable: '[% ! c("var/android") %]'
-  - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
-    name: gradle-dependencies
-    exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
-    enable: '[% c("var/android") %]'
-  - project: tor-android-service
-    name: tor-android-service
-    enable: '[% c("var/android") %]'
-  - project: tor-onion-proxy-library
-    name: topl
-    enable: '[% c("var/android") %]'
-  - project: firefox-locale-bundle
-    name: firefox-locale-bundle
-    enable: '[% c("var/android") %]'
-  - project: tba-translation
-    name: tba-translation
-    enable: '[% c("var/android") %]'
   - filename: nightly-marsigner.der
     enable: '[% c("var/nightly") %]'
   - filename: namecoin-torbutton.patch

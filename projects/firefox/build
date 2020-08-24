@@ -23,11 +23,10 @@ export PATH="/var/tmp/dist/rust/bin:/var/tmp/dist/cbindgen:/var/tmp/dist/nasm/bi
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
 export LLVM_CONFIG="/var/tmp/dist/clang/bin/llvm-config"
 
-[% IF c("var/linux") || c("var/android") %]
+[% IF c("var/linux") %]
   tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/binutils') %]
   export PATH="/var/tmp/dist/binutils/bin:$PATH"
-  # Use clang for everything on Linux and Android now if we don't build with
-  # ASan.
+  # Use clang for everything on Linux now if we don't build with ASan.
   [% IF ! c("var/asan") -%]
     export PATH="/var/tmp/dist/clang/bin:$PATH"
   [% END -%]
@@ -68,28 +67,6 @@ mv -f $rootdir/[% c('input_files_by_name/mozconfig') %] .mozconfig
   export ASAN_OPTIONS="detect_leaks=0"
 [% END -%]
 
-[% IF c("var/android") %]
-  export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
-  gradle_repo=/var/tmp/dist/gradle-dependencies
-  export GRADLE_MAVEN_REPOSITORIES="file://$gradle_repo"
-  export GRADLE_FLAGS="--no-daemon --offline"
-  # Move Gradle Repo to hard-coded location. This location is embedded in the file
-  # chrome/toolkit/content/global/buildconfig.html so needs to be standard for reproducibility
-  mv $rootdir/[% c('input_files_by_name/gradle-dependencies') %] $gradle_repo
-  cp -r $gradle_repo/m2/* $gradle_repo
-  # Move Android library dependencies so they will be included in the apk during the build
-  cp $rootdir/[% c('input_files_by_name/topl') %]/* mobile/android/app
-  cp $rootdir/[% c('input_files_by_name/tor-android-service') %]/* mobile/android/app
-  # Move emulator to location that firefox build expects
-  mkdir /var/tmp/dist/android-toolchain/android-sdk-linux/emulator
-  cp /var/tmp/dist/android-toolchain/android-sdk-linux/tools/emulator /var/tmp/dist/android-toolchain/android-sdk-linux/emulator
-
-  # Prepare building the multi-locale .apk including our own strings
-  mkdir -p /var/tmp/dist/locales
-  tar -C /var/tmp/dist/locales -xf $rootdir/[% c('input_files_by_name/firefox-locale-bundle') %]
-  tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/tba-translation') %]
-[% END %]
-
 eval $(perl $rootdir/get-moz-build-date [% c("var/copyright_year") %] [% c("var/torbrowser_version") %])
 if [ -z $MOZ_BUILD_DATE ]
 then
@@ -109,10 +86,8 @@ fi
   patch -p1 < $rootdir/namecoin-etld.patch
 [% END -%]
 
-[% IF ! c("var/android") %]
-  # Place a copy of the Tor Launcher sources under browser/extensions
-  tar -C browser/extensions -xf $rootdir/[% c('input_files_by_name/tor-launcher') %]
-[% END -%]
+# Place a copy of the Tor Launcher sources under browser/extensions
+tar -C browser/extensions -xf $rootdir/[% c('input_files_by_name/tor-launcher') %]
 
 [% IF c("var/namecoin") %]
   pushd toolkit/torproject/torbutton
@@ -132,31 +107,9 @@ rm -f configure
 rm -f js/src/configure
 
 # Android does not support --enable-bundled-fonts option
-./mach configure --with-tor-browser-version=[% c("var/torbrowser_version") %] --with-distribution-id=org.torproject --enable-update-channel=[% c("var/channel") %] [% IF ! c("var/android") %]--enable-bundled-fonts[% END -%] --with-branding=[% c("var/branding_directory") %]
+./mach configure --with-tor-browser-version=[% c("var/torbrowser_version") %] --with-distribution-id=org.torproject --enable-update-channel=[% c("var/channel") %] --enable-bundled-fonts --with-branding=[% c("var/branding_directory") %]
 
 ./mach build --verbose
-
-[% IF c("var/android") %]
-  # Building a multi-locale .apk
-  [% FOREACH lang = c('var/locales');
-     SET lang = tmpl(lang);
-     # mk is unavailable on mobile.
-     NEXT IF lang == 'mk'; %]
-    # Copy our torbrowser_strings.dtd at the right place
-    cp /var/tmp/dist/tba-translation/[% lang %]/torbrowser_strings.dtd /var/tmp/dist/locales/[% lang %]/mobile/android/base/
-    ./mach build chrome-[% lang %];
-  [% END %]
-  # Include localization for all available locales.
-  # mk is excluded above because Mozilla does not provide mk localization.
-  # mk is included here because we may have localization for torbutton.
-  export MOZ_CHROME_MULTILOCALE='[% tmpl(c('var/locales').join(' ')) %]'
-  ./mach android assemble-app
-  AB_CD=multi ./mach package
-  # Copy the result over and return. There is nothing more to do for mobile.
-  cp obj-*/dist/*unsigned-unaligned.apk [% dest_dir _ '/' _ c('filename') %]/tor-browser-unsigned-unaligned.apk
-  [% RETURN %]
-[% END %]
-
 ./mach build stage-package
 
 [% IF c("var/osx") %]

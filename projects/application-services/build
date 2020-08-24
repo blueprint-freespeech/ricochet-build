@@ -21,11 +21,11 @@ export PATH=/var/tmp/dist/fenix-rust/bin:$PATH
 cd $rootdir
 
 # application-services uses a newer NDK, 21, than everything else...
-export ANDROID_NDK_HOME=/var/tmp/dist/[% c('var/compiler') %]/android-ndk/android-ndk-r[% pc('fenix-android-toolchain', 'var/android_ndk_version') %][% pc('fenix-android-toolchain', 'var/android_ndk_revision') %]
+export ANDROID_NDK_HOME=/var/tmp/dist/[% c('var/compiler') %]/android-ndk/android-ndk-r[% pc('android-toolchain', 'var/android_ndk_version') %][% pc('android-toolchain', 'var/android_ndk_revision') %]
 # We need to add the new path to our build tools to PATH.
 export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
 export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
-export ANDROID_NDK_API_VERSION=[% pc("fenix-android-toolchain", "var/android_ndk_version") %][% pc('fenix-android-toolchain', 'var/android_ndk_revision') %]
+export ANDROID_NDK_API_VERSION=[% pc("android-toolchain", "var/android_ndk_version") %][% pc('android-toolchain', 'var/android_ndk_revision') %]
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 
 [% IF !c('var/fetch_gradle_dependencies') %]

@@ -68,11 +68,7 @@ cd /var/tmp/dist/go/src
   CGO_ENABLED=1 CC_FOR_TARGET="$CC_FOR_TARGET" CC= CFLAGS= LDFLAGS= ./make.bash
 [% ELSIF c("var/android") -%]
   patch -p2 < $rootdir/0001-Use-fixed-go-build-tmp-directory.patch
-  [% IF c("var/android-fenix") -%]
-    CGO_ENABLED=1 CC_FOR_TARGET=[% c("var/CC") %] CC= CFLAGS= LDFLAGS= ./make.bash
-  [% ELSE -%]
-    CGO_ENABLED=1 CC_FOR_TARGET=[% c("var/CC") %] CGO_CFLAGS='-D__ANDROID_API__=[% c("var/android_min_api") %]' CC= CFLAGS= LDFLAGS= ./make.bash
-  [% END -%]
+  CGO_ENABLED=1 CC_FOR_TARGET=[% c("var/CC") %] CC= CFLAGS= LDFLAGS= ./make.bash
 [% END -%]
 
 # This directory is non-reproducible and doesn't exist in official Go releases,

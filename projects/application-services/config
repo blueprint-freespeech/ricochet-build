@@ -26,51 +26,51 @@ input_files:
   - project: fenix-rust
     name: rust-armv7
     target_prepend:
-      - torbrowser-android-fenix-armv7
+      - torbrowser-android-armv7
   - project: fenix-rust
     name: rust-aarch64
     target_prepend:
-      - torbrowser-android-fenix-aarch64
+      - torbrowser-android-aarch64
   - project: fenix-rust
     name: rust-x86
     target_prepend:
-      - torbrowser-android-fenix-x86
+      - torbrowser-android-x86
   - project: fenix-rust
     name: rust-x86_64
     target_prepend:
-      - torbrowser-android-fenix-x86_64
+      - torbrowser-android-x86_64
   - project: nss
     name: nss-armv7
     target_prepend:
-      - torbrowser-android-fenix-armv7
+      - torbrowser-android-armv7
   - project: nss
     name: nss-aarch64
     target_prepend:
-      - torbrowser-android-fenix-aarch64
+      - torbrowser-android-aarch64
   - project: nss
     name: nss-x86
     target_prepend:
-      - torbrowser-android-fenix-x86
+      - torbrowser-android-x86
   - project: nss
     name: nss-x86_64
     target_prepend:
-      - torbrowser-android-fenix-x86_64
+      - torbrowser-android-x86_64
   - project: sqlcipher
     name: sqlcipher-armv7
     target_prepend:
-      - torbrowser-android-fenix-armv7
+      - torbrowser-android-armv7
   - project: sqlcipher
     name: sqlcipher-aarch64
     target_prepend:
-      - torbrowser-android-fenix-aarch64
+      - torbrowser-android-aarch64
   - project: sqlcipher
     name: sqlcipher-x86
     target_prepend:
-      - torbrowser-android-fenix-x86
+      - torbrowser-android-x86
   - project: sqlcipher
     name: sqlcipher-x86_64
     target_prepend:
-      - torbrowser-android-fenix-x86_64
+      - torbrowser-android-x86_64
   - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
     name: gradle-dependencies
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
