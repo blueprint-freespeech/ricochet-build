@@ -1,0 +1,811 @@
+From 1641b74b17dad85a3ee65802a0a6320d2184c6c3 Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Fri, 21 Aug 2020 19:26:37 +0000
+Subject: [PATCH] 1651660
+
+
+diff --git a/build.gradle b/build.gradle
+index 6b16a91d..58a4ddae 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -4,16 +4,16 @@ buildscript {
+     ext.kotlin_version = '1.3.71'
+     ext.jna_version = '5.2.0'
+     ext.android_gradle_plugin_version = '3.6.0'
+-
+-    // N.B. try to keep these two in sync
+-    ext.android_components_version = '24.0.0'
+-    ext.glean_version = '21.3.0'
++    ext.android_components_version = '47.0.0'
+ 
+     ext.build = [
+         ndkVersion: "21.3.6528147", // Keep it in sync in TC Dockerfile.
+         compileSdkVersion: 29,
+         targetSdkVersion: 28,
+         minSdkVersion: 21, // So that we can publish for aarch64.
++        // This is required to support new AndroidX support libraries.
++        // See mozilla-mobile/android-components#842
++        jvmTargetCompatibility: "1.8",
+     ]
+ 
+     repositories {
+@@ -44,6 +44,11 @@ buildscript {
+ 
+         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.12'
+ 
++        // Since the Glean version depends on the Android components version,
++        // it is very important to use a modern version of Glean and, ideally,
++        // let this come from the embedding product itself.
++        classpath "org.mozilla.components:tooling-glean-gradle:$android_components_version"
++
+         // NOTE: Do not place your application dependencies here; they belong
+         // in the individual module build.gradle files
+     }
+diff --git a/components/fxa-client/android/build.gradle b/components/fxa-client/android/build.gradle
+index 9981facd..e0cac485 100644
+--- a/components/fxa-client/android/build.gradle
++++ b/components/fxa-client/android/build.gradle
+@@ -36,6 +36,19 @@ android {
+             }
+         }
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+diff --git a/components/logins/android/build.gradle b/components/logins/android/build.gradle
+index be777e5b..166b81fe 100644
+--- a/components/logins/android/build.gradle
++++ b/components/logins/android/build.gradle
+@@ -46,6 +46,19 @@ android {
+             includeAndroidResources = true
+         }
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+@@ -80,6 +93,12 @@ protobuf {
+     }
+ }
+ 
++// Needs to happen before `dependencies` in order for the variables
++// exposed by the plugin to be available for this project.
++ext.gleanGenerateMarkdownDocs = true
++ext.gleanDocsDirectory = "$rootDir/docs/metrics/logins"
++apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
++
+ dependencies {
+     // Part of the public API.
+     api project(':sync15')
+@@ -108,7 +127,7 @@ dependencies {
+     testImplementation 'org.mockito:mockito-core:2.21.0'
+     testImplementation 'androidx.test:core-ktx:1.2.0'
+     testImplementation 'androidx.work:work-testing:2.2.0'
+-    testImplementation "org.mozilla.telemetry:glean-forUnitTests:$glean_version"
++    testImplementation "org.mozilla.telemetry:glean-forUnitTests:$project.ext.glean_version"
+ 
+     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+@@ -132,8 +151,3 @@ afterEvaluate {
+ 
+ apply from: "$rootDir/publish.gradle"
+ ext.configurePublish()
+-
+-ext.gleanGenerateMarkdownDocs = true
+-ext.gleanDocsDirectory = "$rootDir/docs/metrics/logins"
+-apply from: "https://github.com/mozilla-mobile/android-components/raw/v${android_components_version}/components/service/glean/scripts/sdk_generator.gradle"
+-
+diff --git a/components/logins/android/metrics.yaml b/components/logins/android/metrics.yaml
+index e7ddec62..c81d6e43 100644
+--- a/components/logins/android/metrics.yaml
++++ b/components/logins/android/metrics.yaml
+@@ -2,31 +2,36 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-# This file defines the metrics that will be gathered for the "logins" storage component.
+-# These are emitted for all users of the component.  Additional metrics specific to the
+-# *syncing* of logins are defined in a separate "sync_ping" package.
++# This file defines the metrics that will be gathered for the "logins"
++# storage component.
++# These are emitted for all users of the component.  Additional metrics
++# specific to the *syncing* of logins are defined in a separate "sync_ping"
++# package.
+ #
+-# Changes to these metrics require data review, which should take into consideration
+-# the following known consumers of the logins component Android bindings:
++# Changes to these metrics require data review, which should take into
++# consideration the following known consumers of the logins component
++# Android bindings:
+ #
+ #  * Firefox Preview
+ #  * Firefox Lockwise for Android
+ 
++---
+ $schema: moz://mozilla.org/schemas/glean/metrics/1-0-0
+ 
+ logins_store:
+ 
+-  # These help us understand how much the logins store is being used, and whether it's succeeding
+-  # in the duties asked of it.  We'll use them to graph e.g. the error rate of applications trying
+-  # to use the logins store, and identify application or platform features that lead to unusually
++  # These help us understand how much the logins store is being used, and
++  # whether it's succeeding in the duties asked of it.  We'll use them to
++  # graph e.g. the error rate of applications trying to use the logins store,
++  # and identify application or platform features that lead to unusually
+   # high error rates.
+ 
+   unlock_count:
+     type: counter
+     description: >
+       The number of times the login store was unlocked.
+-      It is intended to be used together with `unlock_error_count` to measure the overall 
+-      error rate of unlocking the logins store.
++      It is intended to be used together with `unlock_error_count` to measure
++      the overall error rate of unlocking the logins store.
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2225
+     data_reviews:
+@@ -39,9 +44,10 @@ logins_store:
+   unlock_error_count:
+     type: labeled_counter
+     description: >
+-      The number of errors encountered when unlocking the logins store, labeled by type.
+-      It is intended to be used together with `unlock_count` to measure the overall error
+-      rate of unlocking the logins store.
++      The number of errors encountered when unlocking the logins store, labeled
++      by type.
++      It is intended to be used together with `unlock_count` to measure the
++      overall error rate of unlocking the logins store.
+     labels:
+       - invalid_key
+       - mismatched_lock
+@@ -59,9 +65,10 @@ logins_store:
+     type: counter
+     description: >
+       The total number of read operations performed on the logins store.
+-      The count only includes operations triggered by the application, not e.g. incidental reads performed
+-      as part of a sync. It is intended to be used together with `read_query_error_count` to measure the 
+-      overall error rate of read operations on the logins store.
++      The count only includes operations triggered by the application, not
++      e.g. incidental reads performed as part of a sync. It is intended to be
++      used together with `read_query_error_count` to measure the overall error
++      rate of read operations on the logins store.
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2225
+     data_reviews:
+@@ -74,9 +81,10 @@ logins_store:
+   read_query_error_count:
+     type: labeled_counter
+     description: >
+-      The total number of errors encountered during read operations on the logins store, labeled by type.
+-      It is intended to be used together with `read_query_count` to measure the overall error rate
+-      of read operations on the logins store.
++      The total number of errors encountered during read operations on the
++      logins store, labeled by type.
++      It is intended to be used together with `read_query_count` to measure
++      the overall error rate of read operations on the logins store.
+     labels:
+       - interrupted
+       - storage_error
+@@ -93,9 +101,10 @@ logins_store:
+     type: counter
+     description: >
+       The total number of write operations performed on the logins store.
+-      The count only includes operations triggered by the application, not e.g. incidental writes performed
+-      as part of a sync. It is intended to be used together with `write_query_error_count` to measure the 
+-      overall error rate of write operations on the logins store.
++      The count only includes operations triggered by the application, not
++      e.g. incidental writes performed as part of a sync. It is intended to
++      be used together with `write_query_error_count` to measure the overall
++      error rate of write operations on the logins store.
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2225
+     data_reviews:
+@@ -108,9 +117,10 @@ logins_store:
+   write_query_error_count:
+     type: labeled_counter
+     description: >
+-      The total number of errors encountered during write operations on the logins store, labeled by type.
+-      It is intended to be used together with `write_query_count` to measure the overall error rate
+-      of write operations on the logins store.
++      The total number of errors encountered during write operations on the
++      logins store, labeled by type.
++      It is intended to be used together with `write_query_count` to measure
++      the overall error rate of write operations on the logins store.
+     labels:
+       - no_such_record
+       - id_collision
+@@ -127,14 +137,16 @@ logins_store:
+     expires: "2021-03-01"
+ 
+   # These help us understand the performance of the logins store in the wild.
+-  # We'll use them to identify any application or platform features that are leading to unacceptably
+-  # slow performance of the store, and eventually for comparison with other logins store implementations
+-  # (such as the one in Desktop).
++  # We'll use them to identify any application or platform features that are
++  # leading to unacceptably slow performance of the store, and eventually for
++  # comparison with other logins store implementations (such as the one in
++  # Desktop).
+ 
+   unlock_time:
+     type: timing_distribution
+     description: >
+-      The time taken to open the logins store on startup, or after locking it due to user inactivity.
++      The time taken to open the logins store on startup, or after locking it
++      due to user inactivity.
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2225
+     data_reviews:
+@@ -147,8 +159,8 @@ logins_store:
+   read_query_time:
+     type: timing_distribution
+     description: >
+-      The time taken to execute a read query on the logins store (such as listing all logins, or finding a
+-      specific login by id).
++      The time taken to execute a read query on the logins store (such as
++      listing all logins, or finding a specific login by id).
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2225
+     data_reviews:
+@@ -161,8 +173,8 @@ logins_store:
+   write_query_time:
+     type: timing_distribution
+     description: >
+-      The time taken to execute a write query on the logins store (such as adding, updating, or deleting
+-      a login record).
++      The time taken to execute a write query on the logins store (such as
++      adding, updating, or deleting a login record).
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2225
+     data_reviews:
+diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
+index ae2ba8b1..8eb2ee7a 100644
+--- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
++++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
+@@ -23,7 +23,6 @@ import org.mozilla.appservices.logins.GleanMetrics.LoginsStore as LoginsStoreMet
+  * on version updates.
+  */
+ import mozilla.components.service.glean.private.CounterMetricType
+-import mozilla.components.service.glean.private.TimingDistributionMetricType
+ import mozilla.components.service.glean.private.LabeledMetricType
+ 
+ /**
+@@ -419,22 +418,6 @@ internal fun Pointer.getRustString(): String {
+     return this.getString(0, "utf8")
+ }
+ 
+-/**
+- * A helper extension method for conveniently measuring execution time of a closure.
+- *
+- * N.B. since we're measuring calls to Rust code here, the provided callback may be doing
+- * unsafe things. It's very imporant that we always call the function exactly once here
+- * and don't try to do anything tricky like stashing it for later or calling it multiple times.
+- */
+-inline fun <U> TimingDistributionMetricType.measure(funcToMeasure: () -> U): U {
+-    val timerId = this.start()
+-    try {
+-        return funcToMeasure()
+-    } finally {
+-        this.stopAndAccumulate(timerId)
+-    }
+-}
+-
+ /**
+  * A helper class for gathering basic count metrics on different kinds of LoginsStore operation.
+  *
+diff --git a/components/places/android/build.gradle b/components/places/android/build.gradle
+index 4debb737..5655326c 100644
+--- a/components/places/android/build.gradle
++++ b/components/places/android/build.gradle
+@@ -44,6 +44,19 @@ android {
+             includeAndroidResources = true
+         }
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+@@ -77,6 +90,11 @@ protobuf {
+     }
+ }
+ 
++// Generate markdown docs for the collected metrics.
++ext.gleanGenerateMarkdownDocs = true
++ext.gleanDocsDirectory = "$rootDir/docs/metrics/places"
++apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
++
+ dependencies {
+     // Part of the public API.
+     api project(':sync15')
+@@ -105,7 +123,7 @@ dependencies {
+     testImplementation 'org.mockito:mockito-core:2.21.0'
+     testImplementation 'androidx.test:core-ktx:1.2.0'
+     testImplementation 'androidx.work:work-testing:2.2.0'
+-    testImplementation "org.mozilla.telemetry:glean-forUnitTests:$glean_version"
++    testImplementation "org.mozilla.telemetry:glean-forUnitTests:$project.ext.glean_version"
+ 
+     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+@@ -130,8 +148,3 @@ afterEvaluate {
+ apply from: "$rootDir/publish.gradle"
+ 
+ ext.configurePublish()
+-
+-// Generate markdown docs for the collected metrics.
+-ext.gleanGenerateMarkdownDocs = true
+-ext.gleanDocsDirectory = "$rootDir/docs/metrics/places"
+-apply from: "https://github.com/mozilla-mobile/android-components/raw/v${android_components_version}/components/service/glean/scripts/sdk_generator.gradle"
+diff --git a/components/places/android/metrics.yaml b/components/places/android/metrics.yaml
+index 2c4b7891..dcfd1318 100644
+--- a/components/places/android/metrics.yaml
++++ b/components/places/android/metrics.yaml
+@@ -2,15 +2,19 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-# This file defines the metrics that will be gathered for the "places" storage component.
+-# These are emitted for all users of the component.  Additional metrics specific to the
+-# *syncing* of places are defined in a separate "sync_ping" package.
++# This file defines the metrics that will be gathered for the "places"
++# storage component.
++# These are emitted for all users of the component.  Additional metrics
++# specific to the *syncing* of places are defined in a separate "sync_ping"
++# package.
+ #
+-# Changes to these metrics require data review, which should take into consideration
++# Changes to these metrics require data review, which should take into
++# consideration
+ # the following known consumers of the places component Android bindings:
+ #
+ #  * Fenix for Andriod
+ 
++---
+ $schema: moz://mozilla.org/schemas/glean/metrics/1-0-0
+ 
+ places_manager:
+@@ -19,9 +23,10 @@ places_manager:
+     type: counter
+     description: >
+       The total number of read operations performed on the places store.
+-      The count only includes operations triggered by the application, not e.g. incidental reads performed
+-      as part of a sync. It is intended to be used together with `read_query_error_count` to measure the
+-      overall error rate of read operations on the places store.
++      The count only includes operations triggered by the application, not
++      e.g. incidental reads performed as part of a sync. It is intended to
++      be used together with `read_query_error_count` to measure the overall
++      error rate of read operations on the places store.
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2300
+       - https://github.com/mozilla/application-services/issues/2299
+@@ -35,9 +40,10 @@ places_manager:
+   read_query_error_count:
+     type: labeled_counter
+     description: >
+-      The total number of errors encountered during read operations on the places store, labeled by type.
+-      It is intended to be used together with `read_query_count` to measure the overall error rate
+-      of read operations on the places store.
++      The total number of errors encountered during read operations on the
++      places store, labeled by type.
++      It is intended to be used together with `read_query_count` to measure
++      the overall error rate of read operations on the places store.
+     labels:
+       - url_parse_failed
+       - operation_interrupted
+@@ -55,9 +61,10 @@ places_manager:
+     type: counter
+     description: >
+       The total number of write operations performed on the places store.
+-      The count only includes operations triggered by the application, not e.g. incidental writes performed
+-      as part of a sync. It is intended to be used together with `write_query_error_count` to measure the
+-      overall error rate of write operations on the places store.
++      The count only includes operations triggered by the application, not
++      e.g. incidental writes performed as part of a sync. It is intended to
++      be used together with `write_query_error_count` to measure the overall
++      error rate of write operations on the places store.
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2300
+       - https://github.com/mozilla/application-services/issues/2299
+@@ -71,9 +78,10 @@ places_manager:
+   write_query_error_count:
+     type: labeled_counter
+     description: >
+-      The total number of errors encountered during write operations on the places store, labeled by type.
+-      It is intended to be used together with `write_query_count` to measure the overall error rate
+-      of write operations on the places store.
++      The total number of errors encountered during write operations on the
++      places store, labeled by type.
++      It is intended to be used together with `write_query_count` to measure
++      the overall error rate of write operations on the places store.
+     labels:
+       - url_parse_failed
+       - invalid_bookmark_update
+@@ -108,8 +116,9 @@ places_manager:
+   scan_query_time:
+     type: timing_distribution
+     description: >
+-      The time taken to execute a scan query on the places store. This metric is for queries that we
+-      expect to be costly e.g. getBookmarksTree(guid, recursive=True).
++      The time taken to execute a scan query on the places store. This metric
++      is for queries that we expect to be costly
++      e.g. getBookmarksTree(guid, recursive=True).
+     bugs:
+       - https://github.com/mozilla/application-services/issues/2300
+       - https://github.com/mozilla/application-services/issues/2299
+diff --git a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
+index 518bf77a..df2110c4 100644
+--- a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
++++ b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
+@@ -27,7 +27,6 @@ import org.mozilla.appservices.places.GleanMetrics.PlacesManager as PlacesManage
+  * on version updates.
+  */
+ import mozilla.components.service.glean.private.CounterMetricType
+-import mozilla.components.service.glean.private.TimingDistributionMetricType
+ import mozilla.components.service.glean.private.LabeledMetricType
+ 
+ /**
+@@ -1273,22 +1272,6 @@ data class VisitInfosWithBound(
+     }
+ }
+ 
+-/**
+- * A helper extension method for conveniently measuring execution time of a closure.
+- *
+- * N.B. since we're measuring calls to Rust code here, the provided callback may be doing
+- * unsafe things. It's very imporant that we always call the function exactly once here
+- * and don't try to do anything tricky like stashing it for later or calling it multiple times.
+- */
+-inline fun <U> TimingDistributionMetricType.measure(funcToMeasure: () -> U): U {
+-    val timerId = this.start()
+-    try {
+-        return funcToMeasure()
+-    } finally {
+-        this.stopAndAccumulate(timerId)
+-    }
+-}
+-
+ /**
+  * A helper class for gathering basic count metrics on different kinds of PlacesManager operations.
+  *
+diff --git a/components/push/android/build.gradle b/components/push/android/build.gradle
+index c68815f1..9dcc0678 100644
+--- a/components/push/android/build.gradle
++++ b/components/push/android/build.gradle
+@@ -36,6 +36,19 @@ android {
+             }
+         }
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+diff --git a/components/rc_log/android/build.gradle b/components/rc_log/android/build.gradle
+index 07f6b238..ad813fca 100644
+--- a/components/rc_log/android/build.gradle
++++ b/components/rc_log/android/build.gradle
+@@ -29,6 +29,19 @@ android {
+         // has their own build dir)
+         test.resources.srcDirs += "${project(':full-megazord').buildDir}/rustJniLibs/desktop"
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+diff --git a/components/support/android/build.gradle b/components/support/android/build.gradle
+index 6555c057..0454acb2 100644
+--- a/components/support/android/build.gradle
++++ b/components/support/android/build.gradle
+@@ -25,6 +25,18 @@ android {
+         }
+     }
+ 
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ dependencies {
+diff --git a/components/sync15/android/build.gradle b/components/sync15/android/build.gradle
+index cd9f7c63..48520a94 100644
+--- a/components/sync15/android/build.gradle
++++ b/components/sync15/android/build.gradle
+@@ -25,6 +25,18 @@ android {
+         }
+     }
+ 
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ dependencies {
+diff --git a/components/sync_manager/android/build.gradle b/components/sync_manager/android/build.gradle
+index 7593e09c..2f1bc7fb 100644
+--- a/components/sync_manager/android/build.gradle
++++ b/components/sync_manager/android/build.gradle
+@@ -33,6 +33,19 @@ android {
+             }
+         }
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+diff --git a/components/tabs/android/build.gradle b/components/tabs/android/build.gradle
+index 7593e09c..2f1bc7fb 100644
+--- a/components/tabs/android/build.gradle
++++ b/components/tabs/android/build.gradle
+@@ -33,6 +33,19 @@ android {
+             }
+         }
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+diff --git a/components/viaduct/android/build.gradle b/components/viaduct/android/build.gradle
+index 842da737..bbffa362 100644
+--- a/components/viaduct/android/build.gradle
++++ b/components/viaduct/android/build.gradle
+@@ -37,6 +37,19 @@ android {
+             }
+         }
+     }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+diff --git a/docs/metrics/logins/metrics.md b/docs/metrics/logins/metrics.md
+index 1a8cce22..bd16ea75 100644
+--- a/docs/metrics/logins/metrics.md
++++ b/docs/metrics/logins/metrics.md
+@@ -4,7 +4,6 @@
+ This document enumerates the metrics collected by this project.
+ This project may depend on other projects which also collect metrics.
+ This means you might have to go searching through the dependency tree to get a full picture of everything collected by this project.
+-Sorry about that.
+ 
+ # Pings
+ 
+@@ -12,21 +11,24 @@ Sorry about that.
+ 
+ 
+ ## metrics
++
+ This is a built-in ping that is assembled out of the box by the Glean SDK.
++
+ See the Glean SDK documentation for the [`metrics` ping](https://mozilla.github.io/glean/book/user/pings/metrics.html).
++
+ The following metrics are added to the ping:
+ 
+ | Name | Type | Description | Data reviews | Extras | Expiration |
+ | --- | --- | --- | --- | --- | --- |
+-| logins_store.read_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of read operations performed on the logins store. The count only includes operations triggered by the application, not e.g. incidental reads performed as part of a sync. It is intended to be used together with `read_query_error_count` to measure the  overall error rate of read operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)||2020-07-01 |
+-| logins_store.read_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during read operations on the logins store, labeled by type. It is intended to be used together with `read_query_count` to measure the overall error rate of read operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)|<ul><li>interrupted</li><li>storage_error</li></ul>|2020-07-01 |
+-| logins_store.read_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a read query on the logins store (such as listing all logins, or finding a specific login by id).  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)||2020-07-01 |
+-| logins_store.unlock_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The number of times the login store was unlocked. It is intended to be used together with `unlock_error_count` to measure the overall  error rate of unlocking the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)||2020-07-01 |
+-| logins_store.unlock_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The number of errors encountered when unlocking the logins store, labeled by type. It is intended to be used together with `unlock_count` to measure the overall error rate of unlocking the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)|<ul><li>invalid_key</li><li>mismatched_lock</li><li>storage_error</li></ul>|2020-07-01 |
+-| logins_store.unlock_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to open the logins store on startup, or after locking it due to user inactivity.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)||2020-07-01 |
+-| logins_store.write_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of write operations performed on the logins store. The count only includes operations triggered by the application, not e.g. incidental writes performed as part of a sync. It is intended to be used together with `write_query_error_count` to measure the  overall error rate of write operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)||2020-07-01 |
+-| logins_store.write_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during write operations on the logins store, labeled by type. It is intended to be used together with `write_query_count` to measure the overall error rate of write operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)|<ul><li>no_such_record</li><li>id_collision</li><li>interrupted</li><li>invalid_record</li><li>storage_error</li></ul>|2020-07-01 |
+-| logins_store.write_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a write query on the logins store (such as adding, updating, or deleting a login record).  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895)||2020-07-01 |
++| logins_store.read_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of read operations performed on the logins store. The count only includes operations triggered by the application, not e.g. incidental reads performed as part of a sync. It is intended to be used together with `read_query_error_count` to measure the overall error rate of read operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| logins_store.read_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during read operations on the logins store, labeled by type. It is intended to be used together with `read_query_count` to measure the overall error rate of read operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)|<ul><li>interrupted</li><li>storage_error</li></ul>|2021-03-01 |
++| logins_store.read_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a read query on the logins store (such as listing all logins, or finding a specific login by id).  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| logins_store.unlock_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The number of times the login store was unlocked. It is intended to be used together with `unlock_error_count` to measure the overall error rate of unlocking the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| logins_store.unlock_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The number of errors encountered when unlocking the logins store, labeled by type. It is intended to be used together with `unlock_count` to measure the overall error rate of unlocking the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)|<ul><li>invalid_key</li><li>mismatched_lock</li><li>storage_error</li></ul>|2021-03-01 |
++| logins_store.unlock_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to open the logins store on startup, or after locking it due to user inactivity.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| logins_store.write_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of write operations performed on the logins store. The count only includes operations triggered by the application, not e.g. incidental writes performed as part of a sync. It is intended to be used together with `write_query_error_count` to measure the overall error rate of write operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| logins_store.write_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during write operations on the logins store, labeled by type. It is intended to be used together with `write_query_count` to measure the overall error rate of write operations on the logins store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)|<ul><li>no_such_record</li><li>id_collision</li><li>interrupted</li><li>invalid_record</li><li>storage_error</li></ul>|2021-03-01 |
++| logins_store.write_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a write query on the logins store (such as adding, updating, or deleting a login record).  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1597895), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
+ 
+ 
+ <!-- AUTOGENERATED BY glean_parser.  DO NOT EDIT. -->
+diff --git a/docs/metrics/places/metrics.md b/docs/metrics/places/metrics.md
+index efdc5723..8f7cb68c 100644
+--- a/docs/metrics/places/metrics.md
++++ b/docs/metrics/places/metrics.md
+@@ -4,7 +4,6 @@
+ This document enumerates the metrics collected by this project.
+ This project may depend on other projects which also collect metrics.
+ This means you might have to go searching through the dependency tree to get a full picture of everything collected by this project.
+-Sorry about that.
+ 
+ # Pings
+ 
+@@ -12,19 +11,22 @@ Sorry about that.
+ 
+ 
+ ## metrics
++
+ This is a built-in ping that is assembled out of the box by the Glean SDK.
++
+ See the Glean SDK documentation for the [`metrics` ping](https://mozilla.github.io/glean/book/user/pings/metrics.html).
++
+ The following metrics are added to the ping:
+ 
+ | Name | Type | Description | Data reviews | Extras | Expiration |
+ | --- | --- | --- | --- | --- | --- |
+-| places_manager.read_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of read operations performed on the places store. The count only includes operations triggered by the application, not e.g. incidental reads performed as part of a sync. It is intended to be used together with `read_query_error_count` to measure the overall error rate of read operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621)||2020-07-01 |
+-| places_manager.read_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during read operations on the places store, labeled by type. It is intended to be used together with `read_query_count` to measure the overall error rate of read operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621)|<ul><li>url_parse_failed</li><li>operation_interrupted</li></ul>|2020-07-01 |
+-| places_manager.read_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a read query on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621)||2020-07-01 |
+-| places_manager.scan_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a scan query on the places store. This metric is for queries that we expect to be costly e.g. getBookmarksTree(guid, recursive=True).  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621)||2020-07-01 |
+-| places_manager.write_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of write operations performed on the places store. The count only includes operations triggered by the application, not e.g. incidental writes performed as part of a sync. It is intended to be used together with `write_query_error_count` to measure the overall error rate of write operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621)||2020-07-01 |
+-| places_manager.write_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during write operations on the places store, labeled by type. It is intended to be used together with `write_query_count` to measure the overall error rate of write operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621)|<ul><li>url_parse_failed</li><li>invalid_bookmark_update</li><li>invalid_parent</li><li>unknown_bookmark_item</li><li>url_too_long</li><li>cannot_update_root</li></ul>|2020-07-01 |
+-| places_manager.write_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a write query on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621)||2020-07-01 |
++| places_manager.read_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of read operations performed on the places store. The count only includes operations triggered by the application, not e.g. incidental reads performed as part of a sync. It is intended to be used together with `read_query_error_count` to measure the overall error rate of read operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| places_manager.read_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during read operations on the places store, labeled by type. It is intended to be used together with `read_query_count` to measure the overall error rate of read operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)|<ul><li>url_parse_failed</li><li>operation_interrupted</li></ul>|2021-03-01 |
++| places_manager.read_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a read query on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| places_manager.scan_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a scan query on the places store. This metric is for queries that we expect to be costly e.g. getBookmarksTree(guid, recursive=True).  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| places_manager.write_query_count |[counter](https://mozilla.github.io/glean/book/user/metrics/counter.html) |The total number of write operations performed on the places store. The count only includes operations triggered by the application, not e.g. incidental writes performed as part of a sync. It is intended to be used together with `write_query_error_count` to measure the overall error rate of write operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
++| places_manager.write_query_error_count |[labeled_counter](https://mozilla.github.io/glean/book/user/metrics/labeled_counters.html) |The total number of errors encountered during write operations on the places store, labeled by type. It is intended to be used together with `write_query_count` to measure the overall error rate of write operations on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)|<ul><li>url_parse_failed</li><li>invalid_bookmark_update</li><li>invalid_parent</li><li>unknown_bookmark_item</li><li>url_too_long</li><li>cannot_update_root</li></ul>|2021-03-01 |
++| places_manager.write_query_time |[timing_distribution](https://mozilla.github.io/glean/book/user/metrics/timing_distribution.html) |The time taken to execute a write query on the places store.  |[1](https://bugzilla.mozilla.org/show_bug.cgi?id=1607621), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1649044)||2021-03-01 |
+ 
+ 
+ <!-- AUTOGENERATED BY glean_parser.  DO NOT EDIT. -->
+diff --git a/megazords/full/android/build.gradle b/megazords/full/android/build.gradle
+index 91d4071e..6da43879 100644
+--- a/megazords/full/android/build.gradle
++++ b/megazords/full/android/build.gradle
+@@ -29,6 +29,19 @@ android {
+ 
+     // Uncomment to include debug symbols in native library builds.
+     // packagingOptions { doNotStrip "**/*.so" }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+diff --git a/megazords/lockbox/android/build.gradle b/megazords/lockbox/android/build.gradle
+index 5f4d5234..be7654ee 100644
+--- a/megazords/lockbox/android/build.gradle
++++ b/megazords/lockbox/android/build.gradle
+@@ -29,6 +29,19 @@ android {
+ 
+     // Uncomment to include debug symbols in native library builds.
+     // packagingOptions { doNotStrip "**/*.so" }
++
++    // This is required to support new AndroidX support libraries.
++    // See mozilla-mobile/android-components#842
++    compileOptions {
++        sourceCompatibility rootProject.ext.build.jvmTargetCompatibility
++        targetCompatibility rootProject.ext.build.jvmTargetCompatibility
++    }
++
++    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
++        kotlinOptions {
++            jvmTarget = rootProject.ext.build.jvmTargetCompatibility
++        }
++    }
+ }
+ 
+ configurations {
+-- 
+2.28.0
+

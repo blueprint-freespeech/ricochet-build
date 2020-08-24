@@ -1,0 +1,103 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+[% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+distdir=/var/tmp/dist/[% project %]
+builddir=/var/tmp/build/[% project %]
+mkdir $distdir
+mkdir /var/tmp/build
+
+cd /var/tmp/dist
+[% FOREACH arch = ['armv7', 'aarch64', 'x86', 'x86_64'] -%]
+  # The host (i.e. Linux) bits should be the same for all four targets. Thus,
+  # extracting all input files into the same place should give us a working host
+  # part with all the needed target architectures.
+  tar -xf $rootdir/[% c('input_files_by_name/rust-' _ arch) %]
+  tar -xf $rootdir/[% c('input_files_by_name/nss-' _ arch) %]
+  mv nss nss-[% arch %]
+  tar -xf $rootdir/[% c('input_files_by_name/sqlcipher-' _ arch) %]
+  mv sqlcipher sqlcipher-[% arch %]
+[% END -%]
+export PATH=/var/tmp/dist/fenix-rust/bin:$PATH
+cd $rootdir
+
+# application-services uses a newer NDK, 21, than everything else...
+export ANDROID_NDK_HOME=/var/tmp/dist/[% c('var/compiler') %]/android-ndk/android-ndk-r[% pc('fenix-android-toolchain', 'var/android_ndk_version') %][% pc('fenix-android-toolchain', 'var/android_ndk_revision') %]
+# We need to add the new path to our build tools to PATH.
+export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
+export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
+export ANDROID_NDK_API_VERSION=[% pc("fenix-android-toolchain", "var/android_ndk_version") %][% pc('fenix-android-toolchain', 'var/android_ndk_revision') %]
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+
+[% IF !c('var/fetch_gradle_dependencies') %]
+  gradle_repo=$rootdir/[% c('input_files_by_name/gradle-dependencies') %]
+  cp -r $gradle_repo/dl/android/maven2/* $gradle_repo
+  cp -r $gradle_repo/m2/* $gradle_repo
+  cp -r $gradle_repo/maven2/* $gradle_repo
+[% END %]
+
+tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+
+# Prepare the offline build.
+# Move the directory for hardcoding the path in .cargo/config.
+mv /var/tmp/build/[% project %]-[% c('version') %] $builddir
+tar -C $builddir -xjf application-services-vendor-[% c('var/rust_vendor_version') %].tar.bz2
+cd $builddir
+# Make sure our vendored crates are used for offline builds.
+cat >> .cargo/config << 'EOF'
+
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "/var/tmp/build/application-services/vendor"
+
+[net]
+offline=true
+EOF
+
+# Move NSS and SQLCipher to the right place
+# XXX: Maybe merge with the loop above.
+archs="armv7 aarch64 x86 x86_64"
+for a in $archs
+do
+  if [ "$a" == "armv7" ]
+  then
+    mkdir -p libs/android/armeabi-v7a
+    mv /var/tmp/dist/nss-$a libs/android/armeabi-v7a/nss
+    mv /var/tmp/dist/sqlcipher-$a libs/android/armeabi-v7a/sqlcipher
+  elif [ "$a" == "aarch64" ]
+  then
+    mkdir -p libs/android/arm64-v8a
+    mv /var/tmp/dist/nss-$a libs/android/arm64-v8a/nss
+    mv /var/tmp/dist/sqlcipher-$a libs/android/arm64-v8a/sqlcipher
+  else
+    mkdir -p libs/android/$a
+    mv /var/tmp/dist/nss-$a libs/android/$a/nss
+    mv /var/tmp/dist/sqlcipher-$a libs/android/$a/sqlcipher
+  fi
+done
+
+patch -p1 < $rootdir/no-git.patch
+# XXX: We don't build the code for Linux for now as this involves additional
+# complexity. That's needed for running unit tests later on, though.
+patch -p1 < $rootdir/target.patch
+patch -p1 < $rootdir/1651660.patch
+[% IF c('var/fetch_gradle_dependencies') %]
+  # XXX: `assemble` is still not enough to see all fetched dependencies via
+  # Gradle's --debug. See: tor-browser-build#40056.
+  $GRADLE_HOME/gradle-6.3/bin/gradle --debug --no-daemon assemble
+[% ELSE %]
+  patch -p1 < $rootdir/mavenLocal.patch
+  gradle_flags="--offline --no-daemon -Dmaven.repo.local=$gradle_repo"
+  $GRADLE_HOME/gradle-6.3/bin/gradle $gradle_flags assembleRelease
+  $GRADLE_HOME/gradle-6.3/bin/gradle $gradle_flags publish
+
+  cd build
+  find maven -regex '.*[0-9].\(aar\|pom\)' -exec cp --parents {} $distdir \;
+
+  cd /var/tmp/dist
+  [% c('tar', {
+      tar_src => [ project ],
+      tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+  }) %]
+[% END %]

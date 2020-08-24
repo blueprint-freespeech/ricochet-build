@@ -1,0 +1,21 @@
+From 9593dc8d9589f0ed94c07d77eab6845b02b484de Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Fri, 7 Aug 2020 20:54:31 +0000
+Subject: [PATCH] No unit test running currently
+
+
+diff --git a/build.gradle b/build.gradle
+index 58a4ddae..95bc8445 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -198,7 +198,6 @@ switch (DefaultPlatform.RESOURCE_PREFIX) {
+         ext.rustTargets += 'darwin'
+         break
+     case 'linux-x86-64':
+-        ext.rustTargets += 'linux-x86-64'
+         break
+     case 'win32-x86-64':
+         ext.rustTargets += 'win32-x86-64-gnu'
+-- 
+2.28.0.rc1
+

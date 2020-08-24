@@ -1,0 +1,53 @@
+From 1eed35b66ea9d943d6ea648649b0012e132f3602 Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Thu, 2 Jul 2020 20:34:23 +0000
+Subject: [PATCH] Use local maven repository for gradle dependencies
+
+
+diff --git a/build.gradle b/build.gradle
+index 4715a7cd..1e71ca04 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -17,6 +17,7 @@ buildscript {
+     ]
+ 
+     repositories {
++        mavenLocal()
+         google()
+         jcenter()
+         maven {
+@@ -57,6 +58,7 @@ apply plugin: 'de.undercouch.download'
+ 
+ allprojects {
+     repositories {
++        mavenLocal()
+         google()
+         jcenter()
+         maven {
+diff --git a/settings.gradle b/settings.gradle
+index 2349f829..f0ad1ef9 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -1,6 +1,11 @@
+ /* This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++pluginManagement {
++  repositories {
++    mavenLocal()
++  }
++}
+ 
+ import org.yaml.snakeyaml.Yaml
+ buildscript {
+@@ -8,6 +13,7 @@ buildscript {
+         classpath 'org.yaml:snakeyaml:1.23'
+     }
+     repositories {
++        mavenLocal()
+         jcenter()
+     }
+ }
+-- 
+2.27.0
+
