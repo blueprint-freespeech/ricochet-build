@@ -56,13 +56,6 @@ targets:
         arch: amd64
         debootstrap_mirror: "http://archive.debian.org/debian/"
 
-  stretch-amd64:
-    var:
-      minimal_apt_version: 1.4.9
-      container:
-        suite: stretch
-        arch: amd64
-
   buster-amd64:
     var:
       minimal_apt_version: 1.8.2

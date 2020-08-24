@@ -193,7 +193,7 @@ of containers: the container-image project is still called, but it will
 just create an empty file instead of a real container image.
 
 The build without containers is currently only supported for the Android
-builds, and will require that you run Debian Stretch and install build
+builds, and will require that you run Debian Buster and install build
 dependencies for all the components that are built. This can be done
 with the following command:
 
