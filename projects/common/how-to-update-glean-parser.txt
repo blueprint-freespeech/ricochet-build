@@ -1,0 +1,44 @@
+In order to be able to do offline builds for mobile we need to collect and
+distribute Glean dependencies beforehand.[1]
+
+There are three steps involved in the process:
+  1) Finding out the `glean_parser` version
+  2) Downloading and verifying the dependencies
+  3) Bundling the dependencies up and pushing them to the sources mirror
+
+1)
+
+The `glean_parser` version is available in glean-core/python/setup.py in the
+Glean code repositoroy.[2] So, make sure which Glean version your
+`android-components` tag is using (`mozilla_glean` in
+buildSrc/src/main/java/Dependencies.kt has it) and then track `glean_parser`
+down in the respective Glean tag.
+
+2)
+
+Create a directory `glean-wheels` and change into it. Then download packages for
+`glean_parser` and its dependencies using
+
+`python3 -m pip download glean_parser==$glean_parser`
+
+($glean_parser being the version from step 1 above and Python 3 needs to be 3.6;
+ideally, we take the artifact we built and will use during the build later on as
+well.)
+
+There is no really good way (yet) to verify that `pip` gave us actually what we
+wanted. We can download `glean_parser` and its dependencies using a different
+network path, though, e.g. by using `torsocks`. Comparing the results of both
+downloads should yield the exact same binaries.
+
+3)
+
+Update the `glean_parser` version in `rbm.conf, tar `glean-wheels` up and
+compress it:
+
+`tar cfj glean-wheels-$glean_parser.tar.bz2 glean-wheels`
+
+Upload the compressed tarball to the sources mirror and update the SHA-256 sum of
+it in the respective projects.
+
+[1] See: https://bugzilla.mozilla.org/show_bug.cgi?id=1651662 for details.
+[2] https://github.com/mozilla/glean
