@@ -103,6 +103,7 @@ sub get_dmg_files_from_sha256sums {
 }
 
 sub convert_files {
+    my ($channel) = @_;
     my $pm = Parallel::ForkManager->new(get_nbprocs);
     $pm->run_on_finish(sub { print "Finished $_[2]\n" });
     foreach my $file (get_dmg_files_from_sha256sums) {
@@ -140,9 +141,13 @@ sub convert_files {
         find($wanted, "$tmpdir/$appname.app");
 
         unlink $output;
+        local $ENV{MOZ_PRODUCT_VERSION} = $file->{version};
+        local $ENV{MAR_CHANNEL_ID} = "torbrowser-torproject-$channel";
         (undef, $err, $success) =  capture_exec('make_full_update.sh', '-q',
                                         $output, "$tmpdir/$appname.app");
         exit_error "Error updating $output: $err" unless $success;
+        exit_error "make_full_update.sh failed. $output does not exist."
+            unless -f $output;
         $pm->finish;
     }
     $pm->wait_all_children;
@@ -164,6 +169,10 @@ sub remove_incremental_mars {
 # Set LC_ALL=C to avoid reproducibility issues when creating mar files
 $ENV{LC_ALL} = 'C';
 
+
+exit_error "Please specify update channel" unless @ARGV == 1;
+my $channel = $ARGV[0];
+
 extract_martools;
-convert_files;
+convert_files $channel;
 remove_incremental_mars;
