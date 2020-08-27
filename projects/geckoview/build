@@ -47,6 +47,8 @@ cp -r $gradle_repo/m2/* $gradle_repo
 rm -f configure
 rm -f js/src/configure
 
+# We unbreak mach, see: https://bugzilla.mozilla.org/show_bug.cgi?id=1656993.
+export MACH_USE_SYSTEM_PYTHON=1
 ./mach configure --with-tor-browser-version=[% c("var/torbrowser_version") %]
 ./mach build --verbose
 

@@ -79,6 +79,8 @@ steps:
       mv $rootdir/[% c('input_files_by_name/gradle-dependencies') %] $gradle_repo
       cp -r $gradle_repo/m2/* $gradle_repo
 
+      # We unbreak mach, see: https://bugzilla.mozilla.org/show_bug.cgi?id=1656993.
+      export MACH_USE_SYSTEM_PYTHON=1
       # We still need to specify --tor-browser-version due to bug 34005.
       ./mach configure --with-tor-browser-version=[% c("var/torbrowser_version") %]
       ./mach build --verbose
