@@ -20,9 +20,37 @@ input_files:
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
   - project: obfs4
-    name: obfs4
+    name: obfs4-armv7
+    target_prepend:
+      - torbrowser-android-armv7
+  - project: obfs4
+    name: obfs4-aarch64
+    target_prepend:
+      - torbrowser-android-aarch64
+  - project: obfs4
+    name: obfs4-x86
+    target_prepend:
+      - torbrowser-android-x86
+  - project: obfs4
+    name: obfs4-x86_64
+    target_prepend:
+      - torbrowser-android-x86_64
   - project: snowflake
-    name: snowflake
+    name: snowflake-armv7
+    target_prepend:
+      - torbrowser-android-armv7
+  - project: snowflake
+    name: snowflake-aarch64
+    target_prepend:
+      - torbrowser-android-aarch64
+  - project: snowflake
+    name: snowflake-x86
+    target_prepend:
+      - torbrowser-android-x86
+  - project: snowflake
+    name: snowflake-x86_64
+    target_prepend:
+      - torbrowser-android-x86_64
   - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
     name: gradle-dependencies
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'

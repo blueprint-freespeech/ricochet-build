@@ -17,7 +17,9 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 
 # Replace pre-packaged tor library with the latest build
 rm -fR service/src/main/jniLibs/*
-tar -C service/src/main -xf $rootdir/[% c('input_files_by_name/tor') %]/tor.tar.gz
+[% FOREACH arch = ['armv7', 'aarch64', 'x86', 'x86_64'] -%]
+  tar -C service/src/main -xf $rootdir/[% c('input_files_by_name/tor-' _ arch) %]/tor.tar.gz
+[% END -%]
 
 # Replace libraries with the config dependencies
 rm service/libs/*

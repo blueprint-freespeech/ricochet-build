@@ -23,4 +23,18 @@ input_files:
   - project: tor-onion-proxy-library
     name: topl
   - project: tor
-    name: tor
+    name: tor-armv7
+    target_prepend:
+      - torbrowser-android-armv7
+  - project: tor
+    name: tor-aarch64
+    target_prepend:
+      - torbrowser-android-aarch64
+  - project: tor
+    name: tor-x86
+    target_prepend:
+      - torbrowser-android-x86
+  - project: tor
+    name: tor-x86_64
+    target_prepend:
+      - torbrowser-android-x86_64

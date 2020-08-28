@@ -16,7 +16,7 @@ var:
   container:
     use_container: 1
   # This should be updated when the list of gradle dependencies is changed.
-  gradle_dependencies_version: 1
+  gradle_dependencies_version: 2
   # Switch to make it easier to grab all dependencies during a dry-run.
   fetch_gradle_dependencies: 0
 
@@ -47,3 +47,7 @@ input_files:
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
   - filename: mavenLocal.patch
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - project: tor-android-service
+    name: tor-android-service
+  - project: tor-onion-proxy-library
+    name: topl

@@ -23,20 +23,30 @@ patch -p1 < $rootdir/gradle.patch
 patch -p1 < $rootdir/0001-Bug-33931-Filter-bridges-in-stream-by-type.patch
 patch -p1 < $rootdir/0001-Bug-30318-Add-snowflake-support.patch
 
-# Extract obfs4proxy from TorBrowser/Tor/PluggableTransports/obfs4proxy
-tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/obfs4') %]
+[% FOREACH arch = ['armv7', 'aarch64', 'x86', 'x86_64'] -%]
+  # Extract obfs4proxy from TorBrowser/Tor/PluggableTransports/obfs4proxy
+  tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/obfs4-' _ arch) %]
 
-# Extract snowflake from TorBrowser/Tor/PluggableTransports/snowflake
-tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/snowflake') %]
+  # Extract snowflake from TorBrowser/Tor/PluggableTransports/snowflake
+  tar --strip-components=4 -xf $rootdir/[% c('input_files_by_name/snowflake-' _ arch) %]
 
-# Overwrite the obfs4proxy binary provided by Pluto and add Snowflake
-for d in external/pluto/bin/*; do
-  cp obfs4proxy $d/
-  cp snowflake-client $d/
-done
+  # Overwrite the obfs4proxy binary provided by Pluto and add Snowflake
+  [% IF arch == "armv7" -%]
+    cp obfs4proxy external/pluto/bin/armeabi-v7a/
+    cp obfs4proxy external/pluto/bin/armeabi/
+    cp snowflake-client external/pluto/bin/armeabi-v7a/
+    cp snowflake-client external/pluto/bin/armeabi/
+  [% ELSIF arch == "aarch64" -%]
+    cp obfs4proxy external/pluto/bin/arm64-v8a/
+    cp snowflake-client external/pluto/bin/arm64-v8a/
+  [% ELSE -%]
+    cp obfs4proxy external/pluto/bin/[% arch %]/
+    cp snowflake-client external/pluto/bin/[% arch %]/
+  [% END -%]
 
-rm obfs4proxy
-rm snowflake-client
+  rm obfs4proxy
+  rm snowflake-client
+[% END -%]
 
 # Build Android Libraries and Apps
 gradle --offline --no-daemon -P androidplugin=3.6.0 -Dmaven.repo.local=$gradle_repo assembleRelease -x lint

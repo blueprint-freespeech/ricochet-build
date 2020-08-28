@@ -462,6 +462,8 @@ f014af749024c57989ca2aa51b0a986f9d86d2669d074c1dee068a8f8da19562 | https://jcent
 943e12b100627804638fa285805a0ab788a680266531e650921ebfe4621a8bfa | https://jcenter.bintray.com/javax/inject/javax.inject/1/javax.inject-1.pom
 b5e60cd8b7b5ff01ce4a74c5dd008f4fbd14ced3495d0b47b85cfedc182211f2 | https://jcenter.bintray.com/javax/xml/bind/jaxb-api/2.2.12-b140109.1041/jaxb-api-2.2.12-b140109.1041.jar
 2092a7d8d9bc5698c59b094bdea46622915c48c83ae66d5b5ad549c7bf16155b | https://jcenter.bintray.com/javax/xml/bind/jaxb-api/2.2.12-b140109.1041/jaxb-api-2.2.12-b140109.1041.pom
+ec3a75bebddbf19ff56a281cf5d1ad146169dcaa0e69d7b14f4aaba2e7775f34 | https://jcenter.bintray.com/net/freehaven/tor/control/jtorctl/0.2/jtorctl-0.2.jar
+3369726ca2b0e3736c741ff3c22e06f707a1007ff20ccc5b5ba5d0d9a01ead30 | https://jcenter.bintray.com/net/freehaven/tor/control/jtorctl/0.2/jtorctl-0.2.pom
 c83a9c71358d781539c34b38d76a88e3ec8e2d587c7f04b611acc9041919b310 | https://jcenter.bintray.com/net/java/dev/jna/jna/5.2.0/jna-5.2.0.aar
 aafe6935d6bedb89a6aa32563d441fbe305da1de193d6f71a45a0212acf9b756 | https://jcenter.bintray.com/net/java/dev/jna/jna/5.2.0/jna-5.2.0.pom
 281440811268e65d9e266b3cc898297e214e04f09740d0386ceeb4a8923d63bf | https://jcenter.bintray.com/net/java/jvnet-parent/1/jvnet-parent-1.pom
@@ -645,9 +647,11 @@ c0e82b220b0a52c71c7ca2a58c99a2530696c7b58b173052b9d48fe3efb10073 | https://jcent
 0f8a1b116e760b8fe6389c51b84e4b07a70fc11082d4f936e453b583dd50b43b | https://jcenter.bintray.com/org/ow2/ow2/1.5/ow2-1.5.pom
 6e58dad0b8565b95c6fb14b4bfbf570523d1c5290244cfb33822789fa53b1d25 | https://jcenter.bintray.com/org/python/jython-installer/2.7.1/jython-installer-2.7.1.jar
 2a42db37f9a565f1baa833b7cb7e9f901bd9fd750d10b9bd7ca76b2385b22387 | https://jcenter.bintray.com/org/python/jython-installer/2.7.1/jython-installer-2.7.1.pom
-baf3c7fe15fefeaf9e5b000d94547379dc48370f22a8797e239c127e7d7756ec | https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.24/slf4j-api-1.7.24.jar
-d7a15266d22fadc1c81bbc3b62637801d116e484eb6c831217dc36c537be48d2 | https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.24/slf4j-api-1.7.24.pom
-36367d127a586d502b60bf54db2d7397ec94573620eff523873ec12a12e54839 | https://jcenter.bintray.com/org/slf4j/slf4j-parent/1.7.24/slf4j-parent-1.7.24.pom
+fbd7b254e02d8aef60c418a5f0e14a783b38a16162caffb2d2a16ccd5d2c09b4 | https://jcenter.bintray.com/org/slf4j/slf4j-android/1.7.25/slf4j-android-1.7.25.jar
+bd9b9cb1a3987b1427f7a18babe7f92078e32bbe2e1dca6dced00cc0e3a077a9 | https://jcenter.bintray.com/org/slf4j/slf4j-android/1.7.25/slf4j-android-1.7.25.pom
+18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79 | https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar
+7cd9d7a0b5d93dfd461a148891b43509cf403a9c7f9fb49060d3554df1c81e1e | https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.pom
+18f5c52120db036e88d6136f8839c832d074bdda95c756c6f429249d2db54ac6 | https://jcenter.bintray.com/org/slf4j/slf4j-parent/1.7.25/slf4j-parent-1.7.25.pom
 b51f8867c92b6a722499557fc3a1fdea77bdf9ef574722fe90ce436a29559454 | https://jcenter.bintray.com/org/sonatype/oss/oss-parent/7/oss-parent-7.pom
 fb40265f982548212ff82e362e59732b2187ec6f0d80182885c14ef1f982827a | https://jcenter.bintray.com/org/sonatype/oss/oss-parent/9/oss-parent-9.pom
 d3f7f09989d5b0ce5c4791818ef937ee7663f1e359c2ef2d312f938aad0763da | https://jcenter.bintray.com/org/yaml/snakeyaml/1.24/snakeyaml-1.24.jar
