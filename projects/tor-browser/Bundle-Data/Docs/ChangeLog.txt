@@ -1,9 +1,11 @@
 Tor Browser 10.0a6 -- August 26 2020
+ * All Platforms
+   * Update HTTPS Everywhere to 2020.08.13
  * Windows + OS X + Linux
    * Update Firefox to 78.2.0esr
    * Update Tor Launcher to 0.2.23
+     * Bug 40002: After rebasing to 80.0b2 moat is broken [tor-launcher]
      * Translations update
-	 * Bug 40002: After rebasing to 80.0b2 moat is broken [tor-launcher]
    * Update NoScript to 11.0.39
    * Bug 21601: Remove unused media.webaudio.enabled pref
    * Bug 40002: Remove about:pioneer [tor-browser]
@@ -12,11 +14,25 @@ Tor Browser 10.0a6 -- August 26 2020
    * Bug 40090: Disable v3 add-on blocklist for now [tor-browser]
  * OS X
    * Bug 40015: Tor Browser broken on MacOS 11 Big Sur
+ * Android
+   * Update Firefox to 68.12.0esr
+   * Update NoScript to 11.0.38
+   * Update Tor to 0.4.4.4-rc
  * Build System
    * Windows + OS X + Linux
      * Bump Go to 1.13.15
    * Linux
      * Bug 40053: Also create the langpacks tarball for non-release builds [tor-browser-build]
+
+Tor Browser 9.5.4 -- August 25 2020
+ * All Platforms
+   * Update Firefox to 68.12.0esr
+   * Update HTTPS Everywhere to 2020.08.13
+   * Update NoScript to 11.0.38
+ * Windows + OS X + Linux
+   * Bug 40019: Onion-Location should not be processed on .onion webpages [tor-browser]
+ * OS X
+   * Bug 40015: Tor Browser is broken on MacOS 11 Big Sur [tor-browser]
 
 Tor Browser 10.0a5 -- August 18 2020
  * Windows + OS X + Linux
