@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-filename: '[% project %]-[% c("version") %]-[% c("version_old") %]-[% c("var/build_id") %].tar.gz'
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 version: 29.0.3
 version_old: 28.0.3
 var:
@@ -22,7 +22,6 @@ var:
     export PATH=$PATH:$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$GRADLE_HOME/gradle-[% c("var/gradle_version") %]/bin
   google_repo: https://dl.google.com/android/repository
   android_api_level: 29
-  android_api_level_old: 28
   android_platform_revision: 04
   android_ndk_version: 21
   android_ndk_version_old: 20
@@ -41,9 +40,6 @@ input_files:
   - URL: '[% c("var/google_repo") %]/platform-[% c("var/android_api_level") %]_r[% c("var/android_platform_revision") %].zip'
     name: platform
     sha256sum: c9eaf2ce4e8fa6f5a8036bd3c95363d003733bf0a1bd349718cadf802db44c69
-  - URL: '[% c("var/google_repo") %]/platform-[% c("var/android_api_level_old") %]_r[% c("var/android_platform_revision") %].zip'
-    name: platform_old
-    sha256sum: 967f8ca99b71d337aa9c7781f9d65dd8110bf5c4746f44304047bf71b20d0ded
   # ./mach bootstrap is fetching the latest version, so it does not seem to
   # matter which particular version we are using. Pin to the one fitting best to
   # SDK version/build-tools version.

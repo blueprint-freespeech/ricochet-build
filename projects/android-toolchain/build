@@ -38,8 +38,9 @@ unzip -qq $HOME/[% c("input_files_by_name/build_tools") %] -d $SDK_HOME
 mkdir -p build-tools/[% c("version") %]
 mv $android_release_dir/* build-tools/[% c("version") %]
 
-# Fenix has not updated to build-tools 29 yet, bundle therefore build-tools 28,
-# too.
+# Apart from GeckoView all other projects do still need build-tools 28.0.3 as
+# they are using the Gradle plugin 3.2.1 - 3.6.0 without specifying
+# `buildToolsVersion`.
 unzip -qq $HOME/[% c("input_files_by_name/build_tools_old") %] -d $SDK_HOME
 mkdir -p build-tools/[% c("version_old") %]
 mv $android_release_dir_old/* build-tools/[% c("version_old") %]
@@ -47,11 +48,6 @@ mv $android_release_dir_old/* build-tools/[% c("version_old") %]
 unzip -qq $HOME/[% c("input_files_by_name/platform") %] -d $SDK_HOME
 mkdir -p platforms/android-[% c("var/android_api_level") %]
 mv $android_release_dir/* platforms/android-[% c("var/android_api_level") %]
-
-# Fenix has not updated to Android 29 yet, bundle therefore Android 28, too.
-unzip -qq $HOME/[% c("input_files_by_name/platform_old") %] -d $SDK_HOME
-mkdir -p platforms/android-[% c("var/android_api_level_old") %]
-mv $android_release_dir_old/* platforms/android-[% c("var/android_api_level_old") %]
 
 unzip -qq $HOME/[% c("input_files_by_name/platform_tools") %] -d $SDK_HOME
 
