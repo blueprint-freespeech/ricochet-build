@@ -44,9 +44,9 @@ By default it is based on the alpha channel, but you can change that by
 editing rbm.local.conf. The resulting build can be found in directory
 testbuild.
 
-{release,alpha,nightly,testbuild}-linux-x86_64-debug
+{release,alpha,nightly,testbuild}-linux-x86_64-asan
 ----------------------------------------------------
-Create a debug build for Linux x86_64 with debug features such as ASan.
+Create a build for Linux x86_64 with Address Sanitizer enabled.
 
 {release,alpha,nightly,testbuild}-src
 -------------------------------------

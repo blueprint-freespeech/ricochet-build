@@ -47,10 +47,10 @@ targets:
   torbrowser-linux-x86_64:
     var:
       torbrowser-linux-x86_64: 1
-  torbrowser-linux-x86_64-debug:
+  torbrowser-linux-x86_64-asan:
     var:
       torbrowser-linux-x86_64: 1
-      debug-build: '-debug'
+      asan-build: '-asan'
   torbrowser-linux-i686:
     var:
       torbrowser-linux-i686: 1
@@ -154,7 +154,7 @@ input_files:
    enable: '[% c("var/torbrowser-linux-x86_64") %]'
    target:
      - '[% c("var/build_target") %]'
-     - 'torbrowser-linux-x86_64[% c("var/debug-build") %]'
+     - 'torbrowser-linux-x86_64[% c("var/asan-build") %]'
 
  - name: linux-i686
    project: tor-browser
