@@ -86,6 +86,7 @@ Tor Browser 10.0a5 -- August 18 2020
    * Bug 40066: Update existing prefs for ESR 78 [tor-browser]
    * Bug 40073: Disable remote Public Suffix List fetching [tor-browser]
    * Bug 40078: Backport patches for bug 1651680 for now [tor-browser]
+   * Bug 40106: Cannot install addons in full screen mode [tor-browser]
    * Translations update
  * Windows
    * Bug 33855: Don't use site's icon as window icon in Windows in private mode
