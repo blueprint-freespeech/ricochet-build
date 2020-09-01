@@ -1,10 +1,10 @@
 # vim: filetype=yaml sw=2
 filename: 'container-image_[% c("var/container/suite") %]-[% c("var/container/arch") %]-[% c("version") %].tar.gz'
-version: 2
+version: 3
 pkg_type: build
 
 var:
-  ubuntu_version: 19.10
+  ubuntu_version: 20.04.1
 
   container:
     use_container: 1
@@ -64,9 +64,9 @@ targets:
         arch: amd64
 
 input_files:
-  - URL: 'http://cdimage.ubuntu.com/ubuntu-base/releases/[% c("var/ubuntu_version") %]/release/ubuntu-base-[% c("var/ubuntu_version") %]-base-amd64.tar.gz'
+  - URL: 'https://cdimage.ubuntu.com/ubuntu-base/releases/[% c("var/ubuntu_version") %]/release/ubuntu-base-[% c("var/ubuntu_version") %]-base-amd64.tar.gz'
     filename: 'container-image_ubuntu-base-[% c("var/ubuntu_version") %]-base-amd64.tar.gz'
-    sha256sum: eedcb1dc0ccc86b59eb1f89960c322a2ba3ed3e0323a20a1da8bcc0e6f100f4f
+    sha256sum: 97f6cbcf41f39272c84e32b6f926ed5d6906c6e463a557025181f4aa191ad667
   - URL: '[% c("var/apt_packages_baseurl") %]/[% c("var/apt_package_filename") %]'
     sha256sum: '[% c("var/apt_package_sha256sum") %]'
     enable: '[% c("var/apt_package_filename") %]'
