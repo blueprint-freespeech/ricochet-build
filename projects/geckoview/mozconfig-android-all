@@ -4,5 +4,5 @@ ac_add_options --disable-compile-environment
 # are on the beta channel for GeckoView
 ac_add_options --enable-update-channel=beta
 
-ac_add_options --with-android-sdk=/var/tmp/dist/fenix-android-toolchain/android-sdk-linux
-ac_add_options --with-gradle=/var/tmp/dist/fenix-android-toolchain/gradle/gradle-5.1.1/bin/gradle
+ac_add_options --with-android-sdk=/var/tmp/dist/android-toolchain/android-sdk-linux
+ac_add_options --with-gradle=/var/tmp/dist/android-toolchain/gradle/gradle-5.1.1/bin/gradle

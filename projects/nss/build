@@ -8,7 +8,7 @@ tar -C /var/tmp/dist -xf [% c('input_files_by_name/ninja') %]
 export PATH=/var/tmp/dist/ninja:$PATH
 
 # application-services uses a newer NDK, 21d, than all the other projects...
-export ANDROID_NDK_API_VERSION=[% pc("fenix-android-toolchain", "var/android_ndk_version") %][% pc('fenix-android-toolchain', 'var/android_ndk_revision') %]
+export ANDROID_NDK_API_VERSION=[% pc("android-toolchain", "var/android_ndk_version") %][% pc('android-toolchain', 'var/android_ndk_revision') %]
 export ANDROID_NDK_HOME=/var/tmp/dist/[% c('var/compiler') %]/android-ndk/android-ndk-r$ANDROID_NDK_API_VERSION
 # We need to add the new path to our build tools to PATH
 export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
@@ -16,22 +16,22 @@ export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
 export NDK_HOST_TAG=linux-x86_64
 
 nspr_64=""
-[% IF c("var/configure_host") == "arm-linux-androideabi" -%]
+[% IF c("var/cross_prefix") == "armv7a-linux-androideabi" -%]
   gyp_arch="arm"
-[% ELSIF c("var/configure_host") == "i686-linux-android" -%]
+[% ELSIF c("var/cross_prefix") == "i686-linux-android" -%]
   gyp_arch="ia32"
-[% ELSIF c("var/configure_host") == "x86_64-linux-android" -%]
+[% ELSIF c("var/cross_prefix") == "x86_64-linux-android" -%]
   gyp_arch="x64"
   nspr_64="--enable-64bit"
-[% ELSIF c("var/configure_host") == "aarch64-linux-android" -%]
+[% ELSIF c("var/cross_prefix") == "aarch64-linux-android" -%]
   gyp_arch="arm64"
   nspr_64="--enable-64bit"
 [% END -%]
 
 export AR="[% c('var/cross_prefix') %]-ar"
 # XXX: Mozilla really uses the NDK_API_VERSION here, which is weird.
-export CC="[% c('var/cross_prefix') %][% pc('fenix-android-toolchain', 'var/android_ndk_version') %]-clang"
-export CXX="[% c('var/cross_prefix') %][% pc('fenix-android-toolchain', 'var/android_ndk_version') %]-clang++"
+export CC="[% c('var/cross_prefix') %][% pc('android-toolchain', 'var/android_ndk_version') %]-clang"
+export CXX="[% c('var/cross_prefix') %][% pc('android-toolchain', 'var/android_ndk_version') %]-clang++"
 export LD="[% c('var/cross_prefix') %]-ld"
 export NM="[% c('var/cross_prefix') %]-nm"
 export RANLIB="[% c('var/cross_prefix') %]-ranlib"
@@ -57,7 +57,7 @@ mkdir $builddir/nspr_build
 cd $builddir/nspr_build
 ../nspr/configure \
   $nspr_64 \
-  --target=[% c("var/configure_host") %] \
+  --target=[% IF c("arch") == "armv7" %]arm-linux-androideabi[% ELSE %][% c("var/cross_prefix") %][% END %] \
   --disable-debug \
   --enable-optimize
 make
@@ -105,21 +105,21 @@ cp -p -L "$builddir/nss_build/lib/libssl.a" "$distdir/lib"
 
 # HW specific.
 # https://searchfox.org/nss/rev/08c4d05078d00089f8d7540651b0717a9d66f87e/lib/freebl/freebl.gyp#278-296
-[% IF c("var/configure_host") == "i686-linux-android" || c("var/configure_host") == "x86_64-linux-android"-%]
+[% IF c("var/cross_prefix") == "i686-linux-android" || c("var/cross_prefix") == "x86_64-linux-android"-%]
   cp -p -L "$builddir/nss_build/lib/libgcm-aes-x86_c_lib.a" "$distdir/lib"
 [% END %]
-[% IF c("var/configure_host") == "arm-linux-androideabi" || c("var/configure_host") == "aarch64-linux-android"-%]
+[% IF c("var/cross_prefix") == "armv7a-linux-androideabi" || c("var/cross_prefix") == "aarch64-linux-android"-%]
   cp -p -L "$builddir/nss_build/lib/libarmv8_c_lib.a" "$distdir/lib"
 [% END %]
-[% IF c("var/configure_host") == "aarch64-linux-android" -%]
+[% IF c("var/cross_prefix") == "aarch64-linux-android" -%]
   cp -p -L "$builddir/nss_build/lib/libgcm-aes-aarch64_c_lib.a" "$distdir/lib"
 [% END %]
-[% IF c("var/configure_host") == "arm-linux-androideabi" -%]
+[% IF c("var/cross_prefix") == "armv7a-linux-androideabi" -%]
   cp -p -L "$builddir/nss_build/lib/libgcm-aes-arm32-neon_c_lib.a" "$distdir/lib"
 [% END %]
 # https://searchfox.org/nss/rev/08c4d05078d00089f8d7540651b0717a9d66f87e/lib/freebl/freebl.gyp#315-324
 # https://searchfox.org/nss/rev/08c4d05078d00089f8d7540651b0717a9d66f87e/lib/freebl/freebl.gyp#43-47
-[% IF c("var/configure_host") == "x86_64-linux-android"-%]
+[% IF c("var/cross_prefix") == "x86_64-linux-android"-%]
   cp -p -L "$builddir/nss_build/lib/libintel-gcm-wrap_c_lib.a" "$distdir/lib"
   cp -p -L "$builddir/nss_build/lib/libintel-gcm-s_lib.a" "$distdir/lib"
   cp -p -L "$builddir/nss_build/lib/libhw-acc-crypto-avx.a" "$distdir/lib"

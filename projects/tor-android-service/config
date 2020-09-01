@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %]'
-git_hash: ecc251d0a73f7e2034a271efd28036a0108b8688
+git_hash: 68b91198066cf89a3664295116b5249b499461d6
 git_url: https://git.torproject.org/tor-android-service.git
 git_submodule: 1
 
@@ -11,7 +11,7 @@ var:
   container:
     use_container: 1
   # this should be updated when the list of gradle dependencies is changed
-  gradle_dependencies_version: 3
+  gradle_dependencies_version: 4
 
 input_files:
   - project: container-image
@@ -24,4 +24,3 @@ input_files:
     name: topl
   - project: tor
     name: tor
-  - filename: remove-native-build.patch

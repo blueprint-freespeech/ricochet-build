@@ -4,41 +4,60 @@ export PROJECT_PATH=/var/tmp/dist/[% project %]
 export SDK_HOME=$PROJECT_PATH/android-sdk-linux
 export NDK_HOME=$PROJECT_PATH/android-ndk
 export GRADLE_HOME=$PROJECT_PATH/gradle
+android_release_dir=android-10
+android_release_dir_old=android-9
 
-#Make directories
+# Make directories
 mkdir -p $NDK_HOME $SDK_HOME $GRADLE_HOME
 
 # Compiler Archives
 unzip -qq [% c("input_files_by_name/android_sdk_tools") %] -d $SDK_HOME
 unzip -qq [% c("input_files_by_name/android_ndk_compiler")%] -d $NDK_HOME
+# GeckoView is still using an older Android NDK, bundle it, too.
+unzip -qq [% c("input_files_by_name/android_ndk_compiler_old")%] -d $NDK_HOME
 unzip -qq [% c("input_files_by_name/gradle_bin") %] -d $GRADLE_HOME
+# GeckoView is still using an older Gradle, bundle it, too.
+unzip -qq [% c("input_files_by_name/gradle_bin_old") %] -d $GRADLE_HOME
+# application-services is using a comparatively new Gradle, bundle it, too.
+unzip -qq [% c("input_files_by_name/gradle_bin_new") %] -d $GRADLE_HOME
 
 # NDK Archive
-cd $NDK_HOME
-mv android-ndk-r17b/* .
-rm -fR android-ndk-r17b
-
-# The architectures we support
-./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_armv7") %] --arch arm --install-dir=./arm
-./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_aarch64") %] --arch arm64 --install-dir=./arm64
-./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_x86") %] --arch x86 --install-dir=./x86
-./build/tools/make_standalone_toolchain.py --api [% c("var/android_min_api_x86_64") %] --arch x86_64 --install-dir=./x86_64
+for version in [% c("var/android_ndk_version") %][% c("var/android_ndk_revision") %] [% c("var/android_ndk_version_old") %]; do
+  # Adjust cross compilation prefix for armv7a. Unfortunately, the compiler cross
+  # compilation prefix and the one for all the other tools differ. Let's fix that
+  # so we only have to take care of one. See: #33557 (comment 2674649).
+  cd $NDK_HOME/android-ndk-r$version/toolchains/llvm/prebuilt/linux-x86_64/bin
+  for f in `ls arm-linux-androideabi-*`; do
+    ln -s $f ${f//arm-linux-androideabi/armv7a-linux-androideabi}
+  done
+done
 
 # Tool Archives
 cd $SDK_HOME
 unzip -qq $HOME/[% c("input_files_by_name/build_tools") %] -d $SDK_HOME
-mkdir -p build-tools/27.0.3
-mv android-8.1.0/* build-tools/27.0.3
+mkdir -p build-tools/[% c("version") %]
+mv $android_release_dir/* build-tools/[% c("version") %]
+
+# Apart from GeckoView all other projects do still need build-tools 28.0.3 as
+# they are using the Gradle plugin 3.2.1 - 3.6.0 without specifying
+# `buildToolsVersion`.
+unzip -qq $HOME/[% c("input_files_by_name/build_tools_old") %] -d $SDK_HOME
+mkdir -p build-tools/[% c("version_old") %]
+mv $android_release_dir_old/* build-tools/[% c("version_old") %]
 
 unzip -qq $HOME/[% c("input_files_by_name/platform") %] -d $SDK_HOME
-mkdir -p platforms/android-28
-mv android-9/* platforms/android-28
+mkdir -p platforms/android-[% c("var/android_api_level") %]
+mv $android_release_dir/* platforms/android-[% c("var/android_api_level") %]
 
 unzip -qq $HOME/[% c("input_files_by_name/platform_tools") %] -d $SDK_HOME
 
+# That's a quirk required by GeckoView but let's have it here instead of in the
+# project's build script
+mkdir emulator
+cp tools/emulator emulator/
+
 # Cleanup
-rm -fR android-8.1.0
-rm -fR android-9
+rm -fR $android_release_dir $android_release_dir_old
 
 # Archive dist directory
 cd /var/tmp/dist

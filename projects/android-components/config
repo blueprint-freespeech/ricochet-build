@@ -1,0 +1,37 @@
+# vim: filetype=yaml sw=2
+version: v52.0.3
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+git_hash: 98aedbeb17261966052dda3dbd9b2953e015e435 # v52.0.3
+git_url: https://github.com/mozilla-mobile/android-components
+
+var:
+  container:
+    use_container: 1
+  # This should be updated when the list of gradle dependencies is changed.
+  gradle_dependencies_version: 1
+  # Switch to make it easier to grab all dependencies during a dry-run.
+  fetch_gradle_dependencies: 0
+
+targets:
+  nightly:
+    version: '[% c("abbrev") %]'
+    git_hash: 98aedbeb17261966052dda3dbd9b2953e015e435
+
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: geckoview
+    project: geckoview
+    pkg_type: merge_aars
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - name: application-services
+    project: application-services
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
+    name: gradle-dependencies
+    exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - filename: git.patch
+  - filename: mavenLocal.patch
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'

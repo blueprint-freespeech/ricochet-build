@@ -3,8 +3,9 @@ If additional Android dependencies are required by the project's build, then
 the Gradle build will fail due to missing dependencies. To find out what the
 missing dependencies are take the following steps.
 
-When calling gradle in the project's build script replace the `--offline` flag
-with `--debug` and remove any `-Dmaven.repo.local` arguments.
+If the dependencies for `application-services`, `android-components`, or `fenix`
+are needed, set the `fetch_gradle_dependencies` flag in their `config` files to
+`1`.
 
 For the firefox project, comment out the following line in the project's build file:
 
@@ -14,7 +15,10 @@ Also modify the gradle flags to include the debug option so the download logs wi
 
    export GRADLE_FLAGS="--no-daemon --debug"
 
-Then allow network access during the build by setting
+Otherwise, when calling gradle in the project's build script replace the
+`--offline` flag with `--debug` and remove any `-Dmaven.repo.local` arguments.
+
+Finally, allow network access during the build by setting
 `var/container/disable_network/build` to `0` in rbm.conf, and rerun the build.
 
 Dependent artifacts will show up as downloads in the logs. You can pull out
@@ -26,4 +30,4 @@ list script in the tools directory:
 Copy the resulting `gradle-dependencies-list.txt` over the one in the respective
 project. Then, in the project's config file, increment the
 `var/gradle_dependencies_version` and make sure to restore the project's build
-file back to original.
+file back to original or set `fetch_gradle_dependencies` to `0` again.

@@ -24,7 +24,7 @@ targets:
 
   android-armv7:
     var:
-      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=thumbv7neon-linux-androideabi --set=target.thumbv7neon-linux-androideabi.cc=[% c("var/CC") %] --set=target.thumbv7neon-linux-androideabi.ar=[% c("var/cross_prefix") %]-ar
+      configure_opt: --enable-local-rust --enable-vendor --enable-extended --release-channel=stable --sysconfdir=etc --target=[% IF pc(c("origin_project"), "var/application_services") %]armv7-linux-androideabi[% ELSE %]thumbv7neon-linux-androideabi[% END %] --set=target.[% IF pc(c("origin_project"), "var/application_services") %]armv7-linux-androideabi[% ELSE %]thumbv7neon-linux-androideabi[% END %].cc=[% c("var/CC") %] --set=target.[% IF pc(c("origin_project"), "var/application_services") %]armv7-linux-androideabi[% ELSE %]thumbv7neon-linux-androideabi[% END %].ar=[% c("var/cross_prefix") %]-ar
 
   linux:
     var:

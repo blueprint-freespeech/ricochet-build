@@ -1,0 +1,23 @@
+From 88fdf4a5e0510fe430e81b652621705d3de47746 Mon Sep 17 00:00:00 2001
+From: Georg Koppen <gk@torproject.org>
+Date: Mon, 6 Jul 2020 17:04:47 +0000
+Subject: [PATCH] no git
+
+
+diff --git a/build.gradle b/build.gradle
+index 6b16a91d..af8a3b6e 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -79,8 +79,7 @@ import com.sun.jna.Platform as DefaultPlatform
+ //
+ // Note we pass the path to the git-dir so that this still works when
+ // used as a dependency substitution from e.g. android-components.
+-ext.libsGitSha = "git --git-dir=${rootProject.rootDir}/.git diff --name-only main -- :/libs".execute().text.allWhitespace ?
+-                 "git --git-dir=${rootProject.rootDir}/.git rev-parse HEAD:libs".execute().text.trim() : null
++ext.libsGitSha = null
+ 
+ // Use in-tree libs from the source directory in CI or if the git SHA is unset; otherwise use
+ // downloaded libs.
+-- 
+2.27.0
+
