@@ -62,7 +62,6 @@ tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 cd /var/tmp/build/[% project %]-[% c("version") %]
 mv -f $rootdir/[% c('input_files_by_name/mozconfig') %] .mozconfig
 [% IF c("var/asan") -%]
-  mv -f .mozconfig-asan .mozconfig
   # Without disabling LSan our build is blowing up:
   # https://bugs.torproject.org/10599#comment:52
   export ASAN_OPTIONS="detect_leaks=0"

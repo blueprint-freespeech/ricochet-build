@@ -23,8 +23,8 @@ release-android-aarch64: submodule-update
 release-linux-x86_64: submodule-update
 	$(rbm) build release --target release --target torbrowser-linux-x86_64
 
-release-linux-x86_64-debug: submodule-update
-	$(rbm) build release --target release --target torbrowser-linux-x86_64-debug
+release-linux-x86_64-asan: submodule-update
+	$(rbm) build release --target release --target torbrowser-linux-x86_64-asan
 
 release-linux-i686: submodule-update
 	$(rbm) build release --target release --target torbrowser-linux-i686
@@ -62,8 +62,8 @@ alpha-android-aarch64: submodule-update
 alpha-linux-x86_64: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-linux-x86_64
 
-alpha-linux-x86_64-debug: submodule-update
-	$(rbm) build release --target alpha --target torbrowser-linux-x86_64-debug
+alpha-linux-x86_64-asan: submodule-update
+	$(rbm) build release --target alpha --target torbrowser-linux-x86_64-asan
 
 alpha-linux-i686: submodule-update
 	$(rbm) build release --target alpha --target torbrowser-linux-i686
@@ -101,8 +101,8 @@ nightly-android-aarch64: submodule-update
 nightly-linux-x86_64: submodule-update
 	$(rbm) build release --target nightly --target torbrowser-linux-x86_64
 
-nightly-linux-x86_64-debug: submodule-update
-	$(rbm) build release --target nightly --target torbrowser-linux-x86_64-debug
+nightly-linux-x86_64-asan: submodule-update
+	$(rbm) build release --target nightly --target torbrowser-linux-x86_64-asan
 
 nightly-linux-i686: submodule-update
 	$(rbm) build release --target nightly --target torbrowser-linux-i686
@@ -140,8 +140,8 @@ testbuild-android-aarch64: submodule-update
 testbuild-linux-x86_64: submodule-update
 	$(rbm) build release --target testbuild --target torbrowser-linux-x86_64
 
-testbuild-linux-x86_64-debug: submodule-update
-	$(rbm) build release --target testbuild --target torbrowser-linux-x86_64-debug
+testbuild-linux-x86_64-asan: submodule-update
+	$(rbm) build release --target testbuild --target torbrowser-linux-x86_64-asan
 
 testbuild-linux-i686: submodule-update
 	$(rbm) build release --target testbuild --target torbrowser-linux-i686

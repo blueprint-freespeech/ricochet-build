@@ -117,7 +117,7 @@ input_files:
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
   - filename: get-moz-build-date
-  - filename: 'mozconfig-[% c("var/osname") %]'
+  - filename: 'mozconfig-[% c("var/osname") %][% IF c("var/asan") %]-asan[% END %]'
     name: mozconfig
   - project: binutils
     name: binutils
