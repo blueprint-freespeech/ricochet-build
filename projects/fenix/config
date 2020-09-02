@@ -5,18 +5,16 @@ git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch"
 git_url: https://gitlab.torproject.org/tpo/applications/fenix.git
 tag_gpg_id: 1
 gpg_keyring: torbutton.gpg
-gecko_flavor: 'GeckoBeta'
-fenix_flavor: 'FennecProduction'
-build_flavor: '[% c("gecko_flavor") %][% c("fenix_flavor") %]'
+variant: Beta
 
 var:
-  fenix_version: '80.0b[% c("var/beta_version") %]'
-  beta_version: 6
-  torbrowser_branch: 10
+  fenix_version: '81.1.0b[% c("var/beta_version") %]'
+  beta_version: 1
+  torbrowser_branch: 10.0
   container:
     use_container: 1
   # This should be updated when the list of gradle dependencies is changed.
-  gradle_dependencies_version: 2
+  gradle_dependencies_version: 3
   # Switch to make it easier to grab all dependencies during a dry-run.
   fetch_gradle_dependencies: 0
 
@@ -25,7 +23,7 @@ targets:
     git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-1'
     tag_gpg_id: 0
     version: '[% c("abbrev") %]'
-    fenix_flavor: 'Debug'
+    variant: Beta
 
 input_files:
   - project: container-image

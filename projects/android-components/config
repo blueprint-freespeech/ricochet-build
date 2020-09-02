@@ -1,21 +1,16 @@
 # vim: filetype=yaml sw=2
-version: v52.0.3
+version: 57.0.0
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
-git_hash: 98aedbeb17261966052dda3dbd9b2953e015e435 # v52.0.3
+git_hash: c84cf8e7736ee77c22c75ca9f0397b202e489991 # v57.0.0
 git_url: https://github.com/mozilla-mobile/android-components
 
 var:
   container:
     use_container: 1
   # This should be updated when the list of gradle dependencies is changed.
-  gradle_dependencies_version: 1
+  gradle_dependencies_version: 2
   # Switch to make it easier to grab all dependencies during a dry-run.
   fetch_gradle_dependencies: 0
-
-targets:
-  nightly:
-    version: '[% c("abbrev") %]'
-    git_hash: 98aedbeb17261966052dda3dbd9b2953e015e435
 
 input_files:
   - project: container-image

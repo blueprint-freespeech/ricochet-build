@@ -1,7 +1,7 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
-version: 61.0.10
-git_hash: 2478bcf2b48d1867b01e8b7df4f86a69d564d49a # v61.0.10
+version: 61.0.13
+git_hash: 8faa8313bcec03775ddaa194438391c4731eb840 # v61.0.13
 git_url: https://github.com/mozilla/application-services
 
 var:
