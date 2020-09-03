@@ -39,10 +39,16 @@ input_files:
     project: geckoview
     pkg_type: merge_aars
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - name: python
+    project: python
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
   - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
     name: gradle-dependencies
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
+  - URL: https://people.torproject.org/~gk/mirrors/sources/glean-parser-[% c('var/glean_parser') %].tar.bz2
+    sha256sum: 69234aa1ae38fd5dda4de71bd5e536795073703c3ed5bb994b9b8485bd7a55dc
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
   - filename: mavenLocal.patch
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
   - project: tor-android-service

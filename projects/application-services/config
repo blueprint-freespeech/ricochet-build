@@ -8,7 +8,7 @@ var:
   container:
     use_container: 1
   # This should be updated when the list of gradle dependencies is changed.
-  gradle_dependencies_version: 1
+  gradle_dependencies_version: 2
   # This should be updated when the list of rust dependencies is changed.
   rust_vendor_version: 1
   # For armv7 we need a different target than the default one we use for
@@ -71,9 +71,15 @@ input_files:
     name: sqlcipher-x86_64
     target_prepend:
       - torbrowser-android-x86_64
+  - name: python
+    project: python
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
   - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
     name: gradle-dependencies
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - URL: https://people.torproject.org/~gk/mirrors/sources/glean-parser-[% c('var/glean_parser') %].tar.bz2
+    sha256sum: 69234aa1ae38fd5dda4de71bd5e536795073703c3ed5bb994b9b8485bd7a55dc
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
   # `cargo vendor vendor` in the `application-services` directory has vendored
   # the sources.
@@ -84,3 +90,4 @@ input_files:
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
   - filename: target.patch
   - filename: 1651660.patch
+  - filename: 1651662.patch
