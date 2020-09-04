@@ -1,58 +1,25 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
-ext_dir=assets/distribution/extensions
+ext_dir=assets/extensions
 qa_apk=[% dest_dir %]/[% c('filename') %]/tor-browser-[% c("version") %]-[% c("var/osname") %]-multi-qa.apk
-apk=$rootdir/[% c('input_files_by_name/firefox') %]/tor-browser-unsigned-unaligned.apk
+apk=$rootdir/fenix/app-[% c("var/abi") %]*.apk
 
+tar xavf $rootdir/[% c('input_files_by_name/fenix') %]
+
+# Bundle our extensions. We treat HTTPS-Everywhere and NoScript differently as
+# the former should be an internal extension without getting any updates besides
+# from Tor Browser releases. NoScript will be copied over to the profile folder
+# being a "regular" browser extension.
 mkdir -p /var/tmp/build/$ext_dir [% dest_dir _ '/' _ c('filename') %]
 cd /var/tmp/build
-
-mv $rootdir/[% c('input_files_by_name/https-everywhere') %] $ext_dir/https-everywhere-eff@eff.org.xpi
+unzip -d $ext_dir/https-everywhere $rootdir/[% c('input_files_by_name/https-everywhere') %]
 mv $rootdir/[% c('input_files_by_name/noscript') %] $ext_dir/{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi
 
 [% c('zip', {
         zip_src => [ '$ext_dir' ],
         zip_args => '$apk',
     }) %]
-unzip $apk lib/*
-zip -d $apk lib/\*
 
-[% IF c("var/android-x86") %]
-    [% c('zip', {
-          zip_src => [ 'lib/x86/*' ],
-          zip_args => '$apk',
-       }) %]
-[% ELSIF c("var/android-x86_64") %]
-    [% c('zip', {
-          zip_src => [ 'lib/x86_64/*' ],
-          zip_args => '$apk',
-       }) %]
-[% ELSIF c("var/android-armv7") %]
-    [% c('zip', {
-          zip_src => [ 'lib/armeabi-v7a/*' ],
-          zip_args => '$apk',
-       }) %]
-[% ELSIF c("var/android-aarch64") %]
-    [% c('zip', {
-          zip_src => [ 'lib/arm64-v8a/*' ],
-          zip_args => '$apk',
-       }) %]
-[% END %]
-
-rm -fR lib
-
-# Bug 31564: Android Gradle Plugin has a reproducibility bug. Decompile and recompile to fix ordering of resources.arsc files
-apktool=$rootdir/[% c('input_files_by_name/apktool') %]
-java -jar $apktool d --no-src -o decompiled $apk
-java -jar $apktool b -o $apk decompiled
-# Fix timestamps and remove extra field info from zip entries
-unzip $apk -d tmp
-rm $apk
-cd tmp
-[% c('zip', {
-   zip_src => [ '.' ],
-   zip_args => '-n ja $apk',
-   }) %]
-
-# Sign a QA build. This apk is not a debug version and doesn't contain a debug flag in the manifest
+# Sign a QA build. This .apk is not a debug version and doesn't contain a debug
+# flag in the manifest.
 java -jar /usr/lib/android-sdk/build-tools/debian/apksigner.jar sign --verbose --min-sdk-version [% c("var/android_min_api") %] --ks $rootdir/android-qa.keystore --out $qa_apk --in $apk --ks-key-alias androidqakey --key-pass pass:android --ks-pass pass:android
