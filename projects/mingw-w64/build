@@ -24,7 +24,7 @@ cd gcc
 tar xJf $rootdir/gcc-[% c("var/gcc_version") %].tar.xz
 # LDFLAGS_FOR_TARGET does not work for some reason. Thus, we take
 # CFLAGS_FOR_TARGET.
-export CFLAGS_FOR_TARGET="-Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-insert-timestamp"
+export CFLAGS_FOR_TARGET="-Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-insert-timestamp [% c('var/flag_noSEH') %]"
 # Rust requires enabling pthreads
 gcc-[% c("var/gcc_version") %]/configure --prefix=$distdir --target=[% c("arch") %]-w64-mingw32 --with-gnu-ld --with-gnu-as --disable-multilib --enable-threads=posix --enable-languages=c,c++
 make -j[% c("buildconf/num_procs") %] all-gcc
@@ -40,7 +40,7 @@ make install
 mkdir -p /var/tmp/build/builddir/mingw-w64/mingw-w64-pthread
 cd /var/tmp/build/builddir/mingw-w64/mingw-w64-pthread
 /var/tmp/build/[% project %]-[% c("version") %]/mingw-w64-libraries/winpthreads/configure \
-  LDFLAGS="-Wl,--dynamicbase -Wl,--nxcompat -Wl,--enable-reloc-section -Wl,--no-insert-timestamp" \
+  LDFLAGS="-Wl,--dynamicbase -Wl,--nxcompat -Wl,--enable-reloc-section -Wl,--no-insert-timestamp [% c('var/flag_noSEH') %]" \
   --host=[% c("arch") %]-w64-mingw32 --prefix=$distdir/[% c("arch") %]-w64-mingw32
 make -j[% c("buildconf/num_procs") %]
 make install

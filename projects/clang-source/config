@@ -30,3 +30,5 @@ input_files:
     name: libunwind
     file_gpg_id: 1
   - filename: 43909.patch
+  - filename: no-seh.patch
+    enable: '[% c("var/windows-i686") %]'

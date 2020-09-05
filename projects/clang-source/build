@@ -19,6 +19,13 @@ mv clang-tools-extra-[% c("version") %].src llvm/tools/clang/tools/extra
 mv libcxx-[% c("version") %].src llvm/projects/libcxx
 mv libcxxabi-[% c("version") %].src llvm/projects/libcxxabi
 mv lld-[% c("version") %].src llvm/tools/lld
+[% IF c("var/windows-i686") %]
+  # mingw-w64 does not support SEH on 32bit systems. Make it possible to
+  # explicitly disable it.
+  cd llvm/tools
+  patch -p1 < $rootdir/no-seh.patch
+  cd ../../
+[% END %]
 mv compiler-rt-[% c("version") %].src llvm/projects/compiler-rt
 # We need libunwind only for mingw-w64-clang, don't include it as tightly by
 # putting it into projects/

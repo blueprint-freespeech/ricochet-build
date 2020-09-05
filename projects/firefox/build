@@ -77,6 +77,8 @@ fi
   # Make sure widl is not inserting random timestamps, see #21837.
   export WIDL_TIME_OVERRIDE="0"
   patch -p1 < $rootdir/nsis-uninstall.patch
+  # mingw-w64 does not support SEH on 32bit systems. Be explicit about that.
+  export LDFLAGS="[% c('var/flag_noSEH') %]"
 [% END -%]
 
 [% IF c("var/namecoin") %]
