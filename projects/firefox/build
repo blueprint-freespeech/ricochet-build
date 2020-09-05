@@ -77,8 +77,6 @@ fi
   # Make sure widl is not inserting random timestamps, see #21837.
   export WIDL_TIME_OVERRIDE="0"
   patch -p1 < $rootdir/nsis-uninstall.patch
-  # Make sure we link without inserting timestamps in general.
-  export LDFLAGS="-Wl,--no-insert-timestamp"
 [% END -%]
 
 [% IF c("var/namecoin") %]
