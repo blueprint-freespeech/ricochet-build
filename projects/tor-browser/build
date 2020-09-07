@@ -45,7 +45,6 @@ mkdir -p "$TBDIR/$EXTSPATH"
 unzip -d $rootdir $rootdir/[% c('input_files_by_name/firefox') %]/mar-tools-*.zip
 MARTOOLS=$rootdir/mar-tools
 
-mv [% c('input_files_by_name/https-everywhere') %] "$TBDIR/$EXTSPATH/https-everywhere-eff@eff.org.xpi"
 mv [% c('input_files_by_name/noscript') %] "$TBDIR/$EXTSPATH/{73a6fe31-595d-460b-a920-fcc0f8843232}.xpi"
 
 tar -C "$TBDIR" -xf [% c('input_files_by_name/obfs4') %]
@@ -74,6 +73,18 @@ RBM_TB_EOF
 [% END %]
 
 tar -C ${TB_STAGE_DIR} -xf [% c('input_files_by_name/firefox') %]/tor-browser.tar.gz
+
+# Make unpacked HTTPS Everywhere available in resource://torbutton/content/extensions/https-everywhere/ as TB expects
+TMP_HTTPS_EVERYWHERE_PATH=$rootdir/tmp_https_everywhere/
+mkdir $TMP_HTTPS_EVERYWHERE_PATH
+pushd $TMP_HTTPS_EVERYWHERE_PATH
+mkdir -p chrome/torbutton/content/extensions/https-everywhere/
+unzip $rootdir/[% c('input_files_by_name/https-everywhere') %] -d chrome/torbutton/content/extensions/https-everywhere/
+find . -exec [% c("var/touch") %] {} \;
+zip -Xr "$TBDIR[% IF c("var/osx") %]/Contents/Resources[% END %]/omni.ja" chrome/
+popd
+rm -rf $TMP_HTTPS_EVERYWHERE_PATH
+
 tar -C "$TBDIR[% IF ! c("var/osx") %]/TorBrowser[% END %]" -xf [% c('input_files_by_name/tor') %]/tor.tar.gz
 [% IF c("var/namecoin") %]
   # Extract Electrum-NMC
