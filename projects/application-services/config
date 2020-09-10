@@ -26,51 +26,51 @@ input_files:
   - project: fenix-rust
     name: rust-armv7
     target_prepend:
-      - torbrowser-android-armv7
+      - android-armv7
   - project: fenix-rust
     name: rust-aarch64
     target_prepend:
-      - torbrowser-android-aarch64
+      - android-aarch64
   - project: fenix-rust
     name: rust-x86
     target_prepend:
-      - torbrowser-android-x86
+      - android-x86
   - project: fenix-rust
     name: rust-x86_64
     target_prepend:
-      - torbrowser-android-x86_64
+      - android-x86_64
   - project: nss
     name: nss-armv7
     target_prepend:
-      - torbrowser-android-armv7
+      - android-armv7
   - project: nss
     name: nss-aarch64
     target_prepend:
-      - torbrowser-android-aarch64
+      - android-aarch64
   - project: nss
     name: nss-x86
     target_prepend:
-      - torbrowser-android-x86
+      - android-x86
   - project: nss
     name: nss-x86_64
     target_prepend:
-      - torbrowser-android-x86_64
+      - android-x86_64
   - project: sqlcipher
     name: sqlcipher-armv7
     target_prepend:
-      - torbrowser-android-armv7
+      - android-armv7
   - project: sqlcipher
     name: sqlcipher-aarch64
     target_prepend:
-      - torbrowser-android-aarch64
+      - android-aarch64
   - project: sqlcipher
     name: sqlcipher-x86
     target_prepend:
-      - torbrowser-android-x86
+      - android-x86
   - project: sqlcipher
     name: sqlcipher-x86_64
     target_prepend:
-      - torbrowser-android-x86_64
+      - android-x86_64
   - name: python
     project: python
     enable: '[% !c("var/fetch_gradle_dependencies") %]'

@@ -25,16 +25,16 @@ input_files:
   - project: tor
     name: tor-armv7
     target_prepend:
-      - torbrowser-android-armv7
+      - android-armv7
   - project: tor
     name: tor-aarch64
     target_prepend:
-      - torbrowser-android-aarch64
+      - android-aarch64
   - project: tor
     name: tor-x86
     target_prepend:
-      - torbrowser-android-x86
+      - android-x86
   - project: tor
     name: tor-x86_64
     target_prepend:
-      - torbrowser-android-x86_64
+      - android-x86_64
