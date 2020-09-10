@@ -8,11 +8,6 @@ tar -C /var/tmp/build -xf nsis-[% c('version') %].tar.bz2
 tar -C /var/tmp/build -xf [% c('input_files_by_name/zlib') %]
 
 cd /var/tmp/build/nsis-[% c('version') %]-src
-# Adding --no-insert-timestamp to APPEND_LINKFLAGS is not working as it
-# is used for both the host and cross-compiled parts, but this option is
-# only valid for the Windows linker. Therefore we add it using a patch
-# to the cross-compilation part only.
-patch -p1 < $rootdir/no-insert-timestamp.patch
 
 [% IF c("var/windows-x86_64") %]
   # Seems like setting TARGET_ARCH is not enough so we need to patch build.cpp
