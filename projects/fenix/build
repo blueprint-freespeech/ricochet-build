@@ -31,7 +31,7 @@ cp $rootdir/[% c('input_files_by_name/topl') %]/* app/
 cp $rootdir/[% c('input_files_by_name/tor-android-service') %]/* app/
 
 [% IF c("var/fetch_gradle_dependencies") %]
-  gradle --debug --no-daemon app:assemble[% c('variant') %] -x lint
+  $GRADLE_HOME/gradle-6.5.1/bin/gradle --debug --no-daemon app:assemble[% c('variant') %] -x lint
 [% ELSE %]
   # Prepare Glean dependencies for offline build
   tar -xjf $rootdir/glean-parser-[% c('var/glean_parser') %].tar.bz2
@@ -45,7 +45,7 @@ cp $rootdir/[% c('input_files_by_name/tor-android-service') %]/* app/
   # not only for geckoview-beta.
   cp -f $distdir/geckoview/*.aar $gradle_repo/org/mozilla/geckoview/geckoview-beta/$geckoview_version/geckoview-beta-$geckoview_version.aar
 
-  gradle --offline --no-daemon -Dmaven.repo.local=$gradle_repo app:assemble[% c('variant') %] -x lint
+  $GRADLE_HOME/gradle-6.5.1/bin/gradle --offline --no-daemon -Dmaven.repo.local=$gradle_repo app:assemble[% c('variant') %] -x lint
   # XXX We need the build variant in lower case. Do something smarter here.
   v=[% c("variant") %]
   cp app/build/outputs/apk/${v,}/*.apk $distdir/[% project %]
