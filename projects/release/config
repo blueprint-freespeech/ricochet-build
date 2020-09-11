@@ -1,79 +1,37 @@
 # vim: filetype=yaml sw=2
-version: '[% c("var/torbrowser_version") %]'
+version: '[% c("var/tego_version") %]'
 output_dir: release
 
 var:
-  signed_status: unsigned
-  publish_dir: '[% c("var/signed_status") %]/[% c("version") %]-[% c("var/torbrowser_build") %]'
+  publish_dir: '[% c("version") %]-[% c("var/build_target") %]'
   containers_target: with_containers
 
 targets:
-  torbrowser-all:
-    - torbrowser-linux-x86_64
-    - torbrowser-linux-i686
-    - torbrowser-windows-i686
-    - torbrowser-windows-x86_64
-    - torbrowser-osx-x86_64
-    - torbrowser-android-armv7
-    - torbrowser-android-x86
-    - torbrowser-android-x86_64
-    - torbrowser-android-aarch64
-    - torbrowser-src
-  torbrowser-all-desktop:
-    - torbrowser-linux-x86_64
-    - torbrowser-linux-i686
-    - torbrowser-windows-i686
-    - torbrowser-windows-x86_64
-    - torbrowser-osx-x86_64
-    - torbrowser-src
-  torbrowser-all-android:
-    - torbrowser-android-armv7
-    - torbrowser-android-x86
-    - torbrowser-android-x86_64
-    - torbrowser-android-aarch64
-  torbrowser-android-armv7:
+  tego-all:
+    - tego-linux-x86_64
+    - tego-linux-i686
+    - tego-windows-i686
+    - tego-windows-x86_64
+    - tego-osx-x86_64
+  tego-linux-x86_64:
     var:
-      torbrowser-android-armv7: 1
-  torbrowser-android-x86:
+      tego-linux-x86_64: 1
+  tego-linux-i686:
     var:
-      torbrowser-android-x86: 1
-  torbrowser-android-x86_64:
+      tego-linux-i686: 1
+  tego-windows-i686:
     var:
-      torbrowser-android-x86_64: 1
-  torbrowser-android-aarch64:
+      tego-windows-i686: 1
+  tego-windows-x86_64:
     var:
-      torbrowser-android-aarch64: 1
-  torbrowser-linux-x86_64:
+      tego-windows-x86_64: 1
+  tego-osx-x86_64:
     var:
-      torbrowser-linux-x86_64: 1
-  torbrowser-linux-x86_64-asan:
-    var:
-      torbrowser-linux-x86_64: 1
-      asan-build: '-asan'
-  torbrowser-linux-i686:
-    var:
-      torbrowser-linux-i686: 1
-  torbrowser-windows-i686:
-    var:
-      torbrowser-windows-i686: 1
-  torbrowser-windows-x86_64:
-    var:
-      torbrowser-windows-x86_64: 1
-  torbrowser-osx-x86_64:
-    var:
-      torbrowser-osx-x86_64: 1
-  torbrowser-src:
-    var:
-      torbrowser-src: '[% ! c("var/testbuild") %]'
-  torbrowser-src-testbuild:
-    var:
-      torbrowser-src: 1
+      tego-osx-x86_64: 1
 
   notarget:
     - release
-    - torbrowser-all
-    - torbrowser-all-android
-    - torbrowser-all-desktop
+    - tego-all
 
   noversiondir:
     var:
@@ -87,157 +45,47 @@ targets:
     output_dir: 'nightly'
     var:
       build_target: nightly
-      publish_dir: '[% c("version") %]'
-
-  alpha:
-    output_dir: alpha
-    var:
-      build_target: alpha
-
-  testbuild:
-    output_dir: 'testbuild'
-    var:
-      testbuild: 1
-      build_target: torbrowser-testbuild
-      publish_dir: ''
 
   no_containers:
     var:
       containers_target: no_containers
 
-  signed:
-    var:
-      signed_status: signed
-
-  create_unsigned_incrementals:
-    var:
-      create_unsigned_incrementals: 1
-
 input_files:
 
 # Release
- - name: android-armv7
-   project: tor-browser
-   enable: '[% c("var/torbrowser-android-armv7") %]'
-   target:
-     - '[% c("var/containers_target") %]'
-     - '[% c("var/build_target") %]'
-     - torbrowser-android-armv7
-
- - name: android-x86
-   project: tor-browser
-   enable: '[% c("var/torbrowser-android-x86") %]'
-   target:
-     - '[% c("var/containers_target") %]'
-     - '[% c("var/build_target") %]'
-     - torbrowser-android-x86
-
- - name: android-x86_64
-   project: tor-browser
-   enable: '[% c("var/torbrowser-android-x86_64") %]'
-   target:
-     - '[% c("var/containers_target") %]'
-     - '[% c("var/build_target") %]'
-     - torbrowser-android-x86_64
-
- - name: android-aarch64
-   project: tor-browser
-   enable: '[% c("var/torbrowser-android-aarch64") %]'
-   target:
-     - '[% c("var/containers_target") %]'
-     - '[% c("var/build_target") %]'
-     - torbrowser-android-aarch64
-
  - name: linux-x86_64
-   project: tor-browser
-   enable: '[% c("var/torbrowser-linux-x86_64") %]'
+   project: tego-package
+   enable: '[% c("var/tego-linux-x86_64") %]'
    target:
      - '[% c("var/build_target") %]'
-     - 'torbrowser-linux-x86_64[% c("var/asan-build") %]'
+     - 'tego-linux-x86_64'
 
  - name: linux-i686
-   project: tor-browser
-   enable: '[% c("var/torbrowser-linux-i686") %]'
+   project: tego-package
+   enable: '[% c("var/tego-linux-i686") %]'
    target:
      - '[% c("var/build_target") %]'
-     - torbrowser-linux-i686
+     - tego-linux-i686
 
  - name: windows-i686
-   project: tor-browser
-   enable: '[% c("var/torbrowser-windows-i686") %]'
+   project: tego-package
+   enable: '[% c("var/tego-windows-i686") %]'
    target:
      - '[% c("var/build_target") %]'
-     - torbrowser-windows-i686
+     - tego-windows-i686
 
  - name: windows-x86_64
-   project: tor-browser
-   enable: '[% c("var/torbrowser-windows-x86_64") %]'
+   project: tego-package
+   enable: '[% c("var/tego-windows-x86_64") %]'
    target:
      - '[% c("var/build_target") %]'
-     - torbrowser-windows-x86_64
+     - tego-windows-x86_64
 
  - name: osx-x86_64
-   project: tor-browser
-   enable: '[% c("var/torbrowser-osx-x86_64") %]'
+   project: tego-package
+   enable: '[% c("var/tego-osx-x86_64") %]'
    target:
      - '[% c("var/build_target") %]'
-     - torbrowser-osx-x86_64
-
- - name: windows-expert-bundle
-   project: tor
-   enable: '[% c("var/torbrowser-windows-i686") %]'
-   target:
-     - '[% c("var/build_target") %]'
-     - torbrowser-windows-i686
-     - expert-bundle
-
- - name: windows64-expert-bundle
-   project: tor
-   enable: '[% c("var/torbrowser-windows-x86_64") %]'
-   target:
-     - '[% c("var/build_target") %]'
-     - torbrowser-windows-x86_64
-     - expert-bundle
-
- - name: src-firefox
-   project: firefox
-   enable: '[% c("var/torbrowser-src") %]'
-   pkg_type: src-tarballs
-   target:
-     - '[% c("var/build_target") %]'
-     - torbrowser-src
-
- - name: src-tor-launcher
-   project: tor-launcher
-   enable: '[% c("var/torbrowser-src") %]'
-   pkg_type: src-tarballs
-   target:
-     - '[% c("var/build_target") %]'
-     - torbrowser-src
+     - tego-osx-x86_64
 
 steps:
-  signtag:
-    build_log: '-'
-    debug: 0
-    input_files: []
-    signtag: '[% INCLUDE signtag %]'
-  update_responses_config:
-    build_log: '-'
-    debug: 0
-    input_files: []
-    update_responses_config: '[% INCLUDE update_responses_config %]'
-  create_update_responses_tar:
-    build_log: '-'
-    debug: 0
-    input_files: []
-    create_update_responses_tar: '[% INCLUDE create_update_responses_tar %]'
-  hash_incrementals:
-    build_log: '-'
-    debug: 0
-    input_files: []
-    hash_incrementals: '[% INCLUDE hash_incrementals %]'
-  dmg2mar:
-    build_log: '-'
-    debug: 0
-    input_files: []
-    dmg2mar: '[% INCLUDE dmg2mar %]'

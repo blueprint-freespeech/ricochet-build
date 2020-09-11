@@ -1,1 +1,0 @@
-projects/tor-browser/Bundle-Data/Docs/ChangeLog.txt

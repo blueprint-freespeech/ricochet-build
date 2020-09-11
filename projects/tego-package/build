@@ -1,0 +1,9 @@
+#!/bin/bash
+set -x
+
+destdir=/var/tmp/dist/[% project %]
+mkdir -p destdir
+
+OUTDIR='[% dest_dir _ "/" _ c("filename") %]'
+mkdir -p $OUTDIR
+echo "[% c("version") %]-[% c("var/osname") %]"  > $OUTDIR/tego-package-[% c("version") %]-[% c("var/osname") %].txt

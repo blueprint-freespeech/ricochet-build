@@ -1,8 +1,0 @@
-# vim: filetype=yaml sw=2
-version: '[% c("var/ff_version") %]-[% c("var/ff_build") %]'
-filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
-
-var:
-  use_container: 0
-  ff_version: '[% pc("firefox", "var/firefox_version") %]'
-  ff_build: build1

@@ -1,0 +1,7 @@
+# vim: filetype=yaml sw=2
+version: '[% c("var/tego_version") %]'
+filename: 'tego-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %]'
+
+input_files:
+ - project: container-image
+ - project: tego

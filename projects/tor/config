@@ -62,9 +62,3 @@ input_files:
     enable: '[% c("var/windows") || c("var/android") %]'
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
-  - name: rust
-    project: rust
-    enable: '[% !c("var/android") && c("var/nightly") %]'
-  - name: zstd
-    project: zstd
-    enable: '[% c("var/android") %]'

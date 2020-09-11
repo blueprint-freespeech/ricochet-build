@@ -1,0 +1,5 @@
+version: none
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+input_files:
+  - project: container-image
