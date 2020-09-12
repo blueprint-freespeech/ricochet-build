@@ -3,6 +3,7 @@ Tor Browser 10.0a7 -- September 14 2020
    * Update Tor Launcher to 0.2.24
    * Update NoScript to 11.0.43
    * Translations update
+   * Bug 10394: Let Tor Browser update HTTPS Everywhere
    * Bug 32017: Use ExtensionStorageIDB again
    * Bug 40006: Fix new identity for 81 [torbutton]
    * Bug 40007: Move SecurityPrefs initialization to the StartupObserver component [torbutton]
