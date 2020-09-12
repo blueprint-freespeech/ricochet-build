@@ -37,24 +37,23 @@ pre: |
   tar -C ./base-image -czf [% dest_dir %]/[% c("filename") %] .
 
 targets:
-  wheezy-amd64:
+  jessie-amd64:
     var:
-      minimal_apt_version: '0.9.7.9+deb7u9'
-      # https://deb.freexian.com/extended-lts/updates/ela-76-1-apt/
-      apt_packages_baseurl: http://deb.freexian.com/extended-lts/pool/main/a/apt
-      apt_package_filename: apt_0.9.7.9+deb7u9_amd64.deb
-      apt_package_sha256sum: b8a218da2ae21979323dd02551d983938d94308ac56930a2d238e822f062dc61
-      apt_utils_package_filename: apt-utils_0.9.7.9+deb7u9_amd64.deb
-      apt_utils_package_sha256sum: d635a166aae03b24cdabe277bb46d584156836637c0b9bef2220fb0bc0928e40
-      libapt_inst_package_filename: libapt-inst1.5_0.9.7.9+deb7u9_amd64.deb
-      libapt_inst_package_sha256sum: 332083172e00d39e55dec4c7078c3522989e45e12b0a1306889e90b8e2c0a0db
-      libapt_pkg_package_filename: libapt-pkg4.12_0.9.7.9+deb7u9_amd64.deb
-      libapt_pkg_package_sha256sum: c3ae83c4ea691074250bf6fb175e71042c4bb7418bf19779ceda0a53eea0a257
+      minimal_apt_version: 1.0.9.8.6
+      # https://lists.debian.org/debian-lts-announce/2020/05/msg00013.html
+      apt_packages_baseurl: https://deb.freexian.com/extended-lts/pool/main/a/apt
+      apt_package_filename: apt_1.0.9.8.6_amd64.deb
+      apt_package_sha256sum: f82ba7ad03a33bed6644777260d28156a0ed0119aeafe657ef1f849330455f5b
+      apt_utils_package_filename: apt-utils_1.0.9.8.6_amd64.deb
+      apt_utils_package_sha256sum: 14cb23047ef9d83b0d026c4d5b0eb5e7b06cca36067d19155e9ea14982b09d61
+      libapt_inst_package_filename: libapt-inst1.5_1.0.9.8.6_amd64.deb
+      libapt_inst_package_sha256sum: 332b7453774ad3d141ce459d0c7a8438f16588c0df987e13c388b45740142c76
+      libapt_pkg_package_filename: libapt-pkg4.12_1.0.9.8.6_amd64.deb
+      libapt_pkg_package_sha256sum: c2e17b87284e8c7e162a390d8bba08870729040c2ec0e73eb6631b846dd013c0
 
       container:
-        suite: wheezy
+        suite: jessie
         arch: amd64
-        debootstrap_mirror: "http://archive.debian.org/debian/"
 
   buster-amd64:
     var:
