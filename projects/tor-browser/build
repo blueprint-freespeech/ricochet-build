@@ -81,7 +81,7 @@ pushd $TMP_HTTPS_EVERYWHERE_PATH
 mkdir -p chrome/torbutton/content/extensions/https-everywhere/
 unzip $rootdir/[% c('input_files_by_name/https-everywhere') %] -d chrome/torbutton/content/extensions/https-everywhere/
 find . -exec [% c("var/touch") %] {} \;
-zip -Xr "$TBDIR[% IF c("var/osx") %]/Contents/Resources[% END %]/omni.ja" chrome/
+find chrome/ | sort | zip -X -@ "$TBDIR[% IF c("var/osx") %]/Contents/Resources[% END %]/omni.ja"
 popd
 rm -rf $TMP_HTTPS_EVERYWHERE_PATH
 
