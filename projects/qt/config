@@ -1,0 +1,33 @@
+# vim: filetype=yaml sw=2
+version: 5.15.0
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+
+var:
+  container:
+    use_container: 1
+targets:
+  linux:
+    var:
+      cross_compile: 'x86_64-pc-linux-gnu-'
+  linux-i686:
+    var:
+      xplatform: linux-g++-32
+  linux-x86_64:
+    var:
+      xplatform: linux-g++-64
+  windows:
+    var:
+      xplatform: win32-g++
+      cross_compile: '[% c("arch") %]-w64-mingw32-'
+  osx:
+    var:
+      xplatform: macx-clang
+      cross_compile: x86_64-apple-darwin-
+
+
+input_files:
+ - project: container-image
+ - name: '[% c("var/compiler") %]'
+   project: '[% c("var/compiler") %]'
+ - URL: 'https://download.qt.io/archive/qt/5.15/5.15.0/single/qt-everywhere-src-[% c("version")%].tar.xz'
+   sha256sum: 22b63d7a7a45183865cc4141124f12b673e7a17b1fe2b91e433f6547c5d548c3

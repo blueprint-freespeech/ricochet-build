@@ -4,4 +4,11 @@ filename: 'tego-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %]
 
 input_files:
  - project: container-image
- - project: tego
+ - name: openssl
+   project: openssl
+ - name: qt
+   project: qt
+ - name: tor
+   project: tor
+ - name: tego
+   project: tego
