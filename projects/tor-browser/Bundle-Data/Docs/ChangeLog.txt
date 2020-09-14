@@ -21,6 +21,7 @@ Tor Browser 10.0a7 -- September 14 2020
      * Bug 40045: Fix complete .mar file creation for dmg2mar [tor-browser-build]
      * Bug 40065: Bump debootstrap-image ubuntu_version to 20.04.1 [tor-browser-build]
      * Bug 40087: Deterministically add HTTPS Everywhere into omni.ja
+     * Bug 40090: NSIS 3.06.1 based builds are not reproducible anymore
    * Windows
      * Bug 40052: Bump NSIS to 3.06.1 [tor-browser-build]
      * Bug 40071: Be explicit about no SEH with mingw-w64 on 32bit systems [tor-browser-build]
