@@ -91,3 +91,5 @@ input_files:
   - filename: target.patch
   - filename: 1651660.patch
   - filename: 1651662.patch
+  - filename: lto.patch
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'

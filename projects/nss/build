@@ -52,6 +52,10 @@ patch -p2 < $rootdir/config.patch
 # side.
 patch -p2 < $rootdir/bug_13028.patch
 
+# Enable LTO
+export CFLAGS="-flto"
+export LDFLAGS="-flto"
+
 # Building NSPR
 mkdir $builddir/nspr_build
 cd $builddir/nspr_build

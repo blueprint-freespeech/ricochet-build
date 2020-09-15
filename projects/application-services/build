@@ -97,11 +97,24 @@ patch -p1 < $rootdir/1651662.patch
   export LANG=C.UTF-8
   patch -p1 < $rootdir/mavenLocal.patch
   gradle_flags="--offline --no-daemon -Dmaven.repo.local=$gradle_repo"
+  patch -p1 < $rootdir/lto.patch
+  # Set the right flags for cross-language LTO and override linking opt level, since
+  # lld does not understand -Os or -Oz.
+  export RUSTFLAGS="-Clinker-plugin-lto -Clink-arg=-fuse-ld=lld -Clink-arg=-Wl,-plugin-opt=O2"
   $GRADLE_HOME/gradle-6.3/bin/gradle $gradle_flags assembleRelease
   $GRADLE_HOME/gradle-6.3/bin/gradle $gradle_flags publish
 
   cd build
   find maven -regex '.*[0-9].\(aar\|pom\)' -exec cp --parents {} $distdir \;
+
+  # Verify that the compiled libs do not have libc networking symbols
+  # (list adapted from https://searchfox.org/mozilla-central/rev/30e70f2fe80c97bfbfcd975e68538cefd7f58b2a/python/mozbuild/mozbuild/action/check_binary.py#217)
+  tmpdir=$(mktemp -d)
+  find $distdir -name '*.aar' -exec mkdir -p $tmpdir/{} \; -exec unzip {} -d $tmpdir/{} \;
+  if find $tmpdir -name '*.so' | xargs objdump -Tt | grep "*UND*" | grep "connect\|accept\|listen\|sock\|recv\|send\|host\|serv\|proto"; then
+    echo "Error: networking symbols found"
+    exit 1
+  fi
 
   cd /var/tmp/dist
   [% c('tar', {
