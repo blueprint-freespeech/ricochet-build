@@ -23,22 +23,23 @@ input_files:
   - project: container-image
   - project: '[% c("var/compiler") %]'
     name: '[% c("var/compiler") %]'
+  # We need the torbrowser-* targets for Rust, see: #40094.
   - project: fenix-rust
     name: rust-armv7
     target_prepend:
-      - android-armv7
+      - torbrowser-android-armv7
   - project: fenix-rust
     name: rust-aarch64
     target_prepend:
-      - android-aarch64
+      - torbrowser-android-aarch64
   - project: fenix-rust
     name: rust-x86
     target_prepend:
-      - android-x86
+      - torbrowser-android-x86
   - project: fenix-rust
     name: rust-x86_64
     target_prepend:
-      - android-x86_64
+      - torbrowser-android-x86_64
   - project: nss
     name: nss-armv7
     target_prepend:
