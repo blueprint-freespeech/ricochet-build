@@ -8,9 +8,9 @@ git_submodule: 1
 gpg_keyring: torbutton.gpg
 
 var:
-  firefox_platform_version: 78.2.0
+  firefox_platform_version: 78.3.0
   firefox_version: '[% c("var/firefox_platform_version") %]esr'
-  torbrowser_branch: 10.0
+  torbrowser_branch: 10.5
   branding_directory: 'browser/branding/alpha'
   copyright_year: '[% exec("git show -s --format=%ci").remove("-.*") %]'
   deps:
