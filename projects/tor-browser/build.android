@@ -2,7 +2,7 @@
 [% c("var/set_default_env") -%]
 ext_dir=assets/extensions
 qa_apk=[% dest_dir %]/[% c('filename') %]/tor-browser-[% c("version") %]-[% c("var/osname") %]-multi-qa.apk
-apk=$rootdir/fenix/app-[% c("var/abi") %]*.apk
+apk=$rootdir/fenix/app-[% c("var/abi") %]-*.apk
 
 tar xavf $rootdir/[% c('input_files_by_name/fenix') %]
 
