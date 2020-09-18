@@ -1,3 +1,19 @@
+Tor Browser 10.5a1 -- September 22 2020
+ * Windows + OS X + Linux
+   * Update Firefox to 78.3.0esr
+   * Update Tor to 0.4.4.5
+   * Update Tor Launcher to 0.2.25
+     * Translations update
+   * Update NoScript to 11.0.44
+     * Bug 40093: Youtube videos on safer produce an error [tor-browser]
+   * Translations update
+ * Linux
+   * Bug 40089: Remove CentOS 6 support for Tor Browser 10.5 [tor-browser]
+ * Build System
+   * Linux
+     * Bug 40041: Remove CentOS 6 support for 10.5 series [tor-browser-build]
+     * Bug 26238: Move to Debian Jessie for our Linux builds [tor-browser-build]
+
 Tor Browser 10.0a7 -- September 14 2020
  * Windows + OS X + Linux
    * Update Tor Launcher to 0.2.24
