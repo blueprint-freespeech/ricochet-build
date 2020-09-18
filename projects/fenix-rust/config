@@ -46,7 +46,7 @@ targets:
       #
       # `--enable-extended` to build not only rustc but cargo as well
       #
-      # `--enable-llvm-static-stdccp` to take a libstdc++ on Wheezy into account
+      # `--enable-llvm-static-stdccp` to take a libstdc++ on Jessie into account
       # which is too old and if used gives undefined reference errors
       #
       # `--release-channel=stable` to just include stable features in the
@@ -63,9 +63,7 @@ targets:
       # `--set=` to explicitly specify the C compiler. We need to compile the
       # bundled LLVM and it wants to use `cc`. However, we don't have that in
       # our compiled GCC resulting in weird errors due to C and C++ compiler
-      # version mismatch. We avoid that with this configure option. We need to
-      # build our own GCC in the first place as 4.7.2 is too old to get all the
-      # Rust pieces compiled.
+      # version mismatch. We avoid that with this configure option.
       configure_opt: --enable-local-rust --enable-vendor --enable-extended --enable-llvm-static-stdcpp --release-channel=stable --sysconfdir=etc --target=x86_64-unknown-linux-gnu,i686-unknown-linux-gnu --set=target.x86_64-unknown-linux-gnu.cc=gcc --set=target.i686-unknown-linux-gnu.cc=gcc
 
   osx-x86_64:
