@@ -11,8 +11,9 @@ Tor Browser 10.5a1 -- September 22 2020
    * Bug 40089: Remove CentOS 6 support for Tor Browser 10.5 [tor-browser]
  * Build System
    * Linux
+     * Bug 26238: Move to Debian Jessie for our Linux builds
      * Bug 40041: Remove CentOS 6 support for 10.5 series [tor-browser-build]
-     * Bug 26238: Move to Debian Jessie for our Linux builds [tor-browser-build]
+     * Bug 40103: Add i386 pkg-config path for linux-i686 [tor-browser-build]
 
 Tor Browser 10.0a7 -- September 14 2020
  * Windows + OS X + Linux
