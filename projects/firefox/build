@@ -30,6 +30,12 @@ export LLVM_CONFIG="/var/tmp/dist/clang/bin/llvm-config"
   [% IF ! c("var/asan") -%]
     export PATH="/var/tmp/dist/clang/bin:$PATH"
   [% END -%]
+  [% IF c("var/linux-i686") %]
+    # Exporting `PKG_CONFIG_PATH` in the mozconfig file is causing build
+    # breakage in Rust code. It seems that environment variable is not passed
+    # down properly in that case. Thus, we set it here in the build script.
+    export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/lib/i386-linux-gnu/pkgconfig"
+  [% END -%]
 [% END -%]
 
 [% IF c("var/rlbox") -%]
