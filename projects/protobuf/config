@@ -1,0 +1,29 @@
+# vim filetype:yaml sw=2
+version: 3.13.0
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+git_hash: 'v[% c("version") %]'
+git_url: https://github.com/protocolbuffers/protobuf.git
+
+var:
+  container:
+    use_container: 1
+
+targets:
+  linux:
+    var:
+      host: x86_64-pc-linux-gnu
+  linux-i686:
+    var:
+      cxxflags: -m32
+  windows:
+    var:
+      host: '[% c("arch") %]-w64-mingw32'
+  osx-x86_64:
+    var:
+      host: x86_64-apple-darwin
+input_files:
+  - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: protoc
+    project: protoc
