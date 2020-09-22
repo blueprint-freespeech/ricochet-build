@@ -38,12 +38,13 @@
 #    having made a copy of `gradle-dependencies-list.txt` from 1) and comparing
 #    the two .txt files.
 
+export LC_ALL=C
 log="$1"
 
 # Step 1: Extract all the download attempts out of the log file, ignore the ones
-# for maven-metadata.xml files. We don't need those.
+# for maven-metadata.xml and module files. We don't need those.
 cat $log | grep "Performing HTTP" | grep -o "https://.*" | \
-  grep -v "maven-metadata.xml" | sort | uniq > dl-attempts
+  grep -vE "\.module|maven-metadata\.xml" | sort | uniq > dl-attempts
 
 # Step 2: Fetch all the dependencies and calculate the SHA-256 sum
 while read line
