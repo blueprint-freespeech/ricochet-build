@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$1" == "--sdk" ] && [ "$2" == "macosx" ]; then
+    if [ "$3" == "-show-sdk-version" ] || [ "$3" == "--show-sdk-version" ]; then
+        echo "10.15"
+    fi
+    if [ "$3" == "--show-sdk-path" ]; then
+        echo "/var/tmp/dist/macosx-toolchain/Developer/SDKs/MacOSX10.15.sdk"
+    fi
+fi
+

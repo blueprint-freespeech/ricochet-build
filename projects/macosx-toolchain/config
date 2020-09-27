@@ -1,16 +1,17 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
-version: 10.11-1
+version: 10.15
 var:
   container:
     use_container: 1
   setup: |
     mkdir -p /var/tmp/dist
     tar -C /var/tmp/dist -xf $rootdir/[% c("compiler_tarfile") %]
-    export sysrootdir=/var/tmp/dist/[% project %]/MacOSX10.11.sdk/
+    export sysrootdir=/var/tmp/dist/[% project %]/MacOSX10.15.sdk/
     export clangdir=/var/tmp/dist/[% project %]/clang
     export cctoolsdir=/var/tmp/dist/[% project %]/cctools/bin
-    export PATH="$clangdir/bin:$cctoolsdir:$PATH"
+    export xcodetoolsdir=/var/tmp/dist/[% project %]/xcode_tools
+    export PATH="$clangdir/bin:$cctoolsdir:$xcodetoolsdir:$PATH"
     export LD_LIBRARY_PATH=/var/tmp/dist/[% project %]/clang/lib
     export CC="$clangdir/bin/clang [% c('var/FLAGS') %]"
     export LDFLAGS="[% c('var/LDFLAGS') %]"
@@ -29,9 +30,11 @@ input_files:
   # Instructions on how to create the SDK tarball can be found at:
   # build/macosx/cross-mozconfig.common
   - name: SDK
-    URL: https://people.torproject.org/~gk/mirrors/sources/MacOSX10.11.sdk.tar.bz2
-    sha256sum: d11e410d757d023be66d2fe7eaa85a1d232da3ac04f177eff3d8b8275cd9ffca
+    URL: https://people.torproject.org/~richard/mirrors/sources/MacOSX10.15.sdk.tar.bz2
+    sha256sum: 80a246cd778125453d4a22f9ae5e7f041758bb8eb876f77fe308e0f9f38d02b1
   - name: clang-source
     project: clang-source
   - filename: compiler-rt-cross-compile.patch
   - filename: compiler-rt-no-codesign.patch
+  - filename: xcode-select
+  - filename: xcrun

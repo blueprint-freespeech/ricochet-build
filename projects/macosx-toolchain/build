@@ -11,9 +11,14 @@ tar -C $distdir -xf [% c('input_files_by_name/SDK') %]
 tar -C $distdir -xf [% c('input_files_by_name/cctools') %]
 tar -C $builddir -xf [% c('input_files_by_name/clang-source') %]
 
+# copy over xcode mocks
+mkdir $distdir/xcode_tools
+cp $rootdir/xcrun $distdir/xcode_tools/xcrun
+cp $rootdir/xcode-select $distdir/xcode_tools/xcode-select
+
 clangdir=/var/tmp/dist/clang/bin
 cctoolsdir=$distdir/cctools/bin
-sysrootdir=$distdir/MacOSX10.11.sdk/
+sysrootdir=$distdir/MacOSX10.15.sdk/
 # We still need to put the cctoolsdir on the path. That's because of `lipo`. See
 # the respective comment in the cctools build script.
 export PATH="/var/tmp/dist/ninja:/var/tmp/dist/cmake/bin:$cctoolsdir:$PATH"
@@ -51,7 +56,7 @@ cmake -GNinja \
       -DCMAKE_RANLIB=$cctoolsdir/x86_64-apple-darwin-ranlib \
       -DCMAKE_LIBTOOL=$cctoolsdir/x86_64-apple-darwin-libtool \
       -DCMAKE_SYSTEM_NAME=Darwin \
-      -DCMAKE_SYSTEM_VERSION=10.10 \
+      -DCMAKE_SYSTEM_VERSION="[% c('var/macosx_deployment_target') %]" \
       -DLLVM_ENABLE_THREADS=OFF \
       -DCOMPILER_RT_BUILD_XRAY=OFF \
       -DLIBCXXABI_LIBCXX_INCLUDES=$builddir/clang-source/projects/libcxx/include \
@@ -79,6 +84,15 @@ cp --remove-destination -lr /var/tmp/dist/clang/* clang/
 cd cctools/bin
 ln -s ../../clang/bin/clang x86_64-apple-darwin-clang
 ln -s ../../clang/bin/clang++ x86_64-apple-darwin-clang++
+
+# setup some paths expected by Xcode tools
+mkdir -p $distdir/Developer/SDKs
+cd $distdir/Developer/SDKs
+ln -s ../../MacOSX10.15.sdk MacOSX10.15.sdk
+
+mkdir -p $distdir/Developer/Toolchains/XcodeDefault.xctoolchain
+cd $distdir/Developer/Toolchains/XcodeDefault.xctoolchain
+ln -s ../../../clang usr
 
 cd /var/tmp/dist
 [% c('tar', {
