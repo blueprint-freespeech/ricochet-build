@@ -7,13 +7,22 @@ set -x
 [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
 distdir=/var/tmp/dist/[% project %]
 
+# clang needs to be reminded where it's c++ includes are
+[% IF c("var/osx") -%]
+cppincludes=/var/tmp/dist/macosx-toolchain/clang/include/c++/v1
+[% END -%]
+
+# build qt
 mkdir -p /var/tmp/build
 tar -C /var/tmp/build -xf qt-everywhere-src-[% c('version') %].tar.xz
+
 cd /var/tmp/build/qt-everywhere-src-[% c('version') %]
 
-# do the build
-mkdir -p $distdir
-./configure -verbose -prefix "$distdir" -release -opensource -confirm-license -static -no-dbus -no-qml-debug -no-glib -no-openssl -no-fontconfig -no-icu -no-opengl -qt-pcre -qt-zlib -qt-libpng -qt-libjpeg -nomake tools -nomake examples -xplatform [% c("var/xplatform") %] -device-option CROSS_COMPILE=/var/tmp/dist/gcc/bin/[% c("var/cross_compile") %] -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtgamepad -skip qtgraphicaleffects -skip qtlocation -skip qtlottie -skip qtmacextras -skip qtnetworkauth -skip qtpurchasing -skip qtquick3d -skip qtquickcontrols2 -skip qtquicktimeline -skip qtremoteobjects -skip qtscript -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtspeech -skip qtsvg -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebglplugin -skip qtwebsockets -skip qtwebview -skip qtx11extras -skip qtxmlpatterns
+# xcode mocks for macOS
+[% IF c("var/osx") -%]
+patch -p1 < $rootdir/fix_hardcode_xcode_paths.patch
+[% END -%]
+./configure -verbose -prefix "$distdir" -release -opensource -confirm-license -static -no-dbus -no-qml-debug -no-glib -no-openssl -no-fontconfig -no-icu -qt-pcre -qt-zlib -qt-libpng -qt-libjpeg -nomake tools -nomake examples -nomake tests -xplatform [% c('var/xplatform') %] -device-option CROSS_COMPILE=[% c('var/cross_compile') %] -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtgamepad -skip qtgraphicaleffects -skip qtlocation -skip qtlottie -skip qtmacextras -skip qtnetworkauth -skip qtpurchasing -skip qtquick3d -skip qtquickcontrols2 -skip qtquicktimeline -skip qtremoteobjects -skip qtscript -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtspeech -skip qtsvg -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebglplugin -skip qtwebsockets -skip qtwebview -skip qtx11extras -skip qtxmlpatterns [% IF c("var/osx") -%]-I $cppincludes[% END -%]
 
 make -j[% c("buildconf/num_procs") %]
 make install
