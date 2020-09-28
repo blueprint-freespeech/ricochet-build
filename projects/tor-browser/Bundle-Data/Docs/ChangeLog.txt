@@ -15,6 +15,120 @@ Tor Browser 10.5a1 -- September 22 2020
      * Bug 40041: Remove CentOS 6 support for 10.5 series [tor-browser-build]
      * Bug 40103: Add i386 pkg-config path for linux-i686 [tor-browser-build]
 
+Tor Browser 10.0 -- September 22 2020
+ * Windows + OS X + Linux
+   * Update Firefox to 78.3.0esr
+   * Update Tor to 0.4.4.5
+   * Update Tor Launcher to 0.2.25
+     * Bug 32174: Replace XUL <textbox> with <html:input>
+     * Bug 33890: Rename XUL files to XHTML
+     * Bug 33862: Fix usages of createTransport API
+     * Bug 33906: Fix Tor-Launcher issues for Firefox 75
+     * Bug 33998: Use CSS grid instead of XUL grid
+     * Bug 34164: Tor Launcher deadlocks during startup (Firefox 77)
+     * Bug 34206: Tor Launcher button labels are missing (Firefox 76)
+     * Bug 40002: After rebasing to 80.0b2 moat is broken [tor-launcher]
+     * Translations update
+   * Update NoScript to 11.0.44
+     * Bug 40093: Youtube videos on safer produce an error [tor-browser]
+   * Translations update
+   * Bug 10394: Let Tor Browser update HTTPS Everywhere
+   * Bug 11154: Disable TLS 1.0 (and 1.1) by default
+   * Bug 16931: Sanitize the add-on blocklist update URL
+   * Bug 17374: Disable 1024-DH Encryption by default
+   * Bug 21601: Remove unused media.webaudio.enabled pref
+   * Bug 30682: Disable Intermediate CA Preloading
+   * Bug 30812: Exempt about: pages from Resist Fingerprinting
+   * Bug 31918+33533+40024+40037: Rebase Tor Browser esr68 patches for ESR 78 [tor-browser]
+   * Bug 32612: Update MAR_CHANNEL_ID for the alpha
+   * Bug 32886: Separate treatment of @media interaction features for desktop and android
+   * Bug 33534: Review FF release notes from FF69 to latest (FF78)
+   * Bug 33697: Use old search config based on list.json
+   * Bug 33721: PDF Viewer is not working in the safest security level
+   * Bug 33734: Set MOZ_NORMANDY to False
+   * Bug 33737: Fix aboutDialog.js error for Firefox nightlies
+   * Bug 33848: Disable Enhanced Tracking Protection
+   * Bug 33851: Patch out Parental Controls detection and logging
+   * Bug 33852: Clean up about:logins to not mention Sync
+   * Bug 33856: Set browser.privatebrowsing.forceMediaMemoryCache to True
+   * Bug 33862: Fix usages of createTransport API
+   * Bug 33867: Disable password manager and password generation
+   * Bug 33890: Rename XUL files to XHTML
+   * Bug 33892: Add brandProductName to brand.dtd and brand.properties
+   * Bug 33962: Uplift patch for bug 5741 (dns leak protection)
+   * Bug 34125: API change in protocolProxyService.registerChannelFilter
+   * Bug 40001: Generate tor-browser-brand.ftl when importing translations [torbutton]
+   * Bug 40002: Remove about:pioneer [tor-browser]
+   * Bug 40002: Fix generateNSGetFactory being moved to ComponentUtils [torbutton]
+   * Bug 40003: Adapt code for L10nRegistry API changes [torbutton]
+   * Bug 40005: Initialize the identity UI before setting up the circuit display [torbutton]
+   * Bug 40006: Fix new identity for 81 [torbutton]
+   * Bug 40007: Move SecurityPrefs initialization to the StartupObserver component [torbutton]
+   * Bug 40008: Style fixes for 78 [torbutton]
+   * Bug 40016: Update Snowflake to discover NAT type [tor-browser-build]
+   * Bug 40017: Audit Firefox 68-78 diff for proxy issues [tor-browser]
+   * Bug 40022: Update new icons in Tor Browser branding [tor-browser]
+   * Bug 40025: Revert add-on permissions due to Mozilla's 1560059 [tor-browser]
+   * Bug 40036: Remove product version/update channel from #13379 patch [tor-browser]
+   * Bug 40038: Review RemoteSettings for ESR 78 [tor-browser]
+   * Bug 40048: Disable various ESR78 features via prefs [tor-browser]
+   * Bug 40059: Verify our external helper patch is still working [tor-browser]
+   * Bug 40066: Update existing prefs for ESR 78 [tor-browser]
+   * Bug 40066: Remove default bridge 37.218.240.34 [tor-browser-build]
+   * Bug 40073: Disable remote Public Suffix List fetching [tor-browser]
+   * Bug 40073: Repack omni.ja to include builtin HTTPS Everywhere [tor-browser-build]
+   * Bug 40078: Backport patches for bug 1651680 for now [tor-browser]
+   * Bug 40082: Let JavaScript on safest setting handled by NoScript again [tor-browser]
+   * Bug 40088: Moat "Submit" button does not work
+   * Bug 40090: Disable v3 add-on blocklist for now [tor-browser]
+   * Bug 40091: Load HTTPS Everywhere as a builtin addon [tor-browser]
+   * Bug 40102: Fix UI bugs in Tor Browser 10.0 alpha [tor-browser]
+   * Bug 40106: Cannot install addons in full screen mode [tor-browser]
+   * Bug 40109: Playing video breaks after reloading pages [tor-browser]
+   * Bug 40119: Enable v3 extension blocklisting again [tor-browser]
+ * Windows
+   * Bug 33855: Don't use site's icon as window icon in Windows in private mode
+   * Bug 40061: Omit the Windows default browser agent from the build [tor-browser]
+ * OS X
+   * Bug 32252: Tor Browser does not display correctly in VMWare Fusion on macOS (mojave)
+ * Build System
+   * Windows + OS X + Linux
+     * Bump Go to 1.14.7
+     * Bug 31845: Bump GCC version to 9.3.0
+     * Bug 34011: Bump clang to 9.0.1
+     * Bug 34014: Enable sqlite3 support in Python
+     * Bug 34390: Don't copy DBM libraries anymore
+     * Bug 34391: Remove unused --enable-signmar option
+     * Bug 40004: Adapt Rust project for Firefox 78 ESR [tor-browser-build]
+     * Bug 40005: Adapt Node project for Firefox 78 ESR [tor-browser-build]
+     * Bug 40006: Adapt cbindgen for Firefox 78 ESR [tor-browser-build]
+     * Bug 40037: Move projects over to clang-source [tor-browser-build]
+     * Bug 40026: Fix full .mar creation for esr78 [tor-browser-build]
+     * Bug 40027: Fix incremental .mar creation for esr78 [tor-browser-build]
+     * Bug 40028: Do not reference unset env variables [tor-browser-build]
+     * Bug 40031: Add licenses for kcp-go and smux. [tor-browser-build]
+     * Bug 40045: Fix complete .mar file creation for dmg2mar [tor-browser-build]
+     * Bug 40065: Bump debootstrap-image ubuntu_version to 20.04.1 [tor-browser-build]
+     * Bug 40087: Deterministically add HTTPS Everywhere into omni.ja [tor-browser-build]
+   * Windows
+     * Bug 34230: Update Windows toolchain for Firefox 78 ESR
+     * Bug 40015: Use only 64bit fxc2 [tor-browser-build]
+     * Bug 40017: Enable stripping again on Windows [tor-browser-build]
+     * Bug 40052: Bump NSIS to 3.06.1 [tor-browser-build]
+     * Bug 40061: Omit the Windows default browser agent from the build [tor-browser]
+     * Bug 40071: Be explicit about no SEH with mingw-w64 on 32bit systems [tor-browser-build]
+     * Bug 40077: Don't pass --no-insert-timestamp when building Firefox [tor-browser-build]
+     * Bug 40090: NSIS 3.06.1 based builds are not reproducible anymore [tor-browser-build]
+   * OS X
+     * Bug 34229: Update macOS toolchain for Firefox 78 ESR
+     * Bug 40003: Update cctools version for Firefox 78 ESR [tor-browser-build]
+     * Bug 40018: Add libtapi project for cctools [tor-browser-build]
+     * Bug 40019: Ship our own runtime library for macOS [tor-browser-build]
+   * Linux
+     * Bug 34359: Adapt abicheck.cc to deal with newer GCC version
+     * Bug 34386: Fix up clang compilation on Linux
+     * Bug 40053: Also create the langpacks tarball for non-release builds [tor-browser-build]
+
 Tor Browser 10.0a7 -- September 14 2020
  * Windows + OS X + Linux
    * Update Tor Launcher to 0.2.24
