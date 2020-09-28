@@ -54,9 +54,6 @@ cp $rootdir/[% c('input_files_by_name/tor-android-service') %]/* app/
   then
     echo "MOZ_BUILD_DATE is not set"
     exit 1
-  else
-    # We only need a MMddHHmmss format and thus no year.
-    MOZ_BUILD_DATE=${MOZ_BUILD_DATE:4}
   fi
 
   $GRADLE_HOME/gradle-6.5.1/bin/gradle --offline --no-daemon -Dmaven.repo.local=$gradle_repo app:assemble[% c('variant') %] -x lint

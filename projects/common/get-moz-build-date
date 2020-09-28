@@ -10,8 +10,9 @@ if ($version =~ m/^tbb-nightly\.([^\.]+)\.([^\.]+)\.([^\.]+)$/) {
   $date = sprintf("%d%02d%02d010101", $1, $2, $3);
 } elsif ($version eq 'testbuild') {
   # There is no need for an increasing build date in test builds. Just hardcode
-  # it.
-  $date = 20010101010101;
+  # it to a value that is compatible with the v1 versionCode scheme on Android,
+  # see: #34163.
+  $date = 20150801000000;
 } else {
   my @v = split(/[\.ab]/, $version);
   push @v, '0' if @v < 4;
