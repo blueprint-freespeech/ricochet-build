@@ -56,7 +56,8 @@ cp $rootdir/[% c('input_files_by_name/tor-android-service') %]/* app/
     exit 1
   fi
 
-  $GRADLE_HOME/gradle-6.5.1/bin/gradle --offline --no-daemon -Dmaven.repo.local=$gradle_repo app:assemble[% c('variant') %] -x lint
+  version_name='[% c("var/torbrowser_version") %] ([% c("var/fenix_version") %]-[% c("variant") %])'
+  $GRADLE_HOME/gradle-6.5.1/bin/gradle --offline --no-daemon -PversionName="$version_name" -Dmaven.repo.local=$gradle_repo app:assemble[% c('variant') %] -x lint
   # XXX We need the build variant in lower case. Do something smarter here.
   v=[% c("variant") %]
   cp app/build/outputs/apk/${v,}/*.apk $distdir/[% project %]

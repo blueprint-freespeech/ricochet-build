@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 10.0a6
+version: '[% c("abbrev") %]'
 filename: 'fenix-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-1-build1'
 git_url: https://gitlab.torproject.org/tpo/applications/fenix.git
@@ -22,7 +22,6 @@ targets:
   nightly:
     git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-1'
     tag_gpg_id: 0
-    version: '[% c("abbrev") %]'
     variant: Beta
 
 input_files:
