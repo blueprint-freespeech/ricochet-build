@@ -22,7 +22,7 @@ targets:
   nightly:
     git_hash: 'tor-browser-[% c("var/fenix_version") %]-[% c("var/torbrowser_branch") %]-1'
     tag_gpg_id: 0
-    variant: Beta
+    variant: Nightly
 
 input_files:
   - project: container-image
