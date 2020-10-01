@@ -1,0 +1,10 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 93006d8b..2c9ae848 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -39,4 +39,4 @@ members = [
+ [profile.release]
+ opt-level = "s"
+ debug = true
+-lto = "thin"
++lto = "fat"
