@@ -16,6 +16,8 @@ var:
     tar -C /var/tmp/dist -xf $rootdir/[% c("compiler_tarfile") %]
     export PATH="/var/tmp/dist/mingw-w64/bin:$PATH"
     export gcclibs=/var/tmp/dist/mingw-w64/gcclibs
+    mkdir -p /var/tmp/dist/mingw-w64/lib/bfd-plugins
+    ln -s /var/tmp/dist/mingw-w64/libexec/gcc/[% c("arch") %]-w64-mingw32/9.3.0/liblto_plugin.so /var/tmp/dist/mingw-w64/lib/bfd-plugins/liblto_plugin.so.0
 targets:
   windows-i686:
     var:

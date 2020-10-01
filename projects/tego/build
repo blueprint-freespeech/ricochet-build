@@ -1,10 +1,31 @@
 #!/bin/bash
 set -x
+[% c("var/set_default_env") -%]
+[% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
+distdir=/var/tmp/dist/[% project %]
+mkdir -p /var/tmp/build
 
-destdir=/var/tmp/dist/[% project %]
-mkdir -p $destdir
-touch $destdir/ricochet
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/openssl') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/protoc') %]
+export PATH=/var/tmp/dist/protoc/bin:$PATH
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/protobuf') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/qt') %]
+export PATH=/var/tmp/dist/qt/bin:$PATH
 
+tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+cd /var/tmp/build/[% project %]-[% c('version') %]/src
+
+# clang needs to be reminded where its c++ includes are
+[% IF c("var/osx") -%]
+cppincludes=/var/tmp/dist/macosx-toolchain/clang/include/c++/v1
+export CPLUS_INCLUDE_PATH=$cppincludes:$CPLUS_INCLUDE_PATH
+export PKG_CONFIG_LIBDIR=$sysrootdir/lib/pkgconfig
+[% END -%]
+
+qmake OPENSSLDIR=/var/tmp/dist/openssl/openssl PROTOBUFDIR=/var/tmp/dist/protobuf
+make -j[% c("buildconf/num_procs") %]
+
+cp -a /var/tmp/build/[% project %]-[% c('version') %]/build/release /var/tmp/dist/tego
 cd /var/tmp/dist
 [% c('tar', {
         tar_src => [ project ],

@@ -9,7 +9,7 @@ tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 cd /var/tmp/build/[% project %]-[% c('version') %]
 
 ./autogen.sh
-./configure --prefix $distdir [% c('var/configure_opt') %] --disable-shared --without-zlib --with-protoc="/var/tmp/dist/protoc/bin/protoc"
+./configure CFLAGS="[% c("var/CFLAGS") %]" LDFLAGS="[% c("var/LDFLAGS") %]" --prefix $distdir [% c('var/configure_opt') %] --disable-shared --without-zlib --with-protoc="/var/tmp/dist/protoc/bin/protoc"
 
 make -j[% c("buildconf/num_procs") %]
 make install

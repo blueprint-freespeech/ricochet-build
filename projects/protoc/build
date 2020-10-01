@@ -17,6 +17,8 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 make -j[% c("buildconf/num_procs") %]
 make install
 
+rm -rf $distdir/lib $distdir/include
+
 cd /var/tmp/dist
 [% c('tar', {
         tar_src => [ project ],

@@ -1,5 +1,25 @@
 version: none
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
+git_hash: d1b594360e28a44a4861f7f509873f51462bc167
+git_url: https://github.com/pospeselr/tego-core.git
+git_submodule: 1
+
+var:
+  container:
+    use_container: 1
+  deps:
+    - build-essential
+    - pkgconf
 
 input_files:
   - project: container-image
+  - name: '[% c("var/compiler") %]'
+    project: '[% c("var/compiler") %]'
+  - name: openssl
+    project: openssl
+  - name: protoc
+    project: protoc
+  - name: protobuf
+    project: protobuf
+  - name: qt
+    project: qt
