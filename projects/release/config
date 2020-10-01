@@ -31,7 +31,6 @@ targets:
     - torbrowser-android-x86
     - torbrowser-android-x86_64
     - torbrowser-android-aarch64
-    - torbrowser-src
   torbrowser-android-armv7:
     var:
       torbrowser-android-armv7: 1
