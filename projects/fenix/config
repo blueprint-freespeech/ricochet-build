@@ -14,9 +14,11 @@ var:
   container:
     use_container: 1
   # This should be updated when the list of gradle dependencies is changed.
-  gradle_dependencies_version: 5
+  gradle_dependencies_version: 6
   # Switch to make it easier to grab all dependencies during a dry-run.
   fetch_gradle_dependencies: 0
+  # Overwrite `glean_parser` for now to fix #40085.
+  glean_parser: 1.28.6
 
 targets:
   nightly:
@@ -46,7 +48,7 @@ input_files:
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
     exec: '[% INCLUDE "fetch-gradle-dependencies" %]'
   - URL: https://people.torproject.org/~gk/mirrors/sources/glean-parser-[% c('var/glean_parser') %].tar.bz2
-    sha256sum: 69234aa1ae38fd5dda4de71bd5e536795073703c3ed5bb994b9b8485bd7a55dc
+    sha256sum: bdbb421fdcc9b66aebe8f41b33e254cab722355c59c0f43f10a8322d7d6da6a4
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
   - filename: mavenLocal.patch
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
