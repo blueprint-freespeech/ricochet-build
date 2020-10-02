@@ -6,6 +6,10 @@ builddir=/var/tmp/build/[% project %]
 mkdir $distdir/[% project %]
 mkdir /var/tmp/build
 
+cat > get-moz-build-date << "EOF"
+[% INCLUDE "get-moz-build-date" %]
+EOF
+
 [% IF !c("var/fetch_gradle_dependencies") %]
   [% pc('python', 'var/setup', { python_tarfile => c('input_files_by_name/python') }) %]
   tar -C $distdir -xf [% c('input_files_by_name/geckoview') %]
@@ -43,6 +47,13 @@ patch -p1 < $rootdir/40085.patch
   export LC_ALL=C.UTF-8
   export LANG=C.UTF-8
   patch -p1 < $rootdir/mavenLocal.patch
+
+  eval $(perl $rootdir/get-moz-build-date [% pc("fenix", "var/copyright_year") %] [% pc("fenix", "var/torbrowser_version") %])
+  if [ -z $MOZ_BUILD_DATE ]
+  then
+    echo "MOZ_BUILD_DATE is not set"
+    exit 1
+  fi
 
   gradle_args="--offline --no-daemon -Dmaven.repo.local=$gradle_repo"
 
