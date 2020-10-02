@@ -27,6 +27,7 @@ EOF
   cp -rf $distdir/application-services/maven/org $gradle_repo
   tar -C $distdir -xf [% c('input_files_by_name/android-components') %]
   cp -rf $distdir/android-components/maven/org $gradle_repo
+  tar -C $distdir -xf $rootdir/[% c('input_files_by_name/tba-translation') %]
 [% END %]
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 
@@ -39,6 +40,13 @@ cp $rootdir/[% c('input_files_by_name/tor-android-service') %]/* app/
 [% IF c("var/fetch_gradle_dependencies") %]
   $GRADLE_HOME/gradle-6.5.1/bin/gradle --debug --no-daemon app:assemble[% c('variant') %] -x lint
 [% ELSE %]
+  # Add our localized strings
+  [% FOREACH lang = c('var/locales_mobile');
+    SET lang = tmpl(lang); %]
+    # Copy our torbrowser_strings.xml at the right place
+    cp /var/tmp/dist/tba-translation/[% lang %]/torbrowser_strings.xml app/src/main/res/values-[% lang %]/
+  [% END %]
+
   # Prepare Glean dependencies for offline build
   tar -xjf $rootdir/glean-parser-[% c('var/glean_parser') %].tar.bz2
   # We need to set `LC_ALL` and `LANG` to something that is not ASCII as encoding

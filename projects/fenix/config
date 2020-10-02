@@ -43,6 +43,9 @@ input_files:
   - name: python
     project: python
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
+  - name: tba-translation
+    project: tba-translation
+    enable: '[% !c("var/fetch_gradle_dependencies") %]'
   - filename: 'gradle-dependencies-[% c("var/gradle_dependencies_version") %]'
     name: gradle-dependencies
     enable: '[% !c("var/fetch_gradle_dependencies") %]'
