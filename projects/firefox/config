@@ -67,6 +67,8 @@ targets:
         - libpulse-dev
         # To pass configure since ESR 52
         - libx11-xcb-dev
+        # To support Wayland mode
+        - libdrm-dev
 
   linux-i686:
     var:
@@ -82,6 +84,8 @@ targets:
         - libpulse-dev:i386
         # To pass configure since ESR 52
         - libx11-xcb-dev:i386
+        # To support Wayland mode
+        - libdrm-dev:i386
 
   osx-x86_64:
     var:
