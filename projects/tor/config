@@ -4,8 +4,6 @@ version: 0.4.4.5
 git_hash: 'tor-[% c("version") %]'
 git_url: https://git.torproject.org/tor.git
 git_submodule: 1
-gpg_keyring: tor.gpg
-tag_gpg_id: 1
 
 var:
   container:
@@ -17,6 +15,10 @@ var:
     - unzip
 
 targets:
+  windows:
+    var:
+      host: '[% c("arch") %]-w64-mingw32'
+
   nightly:
     version: '[% c("abbrev") %]'
     git_hash: master
@@ -59,6 +61,7 @@ input_files:
     project: libevent
   - name: zlib
     project: zlib
-    enable: '[% c("var/windows") || c("var/android") %]'
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
+  - filename: fix_mingw_static_build.patch
+    enable: '[% c("var/windows") %]'

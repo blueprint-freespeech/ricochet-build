@@ -1,4 +1,6 @@
 #!/bin/bash
+set -x
+
 [% c("var/set_default_env") -%]
 [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
 distdir=/var/tmp/dist/[% project %]
@@ -53,9 +55,6 @@ openssldir=/var/tmp/dist/openssl/openssl
   # XXX: It's a bit unfortunate but we need the pthread dll here as libevent
   # gets compiled with pthread support once it is enabled in GCC, which we need
   # to do as otherwise the Rust compilaton breaks.
-  mingwlibs=/var/tmp/dist/mingw-w64/[% c("arch") %]-w64-mingw32/bin/
-  cp $zlibdir/lib/*.dll $openssldir/bin/*.dll $libeventdir/bin/*.dll \
-      $gcclibs/*.dll $mingwlibs/libwinpthread-1.dll $distdir/Tor/
 [% END %]
 
 [% IF c("var/linux-i686") && c("var/nightly") -%]
@@ -89,15 +88,18 @@ openssldir=/var/tmp/dist/openssl/openssl
 [% END %]
 
 cd /var/tmp/build/[% project %]-[% c('version') %]
+
+[% IF c("var/windows") -%]
+patch -p1 < $rootdir/fix_mingw_static_build.patch
+[% END -%]
+
 # add git hash to micro-revision.i for #24995
 echo '"[% c("abbrev", { abbrev_length => 16 }) %]"' > micro-revision.i
 ./autogen.sh
 find -type f -print0 | xargs -0 [% c("var/touch") %]
-./configure --disable-asciidoc --with-libevent-dir="$libeventdir" --with-openssl-dir="$openssldir" \
-    [% IF c("var/asan") %]--enable-fragile-hardening[% END %] \
-    [% IF c("var/windows") || c("var/android") %]--with-zlib-dir="$zlibdir"[% END %] \
-    [% IF c("var/osx") %]--enable-static-openssl[% END %] \
-    --prefix="$distdir" [% c("var/configure_opt") %]
+./configure --disable-asciidoc --with-libevent-dir="$libeventdir" --with-openssl-dir="$openssldir" --with-zlib-dir="$zlibdir"\
+    --enable-static-libevent --enable-static-openssl --enable-static-zlib --enable-static-tor \
+    --prefix="$distdir" --host=[% c("var/host") %]
 [% IF c("var/osx") -%]
   export LD_PRELOAD=[% c("var/faketime_path") %]
   export FAKETIME="[% USE date; GET date.format(c('timestamp'), format = '%Y-%m-%d %H:%M:%S') %]"
