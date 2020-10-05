@@ -11,6 +11,14 @@ var:
   container:
     use_container: 1
 
+targets:
+  osx-x86_64:
+    var:
+      chost: x86_64-apple-darwin
+      cc: /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-clang
+      ar: /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-ar
+      ranlib: /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-ranlib
+
 input_files:
   - project: container-image
   - name: '[% c("var/compiler") %]'

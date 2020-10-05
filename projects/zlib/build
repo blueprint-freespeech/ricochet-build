@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 [% c("var/set_default_env") -%]
 [% pc(c('var/compiler'), 'var/setup', { compiler_tarfile => c('input_files_by_name/' _ c('var/compiler')) }) %]
 distdir=/var/tmp/dist/[% project %]
@@ -8,17 +9,24 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
 [% IF c("var/windows") -%]
   make BINARY_PATH=$distdir/lib INCLUDE_PATH=$distdir/include LIBRARY_PATH=$distdir/lib -f win32/Makefile.gcc PREFIX=[% c("arch") %]-w64-mingw32- -j[% c("buildconf/num_procs") %] SHARED_MODE=0 LOC="[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]"
   make BINARY_PATH=$distdir/lib INCLUDE_PATH=$distdir/include LIBRARY_PATH=$distdir/lib -f win32/Makefile.gcc PREFIX=[% c("arch") %]-w64-mingw32- -j[% c("buildconf/num_procs") %] SHARED_MODE=0 LOC="[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]" install
-[% END -%]
+[% ELSE -%]
 
-[% IF c("var/android") -%]
-  export CHOST=[% c("var/cross_prefix") %]
-  export CC=[% c("var/CC") %]
-  ./configure --prefix=$distdir
+  [% IF c("var/osx") -%]
+    ln -s /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-libtool /var/tmp/dist/macosx-toolchain/cctools/bin/libtool
+  [% END -%]
+
+  export CHOST=[% c("var/chost") %]
+  echo $CC
+  # export CC=[% c("var/cc") %]
+  export AR=[% c("var/ar") %]
+  export RANLIB=[% c("var/ranlib") %]
+  ./configure --prefix=$distdir --static
   make -j[% c("buildconf/num_procs") %]
   make -j[% c("buildconf/num_procs") %] install
   # Only need static libraries
-  rm -r $distdir/lib/{*.so*,pkgconfig}
+  # rm -r $distdir/lib/{*.so*,pkgconfig}
 [% END -%]
+
 
 cd /var/tmp/dist
 [% c('tar', {

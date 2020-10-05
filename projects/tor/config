@@ -41,6 +41,7 @@ targets:
         - hardening-wrapper
   osx-x86_64:
     var:
+      host: x86_64-apple-darwin
       arch_deps:
         - faketime
   expert-bundle:
