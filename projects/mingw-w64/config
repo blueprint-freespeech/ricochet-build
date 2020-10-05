@@ -6,7 +6,7 @@ version: '[% c("abbrev") %]'
 var:
   container:
     use_container: 1
-  gcc_version: 9.3.0
+  gcc_version: 10.2.0
   deps:
     - automake
     - build-essential
@@ -17,7 +17,7 @@ var:
     export PATH="/var/tmp/dist/mingw-w64/bin:$PATH"
     export gcclibs=/var/tmp/dist/mingw-w64/gcclibs
     mkdir -p /var/tmp/dist/mingw-w64/lib/bfd-plugins
-    ln -s /var/tmp/dist/mingw-w64/libexec/gcc/[% c("arch") %]-w64-mingw32/9.3.0/liblto_plugin.so /var/tmp/dist/mingw-w64/lib/bfd-plugins/liblto_plugin.so.0
+    ln -s /var/tmp/dist/mingw-w64/libexec/gcc/[% c("arch") %]-w64-mingw32/[% c("var/gcc_version") %]/liblto_plugin.so /var/tmp/dist/mingw-w64/lib/bfd-plugins/liblto_plugin.so.0
 targets:
   windows-i686:
     var:
@@ -32,6 +32,6 @@ targets:
 input_files:
   - project: container-image
   - URL: 'https://ftp.gnu.org/gnu/gcc/gcc-[% c("var/gcc_version") %]/gcc-[% c("var/gcc_version") %].tar.xz'
-    sha256sum: 71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1
+    sha256sum: b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c
   - name: binutils
     project: binutils

@@ -1,9 +1,32 @@
 #!/bin/bash
 set -x
 
-destdir=/var/tmp/dist/[% project %]
-mkdir -p destdir
+[% c("var/set_default_env") -%]
+distdir=/var/tmp/dist/[% project %]
+mkdir -p /var/tmp/build
+mkdir -p $distdir
 
-OUTDIR='[% dest_dir _ "/" _ c("filename") %]'
-mkdir -p $OUTDIR
-echo "[% c("version") %]-[% c("var/osname") %]"  > $OUTDIR/tego-package-[% c("version") %]-[% c("var/osname") %].txt
+# get our dependencies
+mkdir -p /var/tmp/dist/tor
+tar -C /var/tmp/dist/tor -xf [% c('input_files_by_name/tor') %]/tor.tar.gz
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/tego') %]
+
+cd /var/tmp/build
+# windows
+[% IF c("var/windows") %]
+    tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/nsis') %]
+    export PATH="/var/tmp/dist/nsis/bin:$PATH"
+    # deploy installer script and copy over binaries
+    cp $rootdir/windows-installer.nsi .
+    cp /var/tmp/dist/tego/tego_ui/ricochet-refresh.exe .
+    cp /var/tmp/dist/tor/Tor/tor.exe .
+
+    # create the installer
+    makensis windows-installer.nsi
+
+    cp ricochet.exe $distdir/ricochet-[% c("arch") %]-installer.exe
+[% END %]
+
+# make our output directory and copy outputs
+mkdir -p [% dest_dir _ '/' _ c('filename') %]
+cp -a $distdir/* [% dest_dir _ '/' _ c('filename') %]/.

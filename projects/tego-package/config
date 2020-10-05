@@ -2,13 +2,18 @@
 version: '[% c("var/tego_version") %]'
 filename: 'tego-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %]'
 
+var:
+  container:
+    use_container: 1
+
 input_files:
  - project: container-image
- - name: openssl
-   project: openssl
- - name: qt
-   project: qt
- - name: tor
-   project: tor
- - name: tego
-   project: tego
+ - project: tego
+   name: tego
+ - project: tor
+   name: tor
+ # windows build deps
+ - project: nsis
+   name: nsis
+ - filename: windows-installer.nsi
+   enable: '[% c("var/windows") %]'
