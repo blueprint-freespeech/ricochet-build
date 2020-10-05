@@ -60,10 +60,13 @@ patch -p1 < $rootdir/40085.patch
   gradle $gradle_args assembleGeckoBeta -x lint
   gradle $gradle_args publish
 
-  find components -regex '.*[0-9].\(aar\|pom\)' -exec cp --parents {} $distdir \;
+  # We only need the archives and .pom files for now.
+  find components -regex '.*[% c('var/android_components_version') %].\(aar\|jar\|pom\)' -exec cp --parents {} $distdir \;
 
   # Package
   cd $distdir
+  # Package just the maven directory structure for easier replacement of
+  # Mozilla's android-components.
   find components -type d -name maven -exec cp -rf {} [% project %] \;
   [% c('tar', {
         tar_src => [ project ],
