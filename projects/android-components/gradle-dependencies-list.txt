@@ -432,8 +432,8 @@ dbc48baf933d7e57eaf7f50c1fabb4c45ecabd0a8bd7a21f5533ab05d1b821d8 | https://maven
 3fe97c6a7bf5bb85cd85f1b2b732bece663fce5a87e4406f95334b9c866f3e20 | https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview-beta/81.0.20200910180444/geckoview-beta-81.0.20200910180444.pom
 e3307e77325cf8e5bd1a4bbfb6f69b1dba208c0cd840ed41438790d6862008da | https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview-nightly/82.0.20200831091558/geckoview-nightly-82.0.20200831091558.aar
 41d405815f5c5c1df8d8f31d61f6a556d0d6b2bc9e02c0f905f41321da1f7f8a | https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview-nightly/82.0.20200831091558/geckoview-nightly-82.0.20200831091558.pom
-b3acbeebbfca2cb7e6d5afa5c23672debd76679752c124e3ae8aa4c5673cdd12 | https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/81.0.20200917005511/geckoview-81.0.20200917005511.aar
-e6754e5153344bacbbe164b1012743db0378b7253b259a1baaa140564fa2aa32 | https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/81.0.20200917005511/geckoview-81.0.20200917005511.pom
+f654485c119c284c7e8132154753e11089254ef27b47abe880e4830abe0bf804 | https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/81.0.20200930150533/geckoview-81.0.20200930150533.aar
+9aee6e0f93d25b480c8bce9720f6e9ef73d0e866b1eddf68492805f021076bb3 | https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/81.0.20200930150533/geckoview-81.0.20200930150533.pom
 acfb992486c44ecf3727fac3eb7a4ac69e005e8baae2dd4104208265a947bccd | https://maven.mozilla.org/maven2/org/mozilla/telemetry/glean-forUnitTests/32.4.1/glean-forUnitTests-32.4.1.jar
 71bf43ad7ea24b261bb1e361c0f1d5642bdc4dab5471ca9628d1b7ad754e84a1 | https://maven.mozilla.org/maven2/org/mozilla/telemetry/glean-forUnitTests/32.4.1/glean-forUnitTests-32.4.1.pom
 93b2f27c919b07b927d764726eb64350cb7d480bac9485b9192881a9d5d10f30 | https://maven.mozilla.org/maven2/org/mozilla/telemetry/glean-gradle-plugin/32.4.1/glean-gradle-plugin-32.4.1.jar

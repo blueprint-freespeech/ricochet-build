@@ -1,18 +1,18 @@
 # vim: filetype=yaml sw=2
 version: '[% c("abbrev") %]'
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
-git_hash: '[% project %]-[% c("var/android_components_version") %]-[% c("var/torbrowser_branch") %]-2-build1'
+git_hash: '[% project %]-[% c("var/android_components_version") %]-[% c("var/torbrowser_branch") %]-1-build1'
 git_url: https://gitlab.torproject.org/tpo/applications/android-components.git
 tag_gpg_id: 1
 gpg_keyring: torbutton.gpg
 
 var:
-  android_components_version: 57.0.6
+  android_components_version: 57.0.7
   torbrowser_branch: 10.0
   container:
     use_container: 1
   # This should be updated when the list of gradle dependencies is changed.
-  gradle_dependencies_version: 4
+  gradle_dependencies_version: 5
   # Switch to make it easier to grab all dependencies during a dry-run.
   fetch_gradle_dependencies: 0
   # Overwrite `glean_parser` for now to fix #40085.
@@ -20,7 +20,7 @@ var:
 
 targets:
   nightly:
-    git_hash: 'android-components-[% c("var/android_components_version") %]-[% c("var/torbrowser_branch") %]-2'
+    git_hash: 'android-components-[% c("var/android_components_version") %]-[% c("var/torbrowser_branch") %]-1'
     tag_gpg_id: 0
 
 input_files:
