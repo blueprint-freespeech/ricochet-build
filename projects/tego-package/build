@@ -27,6 +27,19 @@ cd /var/tmp/build
     cp ricochet.exe $distdir/ricochet-[% c("arch") %]-installer.exe
 [% END %]
 
+[% IF c("var/osx") %]
+    tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/libdmg') %]
+    export PATH="/var/tmp/dist/libdmg-hfsplus:$PATH"
+
+    cp -a /var/tmp/dist/tego/tego_ui/ricochet-refresh.app .
+    cp /var/tmp/dist/tor/Contents/MacOS/Tor/tor ricochet-refresh.app/Contents/MacOS/.
+    genisoimage -V ricochet-refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
+    dmg dmg ricochet-refresh-uncompressed.dmg ricochet-refresh.dmg
+
+    cp ricochet-refresh.dmg $distdir/.
+[% END %]
+
+
 # make our output directory and copy outputs
 mkdir -p [% dest_dir _ '/' _ c('filename') %]
 cp -a $distdir/* [% dest_dir _ '/' _ c('filename') %]/.

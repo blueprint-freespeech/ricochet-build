@@ -6,6 +6,12 @@ var:
   container:
     use_container: 1
 
+targets:
+  osx-x86_64:
+    var:
+      arch_deps:
+        - genisoimage
+
 input_files:
  - project: container-image
  - project: tego
@@ -15,5 +21,10 @@ input_files:
  # windows build deps
  - project: nsis
    name: nsis
+   enable: '[% c("var/windows") %]'
  - filename: windows-installer.nsi
    enable: '[% c("var/windows") %]'
+ # linux build deps
+ - project: libdmg-hfsplus
+   name: libdmg
+   enable: '[% c("var/osx") %]'
