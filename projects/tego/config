@@ -1,7 +1,8 @@
 version: none
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
-git_hash: d0d787372387984d8b04723c2746444da66d7068
-git_url: https://github.com/pospeselr/tego-core.git
+git_hash: f304f73c3bdd351d9ec96370b571e38b7df83d82
+# git_url: https://github.com/pospeselr/tego-core.git
+git_url: /home/pospeselr/Code/tego-core/.git
 git_submodule: 1
 
 var:
@@ -10,6 +11,14 @@ var:
   deps:
     - build-essential
     - pkgconf
+
+
+targets:
+  linux-i686:
+    var:
+      arch_deps:
+        - libc6-dev-i386
+        - libxkbcommon-dev:i386
 
 input_files:
   - project: container-image

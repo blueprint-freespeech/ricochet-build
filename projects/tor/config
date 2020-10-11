@@ -31,14 +31,12 @@ targets:
       arch_deps:
         - libtool
         - zlib1g-dev:i386
-        - hardening-wrapper
   linux-x86_64:
     var:
       libdir: lib64
       arch_deps:
         - libtool
         - zlib1g-dev
-        - hardening-wrapper
   osx-x86_64:
     var:
       host: x86_64-apple-darwin

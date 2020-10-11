@@ -25,15 +25,6 @@ var:
       export DEB_BUILD_HARDENING_PIE=1
 
       # Make sure we use the hardening wrapper
-      pushd /var/tmp/dist/gcc/bin
-      cp /usr/bin/hardened-cc ./
-      mv gcc gcc.real
-      mv c++ c++.real
-      mv g++ g++.real
-      ln -sf hardened-cc gcc
-      ln -sf hardened-cc c++
-      ln -sf hardened-cc g++
-      popd
     [% END -%]
 
 targets:
@@ -48,7 +39,6 @@ targets:
     var:
       configure_opt: --enable-multilib --enable-languages=c,c++ --with-arch_32=i686
       arch_deps:
-        - hardening-wrapper
         - libc6-dev-i386
 
 input_files:

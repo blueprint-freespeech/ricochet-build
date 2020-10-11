@@ -12,10 +12,14 @@ var:
     use_container: 1
 
 targets:
+  linux:
+    var:
+      chost: x86_64-pc-linux-gnu
+      ar: /var/tmp/dist/gcc/bin/x86_64-pc-linux-gnu-gcc-ar
+      ranlib: /var/tmp/dist/gcc/bin/x86_64-pc-linux-gnu-gcc-ranlib
   osx-x86_64:
     var:
       chost: x86_64-apple-darwin
-      cc: /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-clang
       ar: /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-ar
       ranlib: /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-ranlib
 

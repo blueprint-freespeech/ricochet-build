@@ -13,6 +13,10 @@ targets:
   linux-i686:
     var:
       xplatform: linux-g++-32
+      arch_deps:
+        - libxcb1-dev:i386
+        - libxkbcommon-x11-dev:i386
+        - libxkbcommon-dev:i386
   linux-x86_64:
     var:
       xplatform: linux-g++-64

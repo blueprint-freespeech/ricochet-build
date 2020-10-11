@@ -15,16 +15,17 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
     ln -s /var/tmp/dist/macosx-toolchain/cctools/bin/x86_64-apple-darwin-libtool /var/tmp/dist/macosx-toolchain/cctools/bin/libtool
   [% END -%]
 
+  [% IF c("var/linux") %]
+    export CC='gcc [% c("var/CFLAGS") %]'
+  [% END -%]
+
   export CHOST=[% c("var/chost") %]
-  echo $CC
-  # export CC=[% c("var/cc") %]
   export AR=[% c("var/ar") %]
   export RANLIB=[% c("var/ranlib") %]
+
   ./configure --prefix=$distdir --static
   make -j[% c("buildconf/num_procs") %]
-  make -j[% c("buildconf/num_procs") %] install
-  # Only need static libraries
-  # rm -r $distdir/lib/{*.so*,pkgconfig}
+  make install
 [% END -%]
 
 

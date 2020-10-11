@@ -10,10 +10,10 @@ var:
 targets:
   linux-x86_64:
     var:
-      configure_opts: -shared enable-ec_nistp_64_gcc_128 linux-x86_64
+      configure_opts: linux-x86_64 no-shared enable-ec_nistp_64_gcc_128
   linux-i686:
     var:
-      configure_opts: -shared linux-x86
+      configure_opts: linux-x86 no-shared
   windows:
     var:
       flag_mwindows: ''
