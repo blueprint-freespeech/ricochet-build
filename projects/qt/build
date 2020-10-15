@@ -25,7 +25,130 @@ patch -p1 < $rootdir/fix_hardcode_xcode_paths.patch
 patch -p1 < $rootdir/fix_deployment_target.patch
 [% END -%]
 
-./configure -verbose -[% IF c("var/osx") -%]ext[% END -%]prefix "$distdir" -release -opensource -confirm-license -no-shared -static [% IF c("var/windows") %]-static-runtime[% END -%] [% IF !c("var/linux") %]-no-dbus[% END -%] -no-qml-debug -no-glib -no-openssl [% IF c("var/windows") %]-no-opengl[% END -%] -no-fontconfig -no-icu -qt-pcre -qt-zlib -qt-libpng -qt-libjpeg [% IF c("var/linux") %]-no-opengl[% END -%] -nomake tools -nomake examples -nomake tests -xplatform [% c('var/xplatform') %] -device-option CROSS_COMPILE=[% c('var/cross_compile') %] -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtgamepad -skip qtgraphicaleffects -skip qtlocation -skip qtlottie [% IF !c("var/osx") -%]-skip qtmacextras[% END -%] -skip qtnetworkauth -skip qtpurchasing -skip qtquick3d -skip qtquickcontrols2 -skip qtquicktimeline -skip qtremoteobjects -skip qtscript -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtspeech -skip qtsvg -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebglplugin -skip qtwebsockets -skip qtwebview [% IF !c("var/windows") %]-skip qtwinextras[% END -%] [% IF !c("var/linux") %]-skip qtx11extras[% END -%] -skip qtxmlpatterns [% IF c("var/linux") %]-xkbcommon -bundled-xcb-xinput[% END -%] [% IF c("var/osx") -%]-I $cppincludes -sysroot $sysrootdir [% END -%]
+# ./configure -verbose -[% IF c("var/osx") -%]ext[% END -%]prefix "$distdir" -release -opensource -confirm-license -no-shared -static [% IF c("var/windows") %]-static-runtime[% END -%] [% IF !c("var/linux") %]-no-dbus[% END -%] -no-qml-debug -no-glib -no-openssl [% IF c("var/windows") %]-no-opengl[% END -%] -no-fontconfig -no-icu -qt-pcre -qt-zlib -qt-libpng -qt-libjpeg [% IF c("var/linux") %]-no-opengl[% END -%] -nomake tools -nomake examples -nomake tests -xplatform [% c('var/xplatform') %] -device-option CROSS_COMPILE=[% c('var/cross_compile') %] -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtgamepad -skip qtgraphicaleffects -skip qtlocation -skip qtlottie [% IF !c("var/osx") -%]-skip qtmacextras[% END -%] -skip qtnetworkauth -skip qtpurchasing -skip qtquick3d -skip qtquickcontrols2 -skip qtquicktimeline -skip qtremoteobjects -skip qtscript -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtspeech -skip qtsvg -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebglplugin -skip qtwebsockets -skip qtwebview [% IF !c("var/windows") %]-skip qtwinextras[% END -%] [% IF !c("var/linux") %]-skip qtx11extras[% END -%] -skip qtxmlpatterns [% IF c("var/linux") %]-xkbcommon -bundled-xcb-xinput[% END -%] [% IF c("var/osx") -%]-I $cppincludes -sysroot $sysrootdir [% END -%]
+
+[% IF c("var/linux-x86_64") %]
+    # https://bugreports.qt.io/browse/QTBUG-85922
+    sed -i "s/X11R6\///g"  qtbase/mkspecs/linux-g++-64/qmake.conf
+[% END -%]
+
+[% IF !c("var/linux") %]
+ ./configure \
+    -verbose \
+    -[% IF c("var/osx") -%]ext[% END -%]prefix "$distdir" \
+    -release \
+    -opensource \
+    -confirm-license \
+    -no-shared \
+    -static \
+    [% IF c("var/windows") %]-static-runtime[% END -%] \
+    -no-qml-debug \
+    -no-glib \
+    -no-openssl \
+    [% IF c("var/windows") %]-no-opengl[% END -%] \
+    -no-fontconfig \
+    -no-icu \
+    -qt-pcre \
+    -qt-zlib \
+    -qt-libpng \
+    -qt-libjpeg \
+    -nomake tools \
+    -nomake examples \
+    -nomake tests \
+    -xplatform [% c('var/xplatform') %] \
+    -device-option CROSS_COMPILE=[% c('var/cross_compile') %] \
+    -skip qt3d \
+    -skip qtactiveqt \
+    -skip qtandroidextras \
+    -skip qtcharts \
+    -skip qtconnectivity \
+    -skip qtdatavis3d \
+    -skip qtdoc \
+    -skip qtgamepad \
+    -skip qtgraphicaleffects \
+    -skip qtlocation \
+    -skip qtlottie \
+    -skip qtnetworkauth \
+    -skip qtpurchasing \
+    -skip qtquick3d \
+    -skip qtquickcontrols2 \
+    -skip qtquicktimeline \
+    -skip qtremoteobjects \
+    -skip qtscript \
+    -skip qtscxml \
+    -skip qtsensors \
+    -skip qtserialbus \
+    -skip qtserialport \
+    -skip qtspeech \
+    -skip qtsvg \
+    -skip qtvirtualkeyboard \
+    -skip qtwayland \
+    -skip qtwebchannel \
+    -skip qtwebengine \
+    -skip qtwebglplugin \
+    -skip qtwebsockets \
+    -skip qtwebview \
+    -skip qtxmlpatterns \
+    [% IF c("var/osx") -%]-I $cppincludes -sysroot $sysrootdir [% END -%]
+
+[% ELSE -%]
+    ./configure \
+        -confirm-license \
+        -opensource \
+        -release \
+        -static \
+        -prefix "$distdir" \
+        -nomake tools \
+        -nomake examples \
+        -nomake tests \
+        -no-openssl \
+        -no-opengl \
+        -no-icu \
+        -qt-pcre \
+        -qt-zlib \
+        -qt-libpng \
+        -qt-libjpeg \
+        -feature-freetype \
+        -fontconfig \
+        -skip qt3d \
+        -skip qtactiveqt \
+        -skip qtandroidextras \
+        -skip qtcharts \
+        -skip qtconnectivity \
+        -skip qtdatavis3d \
+        -skip qtdoc \
+        -skip qtgamepad \
+        -skip qtgraphicaleffects \
+        -skip qtlocation \
+        -skip qtlottie \
+        -skip qtmacextras \
+        -skip qtnetworkauth \
+        -skip qtpurchasing \
+        -skip qtquick3d \
+        -skip qtquickcontrols2 \
+        -skip qtquicktimeline \
+        -skip qtremoteobjects \
+        -skip qtscript \
+        -skip qtscxml \
+        -skip qtsensors \
+        -skip qtserialbus \
+        -skip qtserialport \
+        -skip qtspeech \
+        -skip qtsvg \
+        -skip qtvirtualkeyboard \
+        -skip qtwebchannel \
+        -skip qtwebengine \
+        -skip qtwebglplugin \
+        -skip qtwebsockets \
+        -skip qtwebview \
+        -skip qtx11extras \
+        -skip qtxmlpatterns \
+        -xcb-xlib \
+        -xcb \
+        -qpa xcb \
+        -xplatform [% c('var/xplatform') %] \
+        -device-option CROSS_COMPILE=[% c('var/cross_compile') %]
+[% END -%]
 
 make -j[% c("buildconf/num_procs") %]
 make install

@@ -8,19 +8,6 @@ var:
   container:
     use_container: 1
 
-targets:
-  linux:
-    var:
-      host: x86_64-pc-linux-gnu
-  linux-i686:
-    var:
-      cxxflags: -m32
-  windows:
-    var:
-      host: '[% c("arch") %]-w64-mingw32'
-  osx-x86_64:
-    var:
-      host: x86_64-apple-darwin
 input_files:
   - project: container-image
   - name: '[% c("var/compiler") %]'

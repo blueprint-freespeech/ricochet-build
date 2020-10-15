@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 5.15.0
+version: 5.15.1
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 var:
@@ -14,12 +14,50 @@ targets:
     var:
       xplatform: linux-g++-32
       arch_deps:
-        - libxcb1-dev:i386
-        - libxkbcommon-x11-dev:i386
+        - libfontconfig1-dev:i386
+        - libfreetype6-dev:i386
         - libxkbcommon-dev:i386
+        - libxcb-glx0-dev:i386
+        - libxcb-keysyms1-dev:i386
+        - libxcb-image0-dev:i386
+        - libxcb-shm0-dev:i386
+        - libxcb-icccm4-dev:i386
+        - libxcb-sync0-dev:i386
+        - libxcb-xfixes0-dev:i386
+        - libxcb-shape0-dev:i386
+        - libxcb-randr0-dev:i386
+        - libxcb-render-util0-dev:i386
+        - libxcb-xinerama0-dev:i386
+        - libx11-xcb-dev:i386
+        - libglu1-mesa-dev:i386
+        - libxrender-dev:i386
+        - libxi-dev:i386
+        - libxkbcommon-x11-dev:i386
+        - libc6-dev-i386
   linux-x86_64:
     var:
       xplatform: linux-g++-64
+      arch_deps:
+        - libfontconfig1-dev
+        - libfreetype6-dev
+        - libxkbcommon-dev
+        - libxcb-glx0-dev
+        - libxcb-keysyms1-dev
+        - libxcb-image0-dev
+        - libxcb-shm0-dev
+        - libxcb-icccm4-dev
+        - libxcb-sync0-dev
+        - libxcb-xfixes0-dev
+        - libxcb-shape0-dev
+        - libxcb-randr0-dev
+        - libxcb-render-util0-dev
+        - libxcb-xinerama0-dev
+        - libx11-xcb-dev
+        - libglu1-mesa-dev
+        - libxrender-dev
+        - libxi-dev
+        - libxkbcommon-x11-dev
+        - libc6-dev
   windows:
     var:
       xplatform: win32-g++
@@ -35,7 +73,7 @@ input_files:
  - name: '[% c("var/compiler") %]'
    project: '[% c("var/compiler") %]'
  - URL: 'https://download.qt.io/archive/qt/5.15/5.15.0/single/qt-everywhere-src-[% c("version")%].tar.xz'
-   sha256sum: 22b63d7a7a45183865cc4141124f12b673e7a17b1fe2b91e433f6547c5d548c3
+   sha256sum: 44da876057e21e1be42de31facd99be7d5f9f07893e1ea762359bcee0ef64ee9
  - filename: fix_hardcode_xcode_paths.patch
    enable: '[% c("var/osx") %]'
  - filename: fix_deployment_target.patch

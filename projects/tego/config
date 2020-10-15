@@ -12,13 +12,53 @@ var:
     - build-essential
     - pkgconf
 
-
 targets:
   linux-i686:
     var:
       arch_deps:
-        - libc6-dev-i386
+        - libfontconfig1-dev:i386
+        - libfreetype6-dev:i386
         - libxkbcommon-dev:i386
+        - libxcb-glx0-dev:i386
+        - libxcb-keysyms1-dev:i386
+        - libxcb-image0-dev:i386
+        - libxcb-shm0-dev:i386
+        - libxcb-icccm4-dev:i386
+        - libxcb-sync0-dev:i386
+        - libxcb-xfixes0-dev:i386
+        - libxcb-shape0-dev:i386
+        - libxcb-randr0-dev:i386
+        - libxcb-render-util0-dev:i386
+        - libxcb-xinerama0-dev:i386
+        - libx11-xcb-dev:i386
+        - libglu1-mesa-dev:i386
+        - libxrender-dev:i386
+        - libxi-dev:i386
+        - libxkbcommon-x11-dev:i386
+        - libc6-dev-i386
+  linux-x86_64:
+    var:
+      arch_deps:
+        - libfontconfig1-dev
+        - libfreetype6-dev
+        - libxkbcommon-dev
+        - libxcb-glx0-dev
+        - libxcb-keysyms1-dev
+        - libxcb-image0-dev
+        - libxcb-shm0-dev
+        - libxcb-icccm4-dev
+        - libxcb-sync0-dev
+        - libxcb-xfixes0-dev
+        - libxcb-shape0-dev
+        - libxcb-randr0-dev
+        - libxcb-render-util0-dev
+        - libxcb-xinerama0-dev
+        - libx11-xcb-dev
+        - libglu1-mesa-dev
+        - libxrender-dev
+        - libxi-dev
+        - libxkbcommon-x11-dev
+        - libc6-dev
 
 input_files:
   - project: container-image
