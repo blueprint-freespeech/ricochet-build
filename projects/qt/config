@@ -72,7 +72,7 @@ input_files:
  - project: container-image
  - name: '[% c("var/compiler") %]'
    project: '[% c("var/compiler") %]'
- - URL: 'https://download.qt.io/archive/qt/5.15/5.15.0/single/qt-everywhere-src-[% c("version")%].tar.xz'
+ - URL: 'https://download.qt.io/archive/qt/5.15/[% c("version")%]/single/qt-everywhere-src-[% c("version")%].tar.xz'
    sha256sum: 44da876057e21e1be42de31facd99be7d5f9f07893e1ea762359bcee0ef64ee9
  - filename: fix_hardcode_xcode_paths.patch
    enable: '[% c("var/osx") %]'
