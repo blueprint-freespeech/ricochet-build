@@ -81,10 +81,6 @@ openssldir=/var/tmp/dist/openssl/openssl
 
 cd /var/tmp/build/[% project %]-[% c('version') %]
 
-[% IF c("var/windows") -%]
-patch -p1 < $rootdir/fix_mingw_static_build.patch
-[% END -%]
-
 # add git hash to micro-revision.i for #24995
 echo '"[% c("abbrev", { abbrev_length => 16 }) %]"' > micro-revision.i
 ./autogen.sh
