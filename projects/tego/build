@@ -22,7 +22,7 @@ export CPLUS_INCLUDE_PATH=$cppincludes:$CPLUS_INCLUDE_PATH
 export PKG_CONFIG_LIBDIR=$sysrootdir/lib/pkgconfig
 [% END -%]
 
-qmake OPENSSLDIR=/var/tmp/dist/openssl/openssl PROTOBUFDIR=/var/tmp/dist/protobuf
+qmake OPENSSLDIR=/var/tmp/dist/openssl/openssl PROTOBUFDIR=/var/tmp/dist/protobuf RICOCHET_REFRESH_VERSION=[% c('var/tego_version') %]
 make -j[% c("buildconf/num_procs") %]
 
 cp -a /var/tmp/build/[% project %]-[% c('version') %]/build/release /var/tmp/dist/tego
