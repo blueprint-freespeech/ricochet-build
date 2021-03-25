@@ -11,9 +11,6 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
   ln -s $clangdir/bin/clang $clangdir/bin/x86_64-apple-darwin-cc
   export CC=cc
 [% END -%]
-[% IF c("var/windows") -%]
-  patch -p1 < $rootdir/use-SOURCE_DATE_EPOCH.patch
-[% END -%]
 export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
 ./Configure [% c('var/configure_opts') %] [% c('var/CFLAGS') %]
 make -j[% c("buildconf/num_procs") %]
