@@ -18,13 +18,7 @@ input_files:
    name: tego
  - project: tor
    name: tor
- # windows build deps
- - project: nsis
-   name: nsis
-   enable: '[% c("var/windows") %]'
- - filename: windows-installer.nsi
-   enable: '[% c("var/windows") %]'
- # linux build deps
+ # macOS build deps
  - project: libdmg-hfsplus
    name: libdmg
    enable: '[% c("var/osx") %]'

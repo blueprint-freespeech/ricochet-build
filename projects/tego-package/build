@@ -17,18 +17,12 @@ arch=[% c("arch") %]
 cd /var/tmp/build
 # windows
 [% IF c("var/windows") %]
-    tar -C /var/tmp/dist -xf $rootdir/[% c('input_files_by_name/nsis') %]
-    export PATH="/var/tmp/dist/nsis/bin:$PATH"
+    mkdir Ricochet\ Refresh
+    cp /var/tmp/dist/tego/tego_ui/ricochet-refresh.exe Ricochet\ Refresh/.
+    cp /var/tmp/dist/tor/Tor/tor.exe Ricochet\ Refresh/.
+    zip -r ricochet.zip Ricochet\ Refresh
 
-    # deploy installer script and copy over binaries
-    cp $rootdir/windows-installer.nsi .
-    cp /var/tmp/dist/tego/tego_ui/ricochet-refresh.exe .
-    cp /var/tmp/dist/tor/Tor/tor.exe .
-
-    # create the installer
-    makensis windows-installer.nsi
-
-    cp ricochet.exe $distdir/ricochet-refresh-$version-windows-$arch.exe
+    cp ricochet.zip $distdir/ricochet-refresh-$version-windows-$arch.zip
 [% END %]
 
 [% IF c("var/linux") %]
