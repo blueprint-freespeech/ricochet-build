@@ -22,3 +22,10 @@ input_files:
  - project: libdmg-hfsplus
    name: libdmg
    enable: '[% c("var/osx") %]'
+ - filename: resources/macos_dmg
+   enable: '[% c("var/osx") %]'
+ - filename: resources/LICENSE
+   enable: '[% c("var/osx") %]'
+# windows build deps
+ - filename: resources/LICENSE
+   enable: '[% c("var/windows") %]'

@@ -20,6 +20,9 @@ cd /var/tmp/build
     mkdir Ricochet\ Refresh
     cp /var/tmp/dist/tego/tego_ui/ricochet-refresh.exe Ricochet\ Refresh/.
     cp /var/tmp/dist/tor/Tor/tor.exe Ricochet\ Refresh/.
+    # package the version number and license in the zip
+    echo $version > Ricochet\ Refresh/VERSION
+    cp $rootdir/resources/LICENSE Ricochet\ Refresh/.
     zip -r ricochet.zip Ricochet\ Refresh
 
     cp ricochet.zip $distdir/ricochet-refresh-$version-windows-$arch.zip
@@ -41,6 +44,10 @@ cd /var/tmp/build
 
     cp -a /var/tmp/dist/tego/tego_ui/ricochet-refresh.app ./Ricochet\ Refresh.app
     cp /var/tmp/dist/tor/Contents/MacOS/Tor/tor ./Ricochet\ Refresh.app/Contents/MacOS/.
+
+    # set the background + icon locations
+    cp -r $rootdir/resources/macos_dmg/. .
+
     genisoimage -V Ricochet\ Refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
     dmg dmg ricochet-refresh-uncompressed.dmg ricochet-refresh-$version-macos-$arch.dmg
 
