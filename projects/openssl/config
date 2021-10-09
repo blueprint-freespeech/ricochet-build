@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 1.1.1k
+version: 1.1.1l
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 
 var:
@@ -31,4 +31,6 @@ input_files:
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
   - URL: 'https://www.openssl.org/source/openssl-[% c("version") %].tar.gz'
-    sha256sum: 892a0875b9872acd04a9fde79b1f943075d5ea162415de3047c327df33fbaee5
+    sha256sum: 0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1
+  - filename: 0001-Revert-apple-getentropy-removal.patch
+    enable: '[% c("var/osx") %]'
