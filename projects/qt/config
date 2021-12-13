@@ -78,3 +78,5 @@ input_files:
    enable: '[% c("var/osx") %]'
  - filename: fix_deployment_target.patch
    enable: '[% c("var/osx") %]'
+ - filename: fix_opengl_linker_error.patch
+   enable: '[% c("var/osx") %]'

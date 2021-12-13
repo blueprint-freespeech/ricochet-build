@@ -15,6 +15,8 @@ var:
     tar -C /var/tmp/dist -xf $rootdir/[% c("compiler_tarfile") %]
     export PATH="/var/tmp/dist/gcc/bin:$PATH"
     export LD_LIBRARY_PATH=/var/tmp/dist/gcc/lib64:/var/tmp/dist/gcc/lib32
+    export CC="/var/tmp/dist/gcc/bin/gcc"
+    export CXX="/var/tmp/dist/gcc/bin/g++"
 
     [% IF c("hardened_gcc") -%]
       # Config options for hardening-wrapper

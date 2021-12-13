@@ -30,7 +30,7 @@ pre: |
   [% IF pc(c('origin_project'), 'var/pre_pkginst') -%]
   [% pc(c('origin_project'), 'var/pre_pkginst') %]
   [% END -%]
-  apt-get update -y -q
+  apt-get update --allow-releaseinfo-change -y -q
   apt-get upgrade -y -q
   [%
      deps = [];

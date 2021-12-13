@@ -1,8 +1,9 @@
 # vim filetype:yaml sw=2
-version: 3.13.0
+version: 3.19.1
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
 git_hash: 'v[% c("version") %]'
 git_url: https://github.com/protocolbuffers/protobuf.git
+git_submodule: 1
 
 var:
   container:
@@ -14,3 +15,5 @@ input_files:
     project: '[% c("var/compiler") %]'
   - name: protoc
     project: protoc
+  - name: cmake
+    project: cmake
