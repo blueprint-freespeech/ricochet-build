@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 3.15.3
+version: 3.16.0
 git_url: https://gitlab.kitware.com/cmake/cmake.git
 git_hash: 'v[% c("version") %]'
 tag_gpg_id: 1
@@ -14,3 +14,7 @@ input_files:
   - name: '[% c("var/compiler") %]'
     project: '[% c("var/compiler") %]'
     enable: '[% c("var/linux") %]'
+  - filename: windres-selection.patch
+    enable: '[% c("var/windows") %]'
+  - filename: findopenssl.patch
+    enable: '[% c("var/windows") %]'

@@ -11,9 +11,11 @@ export PATH=/var/tmp/dist/protoc/bin:$PATH
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/protobuf') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/qt') %]
 export PATH=/var/tmp/dist/qt/bin:$PATH
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
+export PATH=/var/tmp/dist/cmake/bin:$PATH
 
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
-cd /var/tmp/build/[% project %]-[% c('version') %]/src
+cd /var/tmp/build/[% project %]-[% c('version') %]/
 
 # clang needs to be reminded where its c++ includes are
 [% IF c("var/osx") -%]
@@ -22,10 +24,60 @@ export CPLUS_INCLUDE_PATH=$cppincludes:$CPLUS_INCLUDE_PATH
 export PKG_CONFIG_LIBDIR=$sysrootdir/lib/pkgconfig
 [% END -%]
 
-qmake OPENSSLDIR=/var/tmp/dist/openssl/openssl PROTOBUFDIR=/var/tmp/dist/protobuf RICOCHET_REFRESH_VERSION=[% c('var/tego_version') %]
-make -j[% c("buildconf/num_procs") %]
+# mingw doesn't define CC or CXX, and cmake needs those set to use mingw 
+[% IF c("var/windows-i686") -%]
+export CC=/var/tmp/dist/mingw-w64/bin/i686-w64-mingw32-gcc
+export CXX=/var/tmp/dist/mingw-w64/bin/i686-w64-mingw32-g++
+[% END -%]
+[% IF c("var/windows-x86_64") -%]
+export CC=/var/tmp/dist/mingw-w64/bin/x86_64-w64-mingw32-gcc
+export CXX=/var/tmp/dist/mingw-w64/bin/x86_64-w64-mingw32-g++
+[% END -%]
 
-cp -a /var/tmp/build/[% project %]-[% c('version') %]/build/release /var/tmp/dist/tego
+CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
+                -DFORCE_QT5=ON
+                -DProtobuf_USE_STATIC_LIBS=ON
+                -DProtobuf_ROOT_DIR=/var/tmp/dist/protobuf
+                -DProtobuf_PROTOC_EXECUTABLE=/var/tmp/dist/protoc/bin/protoc
+                -DOPENSSL_USE_STATIC_LIBS=ON
+                -DOPENSSL_ROOT_DIR=/var/tmp/dist/openssl/openssl
+                -DUSE_SUBMODULE_FMT=ON"
+
+# Set toolchain file
+[% IF c("var/linux-i686") -%]
+    CMAKE_FLAGS="-DCMAKE_TOOLCHAIN_FILE=../src/cmake/toolchains/i386-linux-gnu.cmake $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/windows-i686") -%]
+    CMAKE_FLAGS="-DCMAKE_TOOLCHAIN_FILE=../src/cmake/toolchains/i386-w64-mingw32.cmake $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/windows-x86_64") -%]
+    CMAKE_FLAGS="-DCMAKE_TOOLCHAIN_FILE=../src/cmake/toolchains/x86_64-w64-mingw32.cmake $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/osx") -%]
+    # Set AR and RANLIB on macos
+    CMAKE_FLAGS="-DCMAKE_AR=$OSX_AR -DCMAKE_RANLIB=$OSX_RANLIB $CMAKE_FLAGS"
+
+    # CMake doesn't honour the CMAKE_AR and CMAKE_RANLIB vars when checking for
+    # IPO, see https://github.com/emscripten-core/emscripten/issues/11143.
+    # Workaround this by CMAKE_(C|CXX)_COMPILER_(AR|RANLIB)
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_AR=$OSX_AR -DCMAKE_CXX_COMPILER_AR=$OSX_AR $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_RANLIB=$OSX_RANLIB -DCMAKE_CXX_COMPILER_RANLIB=$OSX_RANLIB $CMAKE_FLAGS"
+
+    # Setting CXX in macosx-toolchain breaks protoc's build, as it ends up
+    # creating an unusable binary. Instead, macosx-toolchain set's it in
+    # OSX_CXX, so as to not conflict with protoc
+    export CXX=$OSX_CXX
+
+    CMAKE_FLAGS="-DCMAKE_TOOLCHAIN_FILE=../src/cmake/toolchains/x86_64-apple-darwin.cmake $CMAKE_FLAGS"
+[% END -%]
+
+mkdir build && cd build
+cmake -S ../src $CMAKE_FLAGS
+
+cmake --build . -j[% c("buildconf/num_procs") %]
+
+mkdir /var/tmp/dist/tego/
+cp -a /var/tmp/build/[% project %]-[% c('version') %]/build/ricochet-refresh/ricochet-refresh/* /var/tmp/dist/tego/
 cd /var/tmp/dist
 [% c('tar', {
         tar_src => [ project ],
