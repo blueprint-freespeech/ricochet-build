@@ -10,7 +10,6 @@ cd /var/tmp/build/[% project %]-[% c('version') %]
   # Tricking OpenSSL into using our clang as cross-compiler
   ln -s $clangdir/bin/clang $clangdir/bin/x86_64-apple-darwin-cc
   export CC=cc
-  patch -p1 < $rootdir/0001-Revert-apple-getentropy-removal.patch
 [% END -%]
 export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
 ./Configure [% c('var/configure_opts') %] [% c('var/CFLAGS') %]

@@ -4,6 +4,8 @@ version: 10.15
 var:
   container:
     use_container: 1
+  # AR and RANLIB are prefixed with OSX_ because otherwise they interfere with
+  # openssl
   setup: |
     mkdir -p /var/tmp/dist
     tar -C /var/tmp/dist -xf $rootdir/[% c("compiler_tarfile") %]
@@ -14,6 +16,9 @@ var:
     export PATH="$clangdir/bin:$cctoolsdir:$xcodetoolsdir:$PATH"
     export LD_LIBRARY_PATH=/var/tmp/dist/[% project %]/clang/lib
     export CC="$clangdir/bin/clang [% c('var/FLAGS') %]"
+    export OSX_CXX="$clangdir/bin/clang++ [% c('var/FLAGS') %]"
+    export OSX_AR="$cctoolsdir/x86_64-apple-darwin-ar"
+    export OSX_RANLIB="$cctoolsdir/x86_64-apple-darwin-ranlib"
     export LDFLAGS="[% c('var/LDFLAGS') %]"
     export MACOSX_DEPLOYMENT_TARGET=[% c("var/macosx_deployment_target") %]
 
