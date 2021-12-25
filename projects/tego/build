@@ -43,7 +43,8 @@ CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
                 -DOPENSSL_ROOT_DIR=/var/tmp/dist/openssl/openssl
                 -DUSE_SUBMODULE_FMT=ON
                 -DSTATIC_QT_ROOT_DIR=/var/tmp/dist/qt
-                -DSTATIC_QT=ON"
+                -DSTATIC_QT=ON
+                -DTEGO_STATIC_BUILD=ON"
 
 # Set toolchain file
 [% IF c("var/linux-i686") -%]
