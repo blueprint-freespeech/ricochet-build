@@ -80,3 +80,5 @@ input_files:
    enable: '[% c("var/osx") %]'
  - filename: fix_opengl_linker_error.patch
    enable: '[% c("var/osx") %]'
+ - filename: macos_font_shaping.patch
+   enable: '[% c("var/osx") %]'
