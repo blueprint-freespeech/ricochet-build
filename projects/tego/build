@@ -75,7 +75,7 @@ CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
 [% END -%]
 
 mkdir build && cd build
-cmake -S ../src $CMAKE_FLAGS
+RICOCHET_REFRESH_VERSION=[% c('var/tego_version') %] cmake -S ../src $CMAKE_FLAGS
 
 cmake --build . -j[% c("buildconf/num_procs") %]
 
