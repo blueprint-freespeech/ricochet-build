@@ -17,6 +17,54 @@ export PATH=/var/tmp/dist/cmake/bin:$PATH
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 cd /var/tmp/build/[% project %]-[% c('version') %]/
 
+mkdir -p /var/tmp/dist/pluggables
+tar -C /var/tmp/dist/pluggables -xf $rootdir/pluggable-transports.tar.gz
+
+# Generate the pluggables header
+# 1. create a QMap<String, std::vector<std::string>> mapping bridge type strings (ie obfs4, snowflake, etc) to lists of bridge lines
+PT_HEADER_PATH=/var/tmp/build/[% project %]-[% c('version') %]/src/libtego_ui/pluggables.hpp
+touch $PT_HEADER_PATH
+echo "#pragma once" > $PT_HEADER_PATH
+echo "const QMap<QString, std::vector<std::string>> defaultBridges {" >> $PT_HEADER_PATH
+ function bridges_conf {
+  local pt="$1"
+  local i=1
+  echo "    {" >> $PT_HEADER_PATH
+  echo "        \"$pt\"," >> $PT_HEADER_PATH
+  echo "        {" >> $PT_HEADER_PATH
+  while read -r line
+  do
+    echo "          R\"($line)\"," >> "$PT_HEADER_PATH"
+  done < "/var/tmp/dist/pluggables/bridges_list.$pt.txt"
+  echo "        }" >> $PT_HEADER_PATH
+  echo "    }," >> $PT_HEADER_PATH
+}
+bridges_conf obfs4
+bridges_conf meek-azure
+bridges_conf snowflake
+echo "};" >> $PT_HEADER_PATH
+
+# 2. set obfs4 as the recommended bridge type
+echo "const QString recommendedBridgeType = \"obfs4\";" >> $PT_HEADER_PATH
+
+# Copy im the torrc header
+# Since RicochetRefresh generates a default torrc at runtime, we put the contents
+# of the PT torrc config in a header, with those contents being included when
+# RicochetRefresh generates the default torrc
+#TODO: At some point it'd be nice to have some way of automatically generating
+# these torrc appendices based on the ones in tor-browser-build
+TORRC_DEFAULT_APPENDIX=$rootdir/[% c('input_files_by_name/torrc') %]
+TORRC_HEADER_PATH=/var/tmp/build/[% project %]-[% c('version') %]/src/libtego/source/torrc.hpp
+cp "$TORRC_DEFAULT_APPENDIX" "$TORRC_HEADER_PATH"
+
+# generate src tar
+pushd /var/tmp/build
+[% c('tar', {
+        tar_src => project _ '-' _ c('version'),
+        tar_args => '-czf ' _ dest_dir _ '/src-' _ c('filename'),
+    }) %]
+popd
+
 # clang needs to be reminded where its c++ includes are
 [% IF c("var/osx") -%]
 cppincludes=/var/tmp/dist/macosx-toolchain/clang/include/c++/v1

@@ -11,6 +11,9 @@ mkdir -p /var/tmp/dist/tor
 tar -C /var/tmp/dist/tor -xf [% c('input_files_by_name/tor') %]/tor.tar.gz
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/tego') %]
 
+mkdir -p /var/tmp/dist/pluggables
+tar -C /var/tmp/dist/pluggables -xf $rootdir/pluggable-transports-[% c("var/osname") %].tar.gz
+
 version=[% c("var/tego_version") %]
 arch=[% c("arch") %]
 
@@ -23,6 +26,12 @@ cd /var/tmp/build
     # package the version number and license in the zip
     echo $version > Ricochet\ Refresh/VERSION
     cp $rootdir/resources/LICENSE Ricochet\ Refresh/.
+
+    # package the pluggables in the zip
+    mkdir -p Ricochet\ Refresh/pluggable_transports
+    cp /var/tmp/dist/pluggables/obfs4proxy.exe Ricochet\ Refresh/pluggable_transports/.
+    cp /var/tmp/dist/pluggables/snowflake-client.exe Ricochet\ Refresh/pluggable_transports/.
+
     zip -r ricochet.zip Ricochet\ Refresh
 
     cp ricochet.zip $distdir/ricochet-refresh-$version-windows-$arch.zip
@@ -32,6 +41,10 @@ cd /var/tmp/build
     mkdir ricochet-refresh
     cp /var/tmp/dist/tego/ricochet-refresh ricochet-refresh/.
     cp /var/tmp/dist/tor/Tor/tor ricochet-refresh/.
+
+    mkdir -p ricochet-refresh/pluggable_transports
+    cp /var/tmp/dist/pluggables/obfs4proxy ricochet-refresh/pluggable_transports/.
+    cp /var/tmp/dist/pluggables/snowflake-client ricochet-refresh/pluggable_transports/.
 
     tar -cvf ricochet-refresh-$version-linux-$arch.tar ricochet-refresh
     gzip -9 ricochet-refresh-$version-linux-$arch.tar
@@ -45,8 +58,12 @@ cd /var/tmp/build
     cp -a /var/tmp/dist/tego/ricochet-refresh.app ./Ricochet\ Refresh.app
     cp /var/tmp/dist/tor/Contents/MacOS/Tor/tor ./Ricochet\ Refresh.app/Contents/MacOS/.
 
+    mkdir -p ./Ricochet\ Refresh.app/Contents/MacOS/pluggable_transports
+    cp /var/tmp/dist/pluggables/obfs4proxy ./Ricochet\ Refresh.app/Contents/MacOS/pluggable_transports/.
+    cp /var/tmp/dist/pluggables/snowflake-client ./Ricochet\ Refresh.app/Contents/MacOS/pluggable_transports/.
+
     # set the background + icon locations
-    cp -r $rootdir/resources/macos_dmg/. .
+    cp -r $rootdir/resources/darwin/macos_dmg/. .
 
     genisoimage -V Ricochet\ Refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
     dmg dmg ricochet-refresh-uncompressed.dmg ricochet-refresh-$version-macos-$arch.dmg

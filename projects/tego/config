@@ -73,3 +73,16 @@ input_files:
     project: qt
   - name: cmake
     project: cmake
+  # Since we only need the bridge string files, we can save some bandwidth and
+  # just save one of the targets bundle and reuse that across all platforms
+  - filename: pluggable-transports.tar.gz
+    URL: 'https://cdn.msimonelli.xyz/pluggables/pluggable-transports-[% c("var/osname") %]-bundle.tar.gz'
+  - name: torrc
+    filename: resources/macos/torrc.hpp
+    enable: '[% c("var/osx") %]'
+  - name: torrc
+    filename: resources/linux/torrc.hpp
+    enable: '[% c("var/linux") %]'
+  - name: torrc
+    filename: resources/windows/torrc.hpp
+    enable: '[% c("var/windows") %]'
