@@ -12,6 +12,10 @@ var:
     - pkgconf
 
 targets:
+  nightly:
+    #git_url: /path/to/your/ricochet-refresh/.git
+    git_hash: main
+
   linux-i686:
     var:
       arch_deps:

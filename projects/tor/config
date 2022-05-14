@@ -21,7 +21,7 @@ targets:
 
   nightly:
     version: '[% c("abbrev") %]'
-    git_hash: master
+    git_hash: main
     tag_gpg_id: 0
 
   linux-i686:
