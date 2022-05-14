@@ -24,10 +24,6 @@ input_files:
    enable: '[% c("var/osx") %]'
  - filename: resources/darwin/macos_dmg
    enable: '[% c("var/osx") %]'
- - filename: resources/LICENSE
-   enable: '[% c("var/osx") %]'
-# windows build deps
- - filename: resources/LICENSE
-   enable: '[% c("var/windows") %]'
+ # pluggable transports
  - filename: pluggable-transports-[% c("var/osname") %].tar.gz
    URL: 'https://cdn.msimonelli.xyz/pluggables/pluggable-transports-[% c("var/osname") %]-bundle.tar.gz'

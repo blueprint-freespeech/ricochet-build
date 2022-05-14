@@ -22,10 +22,10 @@ cd /var/tmp/build
 [% IF c("var/windows") %]
     mkdir Ricochet\ Refresh
     cp /var/tmp/dist/tego/ricochet-refresh.exe Ricochet\ Refresh/.
+    cp /var/tmp/dist/tego/LICENSE Ricochet\ Refresh/.
     cp /var/tmp/dist/tor/Tor/tor.exe Ricochet\ Refresh/.
     # package the version number and license in the zip
     echo $version > Ricochet\ Refresh/VERSION
-    cp $rootdir/resources/LICENSE Ricochet\ Refresh/.
 
     # package the pluggables in the zip
     mkdir -p Ricochet\ Refresh/pluggable_transports
@@ -40,6 +40,7 @@ cd /var/tmp/build
 [% IF c("var/linux") %]
     mkdir ricochet-refresh
     cp /var/tmp/dist/tego/ricochet-refresh ricochet-refresh/.
+    cp /var/tmp/dist/tego/LICENSE ricochet-refresh/.
     cp /var/tmp/dist/tor/Tor/tor ricochet-refresh/.
 
     mkdir -p ricochet-refresh/pluggable_transports
