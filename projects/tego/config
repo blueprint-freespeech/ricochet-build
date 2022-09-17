@@ -1,6 +1,6 @@
 version: '[% c("var/tego_version") %]'
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %].tar.gz'
-git_hash: v3.0.13-release
+git_hash: v3.0.14-release
 git_url: https://github.com/blueprint-freespeech/ricochet-refresh.git
 git_submodule: 1
 

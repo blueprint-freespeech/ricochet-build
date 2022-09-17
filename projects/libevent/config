@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: 2.1.11
+version: 2.1.12
 git_url: https://github.com/libevent/libevent.git
 git_hash: 'release-[% c("version") %]-stable'
 tag_gpg_id: 1
