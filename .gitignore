@@ -1,0 +1,6 @@
+# standard rbm directories
+/git_clones
+/logs
+/out
+/tmp
+/rbm.local.conf
