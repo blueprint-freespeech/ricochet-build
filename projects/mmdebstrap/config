@@ -1,0 +1,7 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-src-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: 0.8.6
+git_hash: '[% c("version") %]'
+git_url: https://gitlab.mister-muffin.de/josch/mmdebstrap.git
+gpg_keyring: mmdebstrap.gpg
+tag_gpg_id: 1

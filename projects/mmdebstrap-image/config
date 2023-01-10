@@ -1,0 +1,46 @@
+# vim: filetype=yaml sw=2
+filename: 'container-image_[% c("var/container/suite") %]-[% c("var/container/arch") %]-[% c("version") %].tar.gz'
+version: 1
+pkg_type: build
+container:
+  use_container: 1
+
+var:
+  ubuntu_version: 22.04.1
+
+pre: |
+  #!/bin/sh
+  set -e
+  rootdir=$(pwd)
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update -y -q
+  apt-get install -y -q debian-archive-keyring ubuntu-keyring mmdebstrap gnupg
+
+  export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
+  tar -xf [% c('input_files_by_name/mmdebstrap') %]
+  ./mmdebstrap/mmdebstrap --mode=unshare [% c("var/container/mmdebstrap_opt") %] [% c("var/container/suite") %] output.tar.gz [% c("var/container/debian_mirror") %]
+
+  [% IF c("var/minimal_apt_version") -%]
+    mkdir base-image
+    tar -C base-image -xf output.tar.gz ./var/lib/dpkg
+    apt_version=$(dpkg --admindir=$rootdir/base-image/var/lib/dpkg -s apt | grep '^Version: ' | cut -d ' ' -f 2)
+    echo "apt version: $apt_version"
+    dpkg --compare-versions "$apt_version" ge '[% c("var/minimal_apt_version") %]'
+  [% END -%]
+
+  mv output.tar.gz [% dest_dir %]/[% c("filename") %]
+
+targets:
+  bullseye-amd64:
+    var:
+      minimal_apt_version: 2.2.4
+      container:
+        suite: bullseye
+        arch: amd64
+
+input_files:
+  - project: mmdebstrap
+    name: mmdebstrap
+  - URL: 'https://cdimage.ubuntu.com/ubuntu-base/releases/[% c("var/ubuntu_version") %]/release/ubuntu-base-[% c("var/ubuntu_version") %]-base-amd64.tar.gz'
+    filename: 'container-image_ubuntu-base-[% c("var/ubuntu_version") %]-base-amd64.tar.gz'
+    sha256sum: e1f9200c99da008a473c9ae7b51e13f5ea05dc4c2e12beb43f0f9cbbbf6216f4
