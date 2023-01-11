@@ -1,0 +1,4 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+cp [% c('input_files_by_name/cmake-build') %] [% dest_dir %]/[% c('filename') %]

@@ -1,0 +1,14 @@
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% pc("cmake-build", "version") %]'
+container:
+  use_container: 0
+
+input_files:
+  - name: cmake-build
+    project: cmake-build
+    target_replace:
+      '^linux-.*': linux-x86_64
+      '^windows-.*': linux-x86_64
+      '^macos-.*': linux-x86_64
+      '^windows$': linux
+      '^macos$': linux
