@@ -1,0 +1,18 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.xz
+cd $builddir/[% project %]-[% c('version') %]
+
+./configure --prefix=$projdir --disable-shared --enable-static \
+        --target=[% c("var/compiler_target") %] --disable-multilib \
+        --enable-lto --disable-gdb --enable-deterministic-archives
+
+make -j[% c("num_procs") %]
+make install
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]

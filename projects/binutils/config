@@ -1,0 +1,22 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/binutils") %]'
+container:
+  use_container: 1
+
+var:
+  deps:
+    - bison
+    - texinfo
+
+targets:
+  windows:
+    var:
+      configure_opt: '--disable-shared --enable-static --target=[% c("var/arch") %]-w64-mingw32 --disable-multilib --enable-lto --disable-gdb --enable-deterministic-archives'
+
+input_files:
+  - project: container-image
+  - URL: https://ftp.gnu.org/gnu/binutils/binutils-[% c("version") %].tar.xz
+    sig_ext: sig
+    file_gpg_id: 1
+    gpg_keyring: binutils.gpg
