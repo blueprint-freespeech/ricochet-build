@@ -1,0 +1,15 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% pc("gcc-source", "version") %]'
+container:
+  use_container: 1
+
+var:
+  deps:
+    - libmpc-dev
+    - libc6-dev-i386
+
+input_files:
+  - project: container-image
+  - name: gcc-source
+    project: gcc-source

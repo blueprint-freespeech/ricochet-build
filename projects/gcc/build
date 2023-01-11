@@ -1,0 +1,16 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $builddir -xf $rootdir/[% c("input_files_by_name/gcc-source") %]
+cd $builddir/[% project %]-[% c("version") %]
+
+./configure --prefix=$projdir --enable-multilib --enable-languages=c,c++ --with-arch_32=i686
+make -j[% c("num_procs") %]
+make install
+ln -s gcc $projdir/bin/cc
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]
