@@ -1,0 +1,14 @@
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% pc("protoc-build", "version") %]'
+container:
+  use_container: 0
+
+input_files:
+  - name: protoc-build
+    project: protoc-build
+    target_replace:
+      '^linux-.*': linux-x86_64
+      '^windows-.*': linux-x86_64
+      '^macos-.*': linux-x86_64
+      '^windows$': linux
+      '^macos$': linux
