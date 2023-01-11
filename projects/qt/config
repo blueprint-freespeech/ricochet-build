@@ -1,0 +1,86 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/qt") %]'
+container:
+  use_container: 1
+
+targets:
+  linux:
+    var:
+      cross_compile: $distdir/gcc/bin/x86_64-pc-linux-gnu-
+      configure: -qpa xcb -xcb -xcb-xlib -feature-freetype -fontconfig -skip qtx11extras
+  linux-i686:
+    var:
+      xplatform: linux-g++-32
+      deps:
+        - libfontconfig1-dev:i386
+        - libfreetype6-dev:i386
+        - libxkbcommon-dev:i386
+        - libxcb-glx0-dev:i386
+        - libxcb-keysyms1-dev:i386
+        - libxcb-image0-dev:i386
+        - libxcb-shm0-dev:i386
+        - libxcb-icccm4-dev:i386
+        - libxcb-sync0-dev:i386
+        - libxcb-xfixes0-dev:i386
+        - libxcb-shape0-dev:i386
+        - libxcb-randr0-dev:i386
+        - libxcb-render-util0-dev:i386
+        - libxcb-xinerama0-dev:i386
+        - libx11-xcb-dev:i386
+        - libglu1-mesa-dev:i386
+        - libxrender-dev:i386
+        - libxi-dev:i386
+        - libxkbcommon-x11-dev:i386
+        - libc6-dev-i386
+  linux-x86_64:
+    var:
+      xplatform: linux-g++-64
+      deps:
+        - libfontconfig1-dev
+        - libfreetype6-dev
+        - libxkbcommon-dev
+        - libxcb-glx0-dev
+        - libxcb-keysyms1-dev
+        - libxcb-image0-dev
+        - libxcb-shm0-dev
+        - libxcb-icccm4-dev
+        - libxcb-sync0-dev
+        - libxcb-xfixes0-dev
+        - libxcb-shape0-dev
+        - libxcb-randr0-dev
+        - libxcb-render-util0-dev
+        - libxcb-xinerama0-dev
+        - libx11-xcb-dev
+        - libglu1-mesa-dev
+        - libxrender-dev
+        - libxi-dev
+        - libxkbcommon-x11-dev
+        - libc6-dev
+  windows:
+    var:
+      xplatform: win32-clang-g++
+      cross_compile: '$distdir/toolchain-windows-clang/bin/[% c("var/arch") %]-w64-mingw32-'
+      configure: -no-fontconfig -no-glib -static-runtime
+  macos:
+    var:
+      xplatform: macx-clang
+      cross_compile: $distdir/toolchain-macos-clang/cctools/bin/[% c("var/arch") %]-apple-darwin-
+      configure: -no-fontconfig -no-glib
+
+input_files:
+ - project: container-image
+ - name: build-toolchain
+   project: '[% c("var/build-toolchain") %]'
+ - URL: 'https://download.qt.io/archive/qt/5.15/[% c("version")%]/single/qt-everywhere-opensource-src-[% c("version")%].tar.xz'
+   sha256sum: 7426b1eaab52ed169ce53804bdd05dfe364f761468f888a0f15a308dc1dc2951
+ - filename: fix_climits.patch
+   enable: '[% c("var/linux") %]'
+ - filename: fix_hardcode_xcode_paths.patch
+   enable: '[% c("var/macos") %]'
+ - filename: fix_deployment_target.patch
+   enable: '[% c("var/macos") %]'
+ - filename: fix_opengl_linker_error.patch
+   enable: '[% c("var/macos") %]'
+ - filename: macos_aarch64.patch
+   enable: '[% c("var/macos-aarch64") %]'

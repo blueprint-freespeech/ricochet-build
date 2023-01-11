@@ -1,0 +1,11 @@
+diff --git a/qtbase/mkspecs/macx-clang/qmake.conf b/qtbase/mkspecs/macx-clang/qmake.conf
+index 0cf1f31..2e7c884 100644
+--- a/qtbase/mkspecs/macx-clang/qmake.conf
++++ b/qtbase/mkspecs/macx-clang/qmake.conf
+@@ -29,4 +29,6 @@ include(../common/gcc-base-mac.conf)
+ include(../common/clang.conf)
+ include(../common/clang-mac.conf)
+ 
++QMAKE_APPLE_DEVICE_ARCHS = arm64
++
+ load(qt_config)

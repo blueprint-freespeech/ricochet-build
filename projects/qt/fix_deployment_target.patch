@@ -1,0 +1,13 @@
+diff --git a/qtbase/mkspecs/common/macx.conf b/qtbase/mkspecs/common/macx.conf
+index 2d4ca24..978c579 100644
+--- a/qtbase/mkspecs/common/macx.conf
++++ b/qtbase/mkspecs/common/macx.conf
+@@ -5,7 +5,7 @@
+ QMAKE_PLATFORM         += macos osx macx
+ QMAKE_MAC_SDK           = macosx
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.13
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14
+ 
+ # Should be 10.15, but as long as the CI builds with
+ # older SDKs we have to keep this.

@@ -1,0 +1,21 @@
+diff --git a/qtbase/src/gui/Qt5GuiConfigExtras.cmake.in b/qtbase/src/gui/Qt5GuiConfigExtras.cmake.in
+index 84dbbfe..ddbb1f6 100644
+--- a/qtbase/src/gui/Qt5GuiConfigExtras.cmake.in
++++ b/qtbase/src/gui/Qt5GuiConfigExtras.cmake.in
+@@ -169,16 +169,6 @@ macro(_qt5gui_find_extra_libs Name Libs LibDir IncDirs)
+     endforeach()
+ endmacro()
+ 
+-
+-!!IF !isEmpty(CMAKE_EGL_LIBS)
+-_qt5gui_find_extra_libs(EGL \"$$CMAKE_EGL_LIBS\" \"$$CMAKE_EGL_LIBDIR\" \"$$CMAKE_EGL_INCDIRS\")
+-!!ENDIF
+-
+-!!IF !isEmpty(CMAKE_OPENGL_LIBS)
+-_qt5gui_find_extra_libs(OPENGL \"$$CMAKE_OPENGL_LIBS\" \"$$CMAKE_OPENGL_LIBDIR\" \"$$CMAKE_OPENGL_INCDIRS\")
+-
+-!!ENDIF
+-
+ !!ENDIF
+ 
+ set(Qt5Gui_OPENGL_IMPLEMENTATION $$CMAKE_QT_OPENGL_IMPLEMENTATION)

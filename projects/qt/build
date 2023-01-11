@@ -1,0 +1,113 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+# https://dexp.in/articles/qtcreator-crosscompile/
+
+# build qt
+mkdir -p $builddir
+tar -C $builddir -xf qt-everywhere-opensource-src-[% c('version') %].tar.xz
+cd $builddir/qt-everywhere-src-[% c('version') %]
+
+[% IF c("var/linux") %]
+  # https://bugreports.qt.io/browse/QTBUG-104264
+  patch -p1 < $rootdir/fix_climits.patch
+[% END -%]
+
+[% IF c("var/linux-x86_64") %]
+  # https://bugreports.qt.io/browse/QTBUG-85922
+  sed -i "s/X11R6\///g" qtbase/mkspecs/linux-g++-64/qmake.conf
+  # /usr/lib64 does not exist in bullseye, so point to the real path
+  sed -i "s/lib64/lib\/x86_64-linux-gnu/g" qtbase/mkspecs/linux-g++-64/qmake.conf
+[% END -%]
+
+[% IF c("var/windows") -%]
+  # remove d3d12 support (or else build looks for fxc.exe for shader compilation which we do not have)
+  sed -i 's/qtConfig(d3d12): SUBDIRS += d3d12//' qtdeclarative/src/plugins/scenegraph/scenegraph.pro
+[% END %]
+
+[% IF c("var/macos") %]
+  # clang needs to be reminded where it's c++ includes are
+  cppincludes=$distdir/toolchain-macos-clang/clang/include/c++/v1
+  ln -s $distdir/toolchain-macos-clang/cctools/bin/[% c("var/arch") %]-apple-darwin-libtool $distdir/toolchain-macos-clang/cctools/bin/libtool
+
+  # xcode mocks for macOS
+  patch -p1 < $rootdir/fix_hardcode_xcode_paths.patch
+  patch -p1 < $rootdir/fix_deployment_target.patch
+
+  # OpenGL patch for macos
+  patch -p1 < $rootdir/fix_opengl_linker_error.patch
+[% END %]
+[% IF c("var/macos-aarch64") %]
+  # Fix aarch64 cross compiling (see: https://github.com/qbittorrent/qBittorrent/wiki/Compilation:-macOS-(x86_64,-arm64,-cross-compilation)#qt )
+  patch -p1 < $rootdir/macos_aarch64.patch
+[% END %]
+
+# may need opengl for macOS
+
+./configure \
+  -prefix "$projdir" \
+  [% IF c("var/macos") -%]-I $cppincludes [% END -%] \
+  -xplatform [% c('var/xplatform') %] \
+  -device-option CROSS_COMPILE=[% c('var/cross_compile') %] \
+  -release \
+  -opensource \
+  -confirm-license \
+  -no-shared \
+  -static \
+  -no-icu \
+  -no-openssl \
+  -no-opengl \
+  -no-qml-debug \
+  -nomake examples \
+  -nomake tests \
+  -nomake tools \
+  -qt-libjpeg \
+  -qt-libpng \
+  -qt-pcre \
+  -qt-zlib \
+  -skip qt3d \
+  -skip qtactiveqt \
+  -skip qtandroidextras \
+  -skip qtcharts \
+  -skip qtconnectivity \
+  -skip qtdatavis3d \
+  -skip qtdoc \
+  -skip qtgamepad \
+  -skip qtlocation \
+  -skip qtlottie \
+  -skip qtnetworkauth \
+  -skip qtpurchasing \
+  -skip qtquick3d \
+  -skip qtquicktimeline \
+  -skip qtremoteobjects \
+  -skip qtscript \
+  -skip qtscxml \
+  -skip qtsensors \
+  -skip qtserialbus \
+  -skip qtserialport \
+  -skip qtspeech \
+  -skip qtsvg \
+  -skip qtvirtualkeyboard \
+  -skip qtwebchannel \
+  -skip qtwebengine \
+  -skip qtwebglplugin \
+  -skip qtwebsockets \
+  -skip qtwebview \
+  -skip qtwebchannel \
+  -skip qtwebengine \
+  -skip qtwebglplugin \
+  -skip qtwebsockets \
+  -skip qtwebview \
+  -skip qtxmlpatterns \
+  [% c("var/configure") %] \
+  -verbose
+
+make -j[% c("num_procs") %]
+make install
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
