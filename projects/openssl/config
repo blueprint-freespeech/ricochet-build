@@ -1,0 +1,34 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/openssl") %]'
+container:
+  use_container: 1
+
+var:
+  openssldir: 'usr/local'
+
+targets:
+  linux-x86_64:
+    var:
+      configure_opts: linux-x86_64 no-shared enable-ec_nistp_64_gcc_128
+  linux-i686:
+    var:
+      configure_opts: linux-x86 no-shared
+  windows-x86_64:
+    var:
+      configure_opts: 'mingw64 no-shared enable-capieng --cross-compile-prefix=x86_64-w64-mingw32-'
+  windows-i686:
+    var:
+      configure_opts: 'mingw no-shared enable-capieng --cross-compile-prefix=i686-w64-mingw32-'
+  macos:
+   var:
+     configure_opts: darwin64-[% c("var/arch_macos") %]-cc no-shared --cross-compile-prefix=[% c("var/compiler_target") %]-
+
+input_files:
+  - project: container-image
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - URL: 'https://www.openssl.org/source/openssl-[% c("version") %].tar.gz'
+    sig_ext: asc
+    file_gpg_id: 1
+    gpg_keyring: openssl.gpg

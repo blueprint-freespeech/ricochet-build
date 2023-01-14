@@ -1,0 +1,30 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
+
+# openssl has its own special config script, so we need to let it handle
+[% IF c("var/windows") %]
+  export CC=clang
+[% END %]
+
+[% IF c("var/macos") -%]
+  # Tricking OpenSSL into using our clang as cross-compiler
+  ln -s $clangdir/bin/clang $clangdir/bin/[% c('var/arch') %]-apple-darwin-cc
+  export CC=cc
+[% END -%]
+
+export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
+# OpenSSL 3 uses lib64 on 64-bit systems, but tor looks for lib
+./Configure --prefix="$projdir" --libdir=lib [% c('var/configure_opts') %] [% c('var/CFLAGS') %]
+make -j[% c('num_procs') %]
+make -j[% c('num_procs') %] install
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
