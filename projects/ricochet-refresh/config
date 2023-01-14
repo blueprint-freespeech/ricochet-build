@@ -1,0 +1,88 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/ricochet-refresh") %]'
+git_url: https://github.com/blueprint-freespeech/ricochet-refresh.git
+git_hash: 'v[% c("version") %]-release'
+git_submodule: 1
+container:
+  use_container: 1
+
+var:
+  deps:
+    - jq
+    - patchelf
+
+targets:
+  testbuild:
+    fetch: 1
+    version: '[% c("var/versions/ricochet-refresh") %]-testbuild-[% exec("git rev-parse --short HEAD") %]'
+    #git_url: /path/to/your/ricochet-refresh/.git
+    git_hash: main
+  linux-i686:
+    var:
+      arch_deps:
+        - libfontconfig1-dev:i386
+        - libfreetype6-dev:i386
+        - libxkbcommon-dev:i386
+        - libxcb-glx0-dev:i386
+        - libxcb-keysyms1-dev:i386
+        - libxcb-image0-dev:i386
+        - libxcb-shm0-dev:i386
+        - libxcb-icccm4-dev:i386
+        - libxcb-sync-dev:i386
+        - libxcb-xfixes0-dev:i386
+        - libxcb-shape0-dev:i386
+        - libxcb-randr0-dev:i386
+        - libxcb-render-util0-dev:i386
+        - libxcb-xinerama0-dev:i386
+        - libx11-xcb-dev:i386
+        - libglu1-mesa-dev:i386
+        - libxrender-dev:i386
+        - libxi-dev:i386
+        - libxkbcommon-x11-dev:i386
+        - libc6-dev-i386
+  linux-x86_64:
+    var:
+      arch_deps:
+        - libfontconfig1-dev
+        - libfreetype6-dev
+        - libxkbcommon-dev
+        - libxcb-glx0-dev
+        - libxcb-keysyms1-dev
+        - libxcb-image0-dev
+        - libxcb-shm0-dev
+        - libxcb-icccm4-dev
+        - libxcb-sync-dev
+        - libxcb-xfixes0-dev
+        - libxcb-shape0-dev
+        - libxcb-randr0-dev
+        - libxcb-render-util0-dev
+        - libxcb-xinerama0-dev
+        - libx11-xcb-dev
+        - libglu1-mesa-dev
+        - libxrender-dev
+        - libxi-dev
+        - libxkbcommon-x11-dev
+        - libc6-dev
+
+input_files:
+  - project: container-image
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - name: openssl
+    project: openssl
+  - name: protoc
+    project: protoc
+  - name: protobuf
+    project: protobuf
+  - name: qt
+    project: qt
+  - name: cmake
+    project: cmake
+  - name: tor
+    project: tor
+  - name: tor-expert-bundle
+    URL: https://archive.torproject.org/tor-package-archive/torbrowser/[% c("var/versions/tor-expert-bundle") %]/tor-expert-bundle-[% c("var/versions/tor-expert-bundle") %]-[% c("var/osname") %]-[% c("var/arch") %].tar.gz
+    sig_ext: asc
+    file_gpg_id: 1
+    gpg_keyring: tor-browser.gpg

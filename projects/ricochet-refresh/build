@@ -1,0 +1,171 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C $distdir -xf [% c('input_files_by_name/openssl') %]
+tar -C $distdir -xf [% c('input_files_by_name/protoc') %]
+export PATH=$distdir/protoc/bin:$PATH
+tar -C $distdir -xf [% c('input_files_by_name/protobuf') %]
+tar -C $distdir -xf [% c('input_files_by_name/qt') %]
+export PATH=$distdir/qt/bin:$PATH
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH=$distdir/cmake/bin:$PATH
+tar -C $distdir -xf [% c('input_files_by_name/tor') %]
+mkdir -p $distdir/tor-expert-bundle
+tar -C $distdir/tor-expert-bundle -xf $rootdir/[% c('input_files_by_name/tor-expert-bundle') %]
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]/
+
+
+# Generate the pluggables header
+# 1. create a QMap<String, std::vector<std::string>> mapping bridge type strings (ie obfs4, snowflake, etc) to lists of bridge lines
+PT_CONFIG=$distdir/tor-expert-bundle/tor/pluggable_transports/pt_config.json
+
+PT_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego_ui/pluggables.hpp
+touch $PT_HEADER_PATH
+echo "#pragma once" > $PT_HEADER_PATH
+echo "const QMap<QString, std::vector<std::string>> defaultBridges {" >> $PT_HEADER_PATH
+
+function bridges_conf {
+  local bridge_type="$1"
+  echo "    {" >> $PT_HEADER_PATH
+  echo "        \"$bridge_type\"," >> $PT_HEADER_PATH
+  echo "        {" >> $PT_HEADER_PATH
+  jq -r ".bridges.\"$bridge_type\" | .[]" $PT_CONFIG | while read -r line; do
+    echo "          R\"($line)\"," >> "$PT_HEADER_PATH"
+  done
+  echo "        }" >> $PT_HEADER_PATH
+  echo "    }," >> $PT_HEADER_PATH
+}
+
+for bridge_type in $(jq -r ".bridges | keys[]" $PT_CONFIG); do
+  bridges_conf $bridge_type
+done
+echo "};" >> $PT_HEADER_PATH
+
+# 2. set the recommended bridge type
+recommended_bridge_type="\"$(jq -r .recommendedDefault $PT_CONFIG)\"";
+echo "const QString recommendedBridgeType = ${recommended_bridge_type};" >> $PT_HEADER_PATH
+
+# Generate the torrc header
+TORRC_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego/source/torrc.hpp
+echo "#pragma once" > $TORRC_HEADER_PATH
+# 1. get the number of pluggable transport bins
+PT_COUNT=$(jq '.pluggableTransports | length' $PT_CONFIG)
+echo "constexpr std::array<std::string_view, ${PT_COUNT}> clientTransportPlugins = {" >> $TORRC_HEADER_PATH
+
+# 2. write all the PT ClientTransportPlugin torrc lines
+jq -r .pluggableTransports[] $PT_CONFIG | while read -r line; do
+    echo "    R\"($line)\"," | awk '{gsub(/\$\{pt_path\}/, "pluggable_transports/"); print}' >> $TORRC_HEADER_PATH
+done
+echo "};" >> $TORRC_HEADER_PATH
+cat $TORRC_HEADER_PATH
+
+# generate src tar
+pushd $builddir
+[% c('tar', {
+        tar_src => project _ '-' _ c('version'),
+        tar_args => '-czf ' _ dest_dir _ '/src-' _ c('filename'),
+    }) %]
+popd
+
+# clang needs to be reminded where its c++ includes are
+[% IF c("var/macos") -%]
+  cppincludes=$distdir/toolchain-macos-clang/clang/include/c++/v1
+  export CPLUS_INCLUDE_PATH=$cppincludes:$CPLUS_INCLUDE_PATH
+  export PKG_CONFIG_LIBDIR=$sysrootdir/lib/pkgconfig
+[% END -%]
+
+CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
+                -DFORCE_QT5=ON
+                -DProtobuf_USE_STATIC_LIBS=ON
+                -DProtobuf_ROOT_DIR=$distdir/protobuf
+                -DProtobuf_PROTOC_EXECUTABLE=$distdir/protoc/bin/protoc
+                -DOPENSSL_USE_STATIC_LIBS=ON
+                -DOPENSSL_ROOT_DIR=$distdir/openssl
+                -DUSE_SUBMODULE_FMT=ON
+                -DSTATIC_QT_ROOT_DIR=$distdir/qt
+                -DSTATIC_QT=ON
+                -DTEGO_STATIC_BUILD=ON"
+
+# Set toolchain file
+[% IF c("var/linux-i686") -%]
+    CMAKE_FLAGS="-DCMAKE_TOOLCHAIN_FILE=../src/cmake/toolchains/i386-linux-gnu.cmake $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/windows") -%]
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Windows $CMAKE_FLAGS"
+    [% IF c("var/windows-i686") -%]
+        CMAKE_FLAGS="-DCMAKE_SYSTEM_PROCESSOR=i386 $CMAKE_FLAGS"
+    [% END -%]
+    [% IF c("var/windows-x86_64") -%]
+        CMAKE_FLAGS="-DCMAKE_SYSTEM_PROCESSOR=x86_64 $CMAKE_FLAGS"
+    [% END -%]
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_AR=$distdir/toolchain-windows-clang/bin/[% c('var/compiler_target') -%]-ar $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_CXX_COMPILER_AR=$distdir/toolchain-windows-clang/bin/[% c('var/compiler_target') -%]-ar $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_RANLIB=$distdir/toolchain-windows-clang/bin/[% c('var/compiler_target') -%]-ranlib $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_CXX_COMPILER_RANLIB=$distdir/toolchain-windows-clang/bin/[% c('var/compiler_target') -%]-ranlib $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_CXX_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_ASM_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_PREFIX_PATH=$distdir/toolchain-windows-clang/[% c('var/compiler_target') -%]/lib/ $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/macos") -%]
+    # Set AR and RANLIB on macos
+    CMAKE_FLAGS="-DCMAKE_AR=$OSX_AR -DCMAKE_RANLIB=$OSX_RANLIB $CMAKE_FLAGS"
+
+    # CMake doesn't honour the CMAKE_AR and CMAKE_RANLIB vars when checking for
+    # IPO, see https://github.com/emscripten-core/emscripten/issues/11143.
+    # Workaround this by CMAKE_(C|CXX)_COMPILER_(AR|RANLIB)
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_AR=$OSX_AR -DCMAKE_CXX_COMPILER_AR=$OSX_AR $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_RANLIB=$OSX_RANLIB -DCMAKE_CXX_COMPILER_RANLIB=$OSX_RANLIB $CMAKE_FLAGS"
+
+    # Setting CXX in toolchain-macos-clang breaks protoc's build, as it ends up
+    # creating an unusable binary. Instead, toolchain-macos-clang set's it in
+    # OSX_CXX, so as to not conflict with protoc
+    export CXX="$OSX_CXX"
+
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Darwin $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_PROCESSOR=[% c('var/arch') %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_C_COMPILER_TARGET=[% c('var/arch') %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_CXX_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_ASM_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_PREFIX_PATH=$distdir/toolchain-macos-clang/clang/lib/ $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_FRAMEWORK_PATH=$distdir/toolchain-macos-clang/MacOSX11.0.sdk/System/Library/Frameworks $CMAKE_FLAGS"
+[% END -%]
+
+mkdir build && cd build
+RICOCHET_REFRESH_VERSION=[% c('version') %] cmake -S ../src $CMAKE_FLAGS
+
+cmake --build . -j[% c('num_procs') %]
+
+# macos target builds an entire .app directory
+[% IF c("var/macos") %]
+bindir="$projdir/ricochet-refresh.app/Contents/MacOS"
+[% ELSE %]
+bindir=$projdir
+[% END %]
+
+# build outputs
+cp -a $builddir/[% project %]-[% c('version') %]/build/ricochet-refresh/ricochet-refresh/* $projdir/.
+
+# pluggable transports
+pushd $distdir/tor-expert-bundle/tor/pluggable_transports
+    mkdir $bindir/pluggable_transports
+    for i in $(find . -type f -executable); do
+        cp $i $bindir/pluggable_transports/.
+    done
+popd
+
+# tor
+cp $distdir/tor/bin/tor[% IF c("var/windows") %].exe[% END %] $bindir/.
+
+# license files
+cp $builddir/[% project %]-[% c('version') %]/LICENSE $distdir/ricochet-refresh/.
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
