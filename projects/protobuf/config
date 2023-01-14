@@ -1,0 +1,14 @@
+# vim filetype:yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% pc("protobuf-source", "version") %]'
+container:
+  use_container: 1
+
+input_files:
+  - project: container-image
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - name: cmake
+    project: cmake
+  - name: protobuf-source
+    project: protobuf-source

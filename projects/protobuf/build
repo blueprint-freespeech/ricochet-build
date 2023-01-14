@@ -1,0 +1,49 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
+
+tar -C $builddir -xf $rootdir/[% c("input_files_by_name/protobuf-source") %]
+cd $builddir/protobuf-source-[% c('version') %]
+
+
+# Build with CMake, as it exposes the CMake modules for tego
+mkdir build && cd build
+
+# On windows, protobuf doesn't deal well with cross compiling unless the
+# compilers are specified through envvars
+CMAKE_FLAGS='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX='$projdir' -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_SHARED_LIBRARIES=OFF -Dprotobuf_BUILD_TESTS=OFF'
+
+[% IF c("var/windows-i686") -%]
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=i386 $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/windows-x86_64") -%]
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/macos") -%]
+    # CMake needs to be nudged into using the correct AR and RANLIB
+    # TODO: We should probably define AR,RANLIB,CXX... etc for all compilers, that way we don't have to handle platforms individually, and can instead just do -DCMAKE_AR=$AR and etc for all platforms
+    CMAKE_FLAGS="-DCMAKE_AR=$OSX_AR -DCMAKE_RANLIB=$OSX_RANLIB $CMAKE_FLAGS"
+
+    export CXX=$OSX_CXX
+[% END -%]
+
+CMAKE_OPTS=( $CMAKE_FLAGS )
+# setting LDFLAGS in the env prior to configuring sets LDFLAGS for all target
+# types
+cmake -E env LDFLAGS="[% c("var/LDFLAGS") %]" \
+    cmake -S .. ${CMAKE_OPTS[@]} \
+        -DCMAKE_C_FLAGS="$CFLAGS" \
+        -DCMAKE_CXX_FLAGS="$CXXFLAGS"
+
+cmake --build . -j[% c('num_procs') %]
+cmake --build . --target install
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
