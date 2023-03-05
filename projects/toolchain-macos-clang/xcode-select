@@ -1,0 +1,4 @@
+#!/bin/bash
+if [ "$1" == "--print-path" ]; then
+    echo "/var/tmp/$(whoami)/dist/toolchain-macos-clang/Developer"
+fi

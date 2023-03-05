@@ -1,0 +1,50 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: 11.0
+container:
+  use_container: 1
+
+var:
+  setup: |
+    mkdir -p $distdir
+    tar -C $distdir -xf $rootdir/[% c("build_toolchain_tarfile") %]
+    export sysrootdir=$distdir/[% project %]/MacOSX[% c("version") %].sdk/
+    export clangdir=$distdir/[% project %]/clang
+    export cctoolsdir=$distdir/[% project %]/cctools/bin
+    export xcodetoolsdir=$distdir/[% project %]/xcode_tools
+    export PATH="$clangdir/bin:$cctoolsdir:$xcodetoolsdir:$PATH"
+    export LD_LIBRARY_PATH=$distdir/[% project %]/clang/lib
+    export CC="$clangdir/bin/clang"
+    export CFLAGS="[% c('var/CFLAGS') %]"
+    export CXXFLAGS="[% c('var/CFLAGS') %]"
+    export LDFLAGS="[% c('var/LDFLAGS') %]"
+    export OSX_CXX="$clangdir/bin/clang++"
+    export OSX_AR="$cctoolsdir/[% c('var/arch') %]-apple-darwin-ar"
+    export OSX_RANLIB="$cctoolsdir/[% c('var/arch') %]-apple-darwin-ranlib"
+    export MACOSX_DEPLOYMENT_TARGET=[% c('var/macosx_deployment_target') %]
+
+targets:
+  macos:
+    var:
+      CFLAGS: "-target [% c('var/compiler_target') %] -B $cctoolsdir -isysroot $sysrootdir [% IF c('var/macos-aarch64') %]-mcpu=apple-m1[% END %]"
+      LDFLAGS: "-Wl,-syslibroot,$sysrootdir -Wl,-dead_strip -Wl,-pie"
+
+input_files:
+  - project: container-image
+  - name: clang
+    project: clang
+  - name: cctools
+    project: cctools
+  - name: cmake
+    project: cmake
+  # Instructions on how to create the SDK tarball can be found at:
+  # https://firefox-source-docs.mozilla.org/widget/cocoa/sdks.html
+  - name: SDK
+    URL: 'https://people.torproject.org/~boklm/mirrors/sources/MacOSX[% c("version") %].sdk.tar.xz'
+    sha256sum: 8cbe3a79e67b0690f931703ce5c282ac0c7265b451a36ec21cdfa9773f93173c
+  - name: llvm-project-source
+    project: llvm-project-source
+  - filename: compiler-rt-cross-compile.patch
+  - filename: compiler-rt-no-codesign.patch
+  - filename: xcode-select
+  - filename: xcrun

@@ -1,0 +1,145 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+builddir=$builddir
+
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+tar -C $projdir -xf [% c('input_files_by_name/clang') %]
+tar -C $projdir -xf [% c('input_files_by_name/SDK') %]
+tar -C $projdir -xf [% c('input_files_by_name/cctools') %]
+tar -C $builddir -xf [% c('input_files_by_name/llvm-project-source') %]
+
+# copy over xcode mocks
+mkdir $projdir/xcode_tools
+cp $rootdir/xcrun $projdir/xcode_tools/xcrun
+cp $rootdir/xcode-select $projdir/xcode_tools/xcode-select
+
+arch=[% c("var/macos_arch") %]
+clangdir=$projdir/clang/bin
+cctoolsdir=$projdir/cctools/bin
+sysrootdir=$projdir/MacOSX[% c("version") %].sdk/
+target=[% c("var/compiler_target") %]
+# We still need to put the cctoolsdir on the path. That's because of `lipo`. See
+# the respective comment in the cctools build script.
+export PATH="$distdir/cmake/bin:$cctoolsdir:$PATH"
+export MACOSX_DEPLOYMENT_TARGET=[% c("var/macosx_deployment_target") %]
+
+[% IF c("var/macos-aarch64") -%]
+  # wrapper taken from:
+  # tor-browser.git/taskcluster/scripts/misc/build-llvm-common.sh
+  clangwrappersdir=$projdir/clang/wrappers
+  mkdir $clangwrappersdir
+  compiler_wrapper() {
+    echo exec $clangdir/$1 -mcpu=apple-m1 \"\$@\" > $clangwrappersdir/$1
+    chmod +x $clangwrappersdir/$1
+  }
+  compiler_wrapper clang
+  compiler_wrapper clang++
+  clang=$clangwrappersdir/clang
+[% ELSE -%]
+  clang=$clangdir/clang
+[% END -%]
+
+cd $builddir/llvm-project-source
+patch -p1 < $rootdir/compiler-rt-cross-compile.patch
+patch -p1 < $rootdir/compiler-rt-no-codesign.patch
+cd ..
+
+mkdir build_compiler_rt
+cd build_compiler_rt
+
+# And we build compiler-rt by following taskcluster/scripts/misc/build-compiler-rt.sh.
+cmake -G "Unix Makefiles" \
+      -DCMAKE_C_COMPILER=$clang \
+      -DCMAKE_CXX_COMPILER=$clang++ \
+      -DCMAKE_C_COMPILER_TARGET=$target \
+      -DCMAKE_CXX_COMPILER_TARGET=$target \
+      -DCMAKE_ASM_COMPILER_TARGET=$target \
+      -DCMAKE_AR=$clangdir/llvm-ar \
+      -DCMAKE_RANLIB=$clangdir/llvm-ranlib \
+      -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+      -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DLLVM_DEFAULT_TARGET_TRIPLE=$target \
+      -DLLVM_ENABLE_ASSERTIONS=OFF \
+      -DCMAKE_INSTALL_PREFIX=$projdir/clang/lib/clang/[% pc("clang", "version") %]/ \
+      -DLLVM_CONFIG_PATH=$clangdir/llvm-config \
+      -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
+      -DCOMPILER_RT_ENABLE_IOS=OFF \
+      -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
+      -DCOMPILER_RT_BUILD_ORC=OFF \
+      -DCOMPILER_RT_ENABLE_TVOS=OFF \
+      -DCOMPILER_RT_ENABLE_WATCHOS=OFF \
+      -DCOMPILER_RT_BUILD_XRAY=OFF \
+      -DCMAKE_LINKER=$clangdir/ld64.lld \
+      -DCMAKE_LIPO=$clangdir/llvm-lipo \
+      -DCMAKE_SYSTEM_NAME=Darwin \
+      -DCMAKE_SYSTEM_VERSION=$MACOSX_DEPLOYMENT_TARGET \
+      -DDARWIN_macosx_OVERRIDE_SDK_VERSION=$MACOSX_DEPLOYMENT_TARGET \
+      -DCMAKE_OSX_ARCHITECTURES=$arch \
+      -DDARWIN_osx_ARCHS=$arch \
+      -DDARWIN_osx_SYSROOT=$sysrootdir \
+      -DDARWIN_osx_BUILTIN_ARCHS=$arch \
+      -DCMAKE_OSX_SYSROOT=$sysrootdir \
+      $builddir/llvm-project-source/compiler-rt
+
+make -j[% c("num_procs") %]
+make install
+
+cd $builddir/llvm-project-source
+
+cmake -G "Unix Makefiles" \
+      -S runtimes -B build \
+      -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" \
+      -DCMAKE_C_COMPILER=$clang \
+      -DCMAKE_CXX_COMPILER=$clang++ \
+      -DCMAKE_C_COMPILER_TARGET=$target \
+      -DCMAKE_CXX_COMPILER_TARGET=$target \
+      -DCMAKE_ASM_COMPILER_TARGET=$target \
+      -DCMAKE_AR=$clangdir/llvm-ar \
+      -DCMAKE_RANLIB=$clangdir/llvm-ranlib \
+      -DCMAKE_C_FLAGS="-target $target -B $cctoolsdir -isysroot $sysrootdir -I$sysrootdir/usr/include -iframework $sysrootdir/System/Library/Frameworks" \
+      -DCMAKE_CXX_FLAGS="-stdlib=libc++ -target $target -B $cctoolsdir -isysroot $sysrootdir -I$sysrootdir/usr/include -iframework $sysrootdir/System/Library/Frameworks" \
+      -DCMAKE_ASM_FLAGS="-target $target -B $cctoolsdir -isysroot $sysrootdir -I$sysrootdir/usr/include -iframework $sysrootdir/System/Library/Frameworks" \
+      -DCMAKE_EXE_LINKER_FLAGS="-Wl,-syslibroot,$sysrootdir -Wl,-dead_strip -Wl,-pie" \
+      -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-syslibroot,$sysrootdir -Wl,-dead_strip -Wl,-pie" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DLLVM_DEFAULT_TARGET_TRIPLE=$target \
+      -DLLVM_ENABLE_ASSERTIONS=OFF \
+      -DCMAKE_INSTALL_PREFIX=$projdir/clang \
+      -DCMAKE_LINKER=$cctoolsdir/$target-ld \
+      -DCMAKE_LIPO=$clangdir/llvm-lipo \
+      -DCMAKE_SYSTEM_NAME=Darwin \
+      -DCMAKE_SYSTEM_VERSION=$MACOSX_DEPLOYMENT_TARGET \
+      -DDARWIN_macosx_OVERRIDE_SDK_VERSION=$MACOSX_DEPLOYMENT_TARGET \
+      -DCMAKE_OSX_ARCHITECTURES=$arch \
+      -DDARWIN_osx_ARCHS=$arch \
+      -DDARWIN_osx_BUILTIN_ARCHS=$arch \
+      -DCMAKE_OSX_SYSROOT=$sysrootdir \
+      -DCMAKE_FIND_ROOT_PATH=$sysrootdir \
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+
+cd build
+make -j[% c("num_procs") %]
+make install
+
+cd $projdir/cctools/bin
+ln -s ../../clang/bin/clang $target-clang
+ln -s ../../clang/bin/clang++ $target-clang++
+
+# setup some paths expected by Xcode tools
+mkdir -p $projdir/Developer/SDKs
+cd $projdir/Developer/SDKs
+ln -s ../../MacOSX[% c("version") %].sdk MacOSX[% c("version") %].sdk
+
+mkdir -p $projdir/Developer/Toolchains/XcodeDefault.xctoolchain
+cd $projdir/Developer/Toolchains/XcodeDefault.xctoolchain
+ln -s ../../../clang usr
+
+cd $distdir
+[% c('tar', {
+   tar_src => [ project ],
+   tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+}) %]

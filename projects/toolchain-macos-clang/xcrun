@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$1" == "--sdk" ] && [ "$2" == "macosx" ]; then
+    if [ "$3" == "-show-sdk-version" ] || [ "$3" == "--show-sdk-version" ]; then
+        echo "11.0"
+    fi
+    if [ "$3" == "--show-sdk-path" ]; then
+        echo "/var/tmp/$(whoami)/dist/toolchain-macos-clang/Developer/SDKs/MacOSX11.0.sdk"
+    fi
+fi
+
