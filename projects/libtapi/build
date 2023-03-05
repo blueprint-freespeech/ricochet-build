@@ -1,0 +1,44 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $distdir -xf [% c('input_files_by_name/clang') %]
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
+
+mkdir build
+cd build
+
+export CLANG_DIR=$distdir/clang
+export CC=$CLANG_DIR/bin/clang
+export CXX=$CLANG_DIR/bin/clang++
+# We also need this LD_LIBRARY_PATH at build time, since tapi builds bits of
+# clang build tools, and then executes those tools.
+export LD_LIBRARY_PATH=$CLANG_DIR/lib
+
+# Values taken from build.sh
+TAPI_REPOSITORY=[% c("var/tapi_repository") %]
+TAPI_VERSION=[% c("var/tapi_version") %]
+INCLUDE_FIX="-I $PWD/../src/llvm/projects/clang/include -I $PWD/projects/clang/include"
+
+cmake $PWD/../src/llvm \
+      -G "Unix Makefiles" \
+      -DCMAKE_CXX_FLAGS="$INCLUDE_FIX" \
+      -DLLVM_INCLUDE_TESTS=OFF \
+      -DCMAKE_BUILD_TYPE=RELEASE \
+      -DCMAKE_INSTALL_PREFIX=$projdir \
+      -DLLVM_TARGETS_TO_BUILD="X86;ARM;AArch64" \
+      -DTAPI_REPOSITORY_STRING=$TAPI_REPOSITORY \
+      -DTAPI_FULL_VERSION=$TAPI_VERSION \
+      -DPYTHON_EXECUTABLE=/usr/bin/python3
+
+make -j[% c("num_procs") %] clangBasic
+make -j[% c("num_procs") %] libtapi install-libtapi install-tapi-headers
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
