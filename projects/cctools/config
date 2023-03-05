@@ -1,0 +1,16 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("abbrev") %]'
+# This can be found in
+# taskcluster/ci/fetch/toolchains.yml
+git_hash: 30518813875aed656aa7f18b6d485feee25f8f87
+git_url: https://github.com/tpoechtrager/cctools-port
+container:
+  use_container: 1
+
+input_files:
+  - project: container-image
+  - name: clang
+    project: clang
+  - name: libtapi
+    project: libtapi

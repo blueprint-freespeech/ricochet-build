@@ -1,0 +1,44 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $distdir -xf [% c('input_files_by_name/clang') %]
+tar -C $distdir -xf [% c('input_files_by_name/libtapi') %]
+mv $distdir/libtapi/* $projdir
+export CLANG_DIR=$distdir/clang
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]/cctools
+
+export CC=$CLANG_DIR/bin/clang
+export CXX=$CLANG_DIR/bin/clang++
+export LDFLAGS="-lpthread -Wl,-rpath-link,$CLANG_DIR/lib -Wl,-rpath,\\\$\$ORIGIN/../lib,-rpath,\\\$\$ORIGIN/../../clang/lib"
+# Force re-libtoolization to overwrite files with the new libtool bits.
+perl -pi -e 's/(LIBTOOLIZE -c)/\1 -f/' autogen.sh
+./autogen.sh
+./configure \
+    --prefix=$projdir \
+    --target=x86_64-apple-darwin \
+    --with-llvm-config=$CLANG_DIR/bin/llvm-config \
+    --enable-lto-support \
+    --enable-tapi-support \
+    --with-libtapi=$projdir
+
+make -j[% c("num_procs") %] install
+strip $projdir/bin/*
+# cctools doesn't include dsymutil but clang will need to find it.
+cp $CLANG_DIR/bin/dsymutil $projdir/bin/x86_64-apple-darwin-dsymutil
+# various build scripts based on cmake want to find `lipo` without a prefix
+cp $projdir/bin/x86_64-apple-darwin-lipo $projdir/bin/lipo
+
+# We build cctools for x86_64 and add aarch64 symlinks, following what
+# Mozilla is doing in taskcluster/scripts/misc/build-cctools-port.sh
+(cd $projdir/bin/; for i in x86_64-apple-darwin-*; do
+    ln $i aarch64${i#x86_64}
+done)
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
+
