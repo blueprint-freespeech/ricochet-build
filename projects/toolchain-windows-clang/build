@@ -1,0 +1,227 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+builddir=$builddir
+
+cd $distdir
+tar -xf $rootdir/[% c('input_files_by_name/clang') %]
+mv clang/* toolchain-windows-clang/
+tar -xf $rootdir/[% c('input_files_by_name/cmake') %]
+mkdir -p $builddir
+
+cd $builddir
+tar -xf $rootdir/[% c('input_files_by_name/llvm-project-source') %]
+# extract mingw sources
+tar -xf $rootdir/[% c('input_files_by_name/mingw-w64-source') %]
+mv mingw-w64-source-[% c('var/versions/mingw-w64') %] mingw-w64
+
+
+# Adding the wrappers and symlinks we need
+cd $projdir/bin
+compiler_flags="--sysroot \$DIR/../[% c("var/arch") %]-w64-mingw32 -rtlib=compiler-rt -stdlib=libc++ -fuse-ld=lld -fuse-cxa-atexit -Qunused-arguments"
+
+cat <<EOF >[% c("var/arch") %]-w64-mingw32-clang
+#!/bin/sh
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+\$DIR/clang -target [% c("var/arch") %]-w64-mingw32 $compiler_flags "\$@"
+EOF
+chmod +x [% c("var/arch") %]-w64-mingw32-clang
+
+cat <<EOF >[% c("var/arch") %]-w64-mingw32-clang++
+#!/bin/sh
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+\$DIR/clang -target [% c("var/arch") %]-w64-mingw32 --driver-mode=g++ $compiler_flags "\$@"
+EOF
+chmod +x [% c("var/arch") %]-w64-mingw32-clang++
+
+ln -s [% c("var/arch") %]-w64-mingw32-clang [% c("var/arch") %]-w64-mingw32-cc
+ln -s [% c("var/arch") %]-w64-mingw32-clang++ [% c("var/arch") %]-w64-mingw32-cxx
+ln -s llvm-ar [% c("var/arch") %]-w64-mingw32-ar
+ln -s llvm-nm [% c("var/arch") %]-w64-mingw32-nm
+ln -s llvm-strip [% c("var/arch") %]-w64-mingw32-strip
+ln -s llvm-ranlib [% c("var/arch") %]-w64-mingw32-ranlib
+ln -s llvm-readobj [% c("var/arch") %]-w64-mingw32-readobj
+ln -s llvm-objcopy [% c("var/arch") %]-w64-mingw32-objcopy
+ln -s llvm-windres [% c("var/arch") %]-w64-mingw32-windres
+
+# Building mingw-w64
+export PATH="$projdir/bin:$distdir/cmake/bin:$PATH"
+CC="[% c("var/arch") %]-w64-mingw32-clang"
+CXX="[% c("var/arch") %]-w64-mingw32-clang++"
+# This is the default value of _WIN32_WINNT. Gecko configure script explicitly
+# sets this, so this is not used to build Gecko itself. We default to 0x601,
+# which is Windows 7.
+default_win32_winnt=0x601
+[% IF c("var/windows-i686") %]
+  crt_flags="--enable-lib32 --disable-lib64"
+  compiler_rt_machine="i386"
+[% ELSE -%]
+  crt_flags="--disable-lib32 --enable-lib64"
+  compiler_rt_machine="x86_64"
+[% END -%]
+
+cd $builddir/mingw-w64
+patch -p1 < $rootdir/mingw-winrt.patch
+patch -p1 < $rootdir/mingw-dwrite_3.patch
+patch -p1 < $rootdir/mingw-unknown.patch
+patch -p1 < $rootdir/mingw-uiautomationcoreapi.patch
+patch -p1 < $rootdir/mingw-windows_foundation.patch
+
+cd mingw-w64-headers
+mkdir build && cd build
+../configure --host=[% c("var/arch") %]-w64-mingw32 \
+             --enable-sdk=all \
+             --enable-idl \
+             --with-default-msvcrt=ucrt \
+             --with-default-win32-winnt=$default_win32_winnt \
+             --prefix=$projdir/[% c("var/arch") %]-w64-mingw32
+make -j[% c("num_procs") %] install
+
+cd $builddir/mingw-w64/mingw-w64-crt
+mkdir build && cd build
+../configure --host=[% c("var/arch") %]-w64-mingw32 \
+             $crt_flags \
+             --with-default-msvcrt=ucrt \
+             CC="$CC" \
+             AR=llvm-ar \
+             RANLIB=llvm-ranlib \
+             DLLTOOL=llvm-dlltool \
+             --prefix=$projdir/[% c("var/arch") %]-w64-mingw32
+make -j[% c("num_procs") %]
+make -j[% c("num_procs") %] install
+
+# widl
+cd $builddir/mingw-w64/mingw-w64-tools/widl
+mkdir build && cd build
+../configure --target=[% c("var/arch") %]-w64-mingw32 --prefix=$projdir
+make -j[% c("num_procs") %]
+make -j[% c("num_procs") %] install
+
+
+# compiler-rt
+cd $builddir/llvm-project-source/compiler-rt
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_C_COMPILER=$CC \
+      -DCMAKE_SYSTEM_NAME=Windows \
+      -DCMAKE_AR=$projdir/bin/llvm-ar \
+      -DCMAKE_RANLIB=$projdir/bin/llvm-ranlib \
+      -DCMAKE_C_COMPILER_WORKS=1 \
+      -DCMAKE_C_COMPILER_TARGET=$compiler_rt_machine-windows-gnu \
+      -DCOMPILER_RT_DEFAULT_TARGET_ONLY=TRUE \
+      $builddir/llvm-project-source/compiler-rt/lib/builtins
+make -j[% c("num_procs") %]
+rtdir=$projdir/lib/clang/[% pc("llvm-project-source", "version") %]/lib/windows
+mkdir -p $rtdir
+cp lib/windows/libclang_rt.builtins-$compiler_rt_machine.a $rtdir/
+
+# libc++, libc++abi and libunwind now are compiled together
+# See https://libcxx.llvm.org/BuildingLibcxx.html
+cd $builddir/llvm-project-source
+mkdir build
+cmake -G "Unix Makefiles" -S runtimes -B build \
+      -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=$projdir/[% c("var/arch") %]-w64-mingw32 \
+      -DCMAKE_C_COMPILER=$CC \
+      -DCMAKE_CXX_COMPILER=$CXX \
+      -DCMAKE_CROSSCOMPILING=TRUE \
+      -DCMAKE_SYSROOT=$projdir/[% c("var/arch") %]-w64-mingw32 \
+      -DCMAKE_SYSTEM_NAME=Windows \
+      -DCMAKE_C_COMPILER_WORKS=TRUE \
+      -DCMAKE_CXX_COMPILER_WORKS=TRUE \
+      -DLLVM_COMPILER_CHECKED=True \
+      -DCMAKE_AR=$projdir/bin/llvm-ar \
+      -DCMAKE_RANLIB=$projdir/bin/llvm-ranlib \
+      -DLLVM_NO_OLD_LIBSTDCXX=TRUE \
+      -DCXX_SUPPORTS_CXX11=TRUE \
+      -DCXX_SUPPORTS_CXX_STD=True \
+      -DCMAKE_CXX_FLAGS="-Wno-dll-attribute-on-redeclaration -DPSAPI_VERSION=2 -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -D_LIBCPP_HAS_THREAD_API_WIN32 -D_LIBCXXABI_DISABLE_VISIBILITY_ANNOTATIONS" \
+      -DCMAKE_C_FLAGS="-Wno-dll-attribute-on-redeclaration" \
+      -DLIBUNWIND_USE_COMPILER_RT=TRUE \
+      -DLIBUNWIND_ENABLE_THREADS=TRUE \
+      -DLIBUNWIND_ENABLE_SHARED=FALSE \
+      -DLIBUNWIND_ENABLE_CROSS_UNWINDING=FALSE \
+      -DLIBCXXABI_USE_COMPILER_RT=ON \
+      -DLIBCXXABI_ENABLE_EXCEPTIONS=ON \
+      -DLIBCXXABI_ENABLE_THREADS=ON \
+      -DCMAKE_CXX_COMPILER_TARGET=[% c("var/arch") %]-w64-mingw32 \
+      -DLIBCXXABI_ENABLE_SHARED=OFF \
+      -DLIBCXXABI_LIBCXX_INCLUDES=$builddir/llvm-project-source/libcxx/include \
+      -DLIBCXX_USE_COMPILER_RT=ON \
+      -DLIBCXX_INSTALL_HEADERS=ON \
+      -DLIBCXX_ENABLE_EXCEPTIONS=ON \
+      -DLIBCXX_ENABLE_THREADS=ON \
+      -DLIBCXX_HAS_WIN32_THREAD_API=ON \
+      -DLIBCXX_ENABLE_MONOTONIC_CLOCK=ON \
+      -DLIBCXX_ENABLE_SHARED=OFF \
+      -DLIBCXX_SUPPORTS_STD_EQ_CXX11_FLAG=TRUE \
+      -DLIBCXX_HAVE_CXX_ATOMICS_WITHOUT_LIB=TRUE \
+      -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF \
+      -DLIBCXX_ENABLE_FILESYSTEM=ON \
+      -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=TRUE \
+      -DLIBCXX_CXX_ABI=libcxxabi \
+      -DLIBCXX_CXX_ABI_INCLUDE_PATHS=$builddir/llvm-project-source/libcxxabi/include \
+      -DLIBCXX_CXX_ABI_LIBRARY_PATH=$builddir/llvm-project-source/libcxxabi/build/lib \
+
+cd build
+make -j[% c("num_procs") %] VERBOSE=1
+make install
+
+# libc++.a depends on libunwind.a. While the linker will automatically link to
+# libc++.a in C++ mode, it won't pick libunwind.a, requiring the caller to
+# explicitly pass -lunwind. To work around that, we merge libunwind.a into
+# libc++.a.
+merge_libs() {
+  cat <<EOF |llvm-ar -M
+CREATE tmp.a
+ADDLIB $1
+ADDLIB $2
+SAVE
+END
+EOF
+  llvm-ranlib tmp.a
+  mv tmp.a $1
+}
+
+merge_libs $projdir/[% c("var/arch") %]-w64-mingw32/lib/libc++.a $projdir/[% c("var/arch") %]-w64-mingw32/lib/libunwind.a
+
+# libssp
+# See build-libssp.sh in llvm-mingw
+cd $rootdir
+tar -xf [% c('input_files_by_name/gcc-source') %]
+cd gcc-*/libssp
+cp $rootdir/libssp-Makefile Makefile
+
+# gcc/libssp's configure script runs checks for flags that clang doesn't
+# implement. We actually just need to set a few HAVE defines and compile
+# the .c sources.
+cp config.h.in config.h
+for i in HAVE_FCNTL_H HAVE_INTTYPES_H HAVE_LIMITS_H HAVE_MALLOC_H \
+    HAVE_MEMMOVE HAVE_MEMORY_H HAVE_MEMPCPY HAVE_STDINT_H HAVE_STDIO_H \
+    HAVE_STDLIB_H HAVE_STRINGS_H HAVE_STRING_H HAVE_STRNCAT HAVE_STRNCPY \
+    HAVE_SYS_STAT_H HAVE_SYS_TYPES_H HAVE_UNISTD_H HAVE_USABLE_VSNPRINTF \
+    HAVE_HIDDEN_VISIBILITY; do
+    cat config.h | sed 's/^#undef '$i'$/#define '$i' 1/' > tmp
+    mv tmp config.h
+done
+cat ssp/ssp.h.in | sed 's/@ssp_have_usable_vsnprintf@/define/' > ssp/ssp.h
+
+arch='[% c("var/arch") %]'
+mkdir -p build-$arch
+pushd build-$arch
+  make -f ../Makefile -j[% c("num_procs") %] CROSS=$arch-w64-mingw32-
+  mkdir -p "$projdir/$arch-w64-mingw32/bin"
+  cp libssp.a "$projdir/$arch-w64-mingw32/lib"
+  cp libssp_nonshared.a "$projdir/$arch-w64-mingw32/lib"
+  # We are interested only in static libraries, but if needed the dynamic ones
+  # can be used, too, just by uncommenting the following two lines.
+  # cp libssp.dll.a "$projdir/$arch-w64-mingw32/lib"
+  # cp libssp-0.dll "$projdir/$arch-w64-mingw32/bin"
+popd
+
+# Package
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]

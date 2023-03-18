@@ -1,0 +1,13 @@
+diff --git a/mingw-w64-headers/include/uiautomationcoreapi.h b/mingw-w64-headers/include/uiautomationcoreapi.h
+index 0c0bcb064..53e62d11b 100644
+--- a/mingw-w64-headers/include/uiautomationcoreapi.h
++++ b/mingw-w64-headers/include/uiautomationcoreapi.h
+@@ -66,7 +66,7 @@ HRESULT WINAPI UiaGetReservedNotSupportedValue(IUnknown **value);
+ int WINAPI UiaLookupId(enum AutomationIdentifierType type, const GUID *guid);
+ WINBOOL WINAPI UiaPatternRelease(HUIAPATTERNOBJECT hobj);
+ HRESULT WINAPI UiaRaiseAutomationEvent(IRawElementProviderSimple *provider, EVENTID id);
+-HRESULT WINAPI UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple *provider, PROPERTYID id, VARIANT old, VARIANT new);
++HRESULT WINAPI UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple *provider, PROPERTYID id, VARIANT old, VARIANT new_);
+ void WINAPI UiaRegisterProviderCallback(UiaProviderCallback *pCallback);
+ LRESULT WINAPI UiaReturnRawElementProvider(HWND hwnd, WPARAM wParam, LPARAM lParam, IRawElementProviderSimple *elprov);
+ WINBOOL WINAPI UiaTextRangeRelease(HUIATEXTRANGE hobj);

@@ -1,0 +1,34 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/mingw-w64") %]'
+container:
+  use_container: 1
+
+var:
+  setup: |
+    mkdir -p $distdir
+    tar -C $distdir -xf $rootdir/[% c("build_toolchain_tarfile") %]
+    export PATH="$distdir/toolchain-windows-clang/bin:$PATH"
+    export CC=$distdir/toolchain-windows-clang/bin/[% c("var/arch") %]-w64-mingw32-clang
+    export CXX=$distdir/toolchain-windows-clang/bin/[% c("var/arch") %]-w64-mingw32-clang++
+  deps:
+    - python3-distutils
+
+input_files:
+  - project: container-image
+  - name: clang
+    project: clang
+  - name: cmake
+    project: cmake
+  - name: gcc-source
+    project: gcc-source
+  - name: llvm-project-source
+    project: llvm-project-source
+  - name: mingw-w64-source
+    project: mingw-w64-source
+  - filename: mingw-winrt.patch
+  - filename: mingw-dwrite_3.patch
+  - filename: mingw-unknown.patch
+  - filename: mingw-uiautomationcoreapi.patch
+  - filename: mingw-windows_foundation.patch
+  - filename: libssp-Makefile

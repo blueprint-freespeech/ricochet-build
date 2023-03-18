@@ -1,0 +1,14 @@
+diff --git a/mingw-w64-headers/include/windows.foundation.h b/mingw-w64-headers/include/windows.foundation.h
+index 97e028b89..604329f08 100644
+--- a/mingw-w64-headers/include/windows.foundation.h
++++ b/mingw-w64-headers/include/windows.foundation.h
+@@ -87,7 +87,8 @@ extern "C" {
+ namespace ABI {
+     namespace Windows {
+         namespace Foundation {
+-            typedef enum PropertyType PropertyType;
++            // ISO C++ forbids forward references to 'enum' types
++            // typedef enum PropertyType PropertyType;
+         }
+     }
+ }
