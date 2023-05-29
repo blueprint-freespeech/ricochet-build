@@ -7,3 +7,12 @@ tag_gpg_id: 1
 gpg_keyring: mingw-w64.gpg
 container:
   use_container: 0
+
+input_files:
+  - filename: mingw-dwrite_3.patch
+  - filename: mingw-unknown.patch
+  - filename: mingw-enum.patch
+  - filename: mingw-widl.patch
+  - filename: mingw-dispatchqueue.patch
+  - filename: mingw-ts_sd.patch
+  - filename: mingw-composition.patch

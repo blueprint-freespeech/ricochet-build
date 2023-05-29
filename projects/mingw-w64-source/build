@@ -1,4 +1,21 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 
-mv [% project %]-[% c('version') %].tar.gz [% dest_dir %]/mingw-w64-[% c('version') %].tar.gz
+tar xf [% project %]-[% c("version") %].tar.gz
+mv [% project %]-[% c("version") %] [% project %]
+
+pushd [% project %]
+  # Apply the same patches as Firefox
+  patch -p1 < "$rootdir/mingw-dwrite_3.patch"
+  patch -p1 < "$rootdir/mingw-unknown.patch"
+  patch -p1 < "$rootdir/mingw-enum.patch"
+  patch -p1 < "$rootdir/mingw-widl.patch"
+  patch -p1 < "$rootdir/mingw-dispatchqueue.patch"
+  patch -p1 < "$rootdir/mingw-ts_sd.patch"
+  patch -p1 < "$rootdir/mingw-composition.patch"
+popd
+
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

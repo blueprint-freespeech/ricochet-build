@@ -14,6 +14,16 @@ var:
   deps:
     - python3-distutils
 
+targets:
+  windows-i686:
+    var:
+      crt-flags: "--enable-lib32 --disable-lib64"
+      compiler-rt-machine: "i386"
+  windows-x86_64:
+    var:
+      crt-flags: "--disable-lib32 --enable-lib64"
+      compiler-rt-machine: "x86_64"
+
 input_files:
   - project: container-image
   - name: clang
@@ -26,9 +36,3 @@ input_files:
     project: llvm-project-source
   - name: mingw-w64-source
     project: mingw-w64-source
-  - filename: mingw-winrt.patch
-  - filename: mingw-dwrite_3.patch
-  - filename: mingw-unknown.patch
-  - filename: mingw-uiautomationcoreapi.patch
-  - filename: mingw-windows_foundation.patch
-  - filename: libssp-Makefile
