@@ -1,6 +1,6 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
-version: 11.0
+version: 13.3
 container:
   use_container: 1
 
@@ -38,13 +38,16 @@ input_files:
   - name: cmake
     project: cmake
   # Instructions on how to create the SDK tarball can be found at:
-  # https://firefox-source-docs.mozilla.org/widget/cocoa/sdks.html
+  # build/macosx/cross-mozconfig.common
   - name: SDK
-    URL: 'https://people.torproject.org/~boklm/mirrors/sources/MacOSX[% c("version") %].sdk.tar.xz'
-    sha256sum: 8cbe3a79e67b0690f931703ce5c282ac0c7265b451a36ec21cdfa9773f93173c
+    # Original URL: https://swcdn.apple.com/content/downloads/15/62/032-84673-A_7A1TG1RF8Z/xpc8q44ggn2pkn82iwr0fi1zeb9cxi8ath/CLTools_macOSNMOS_SDK.pkg
+    URL: https://build-sources.tbb.torproject.org/CLTools_macOSNMOS_SDK-13.3.pkg
+    sha256sum: c33545d543a38911aee2a65d4bf7ff4932c12de1e6a042ae38e6415f65a10710
   - name: llvm-project-source
     project: llvm-project-source
-  - filename: compiler-rt-cross-compile.patch
-  - filename: compiler-rt-no-codesign.patch
+  - filename: macpkg.py
+  - filename: unpack-sdk.py
+  - filename: mozbuild_util.py
+  - filename: tools.diff
   - filename: xcode-select
   - filename: xcrun

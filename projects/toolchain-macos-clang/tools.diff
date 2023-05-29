@@ -1,0 +1,67 @@
+diff '--color=auto' -rupN a/macpkg.py b/macpkg.py
+--- a/macpkg.py	2023-07-03 17:54:28.056269014 +0200
++++ b/macpkg.py	2023-07-03 17:53:47.839524710 +0200
+@@ -2,6 +2,10 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
++# This file comes from Firefox source code, and has been slightly
++# adapted for tor-browser-build.
++# Its original path is: python/mozbuild/mozpack/macpkg.py.
++
+ # TODO: Eventually consolidate with mozpack.pkg module. This is kept separate
+ # for now because of the vast difference in API, and to avoid churn for the
+ # users of this module (docker images, macos SDK artifacts) when changes are
+@@ -15,7 +19,7 @@ import struct
+ import zlib
+ from xml.etree.ElementTree import XML
+ 
+-from mozbuild.util import ReadOnlyNamespace
++from mozbuild_util import ReadOnlyNamespace
+ 
+ 
+ class ZlibFile(object):
+diff '--color=auto' -rupN a/unpack-sdk.py b/unpack-sdk.py
+--- a/unpack-sdk.py	2023-07-03 17:54:28.056269014 +0200
++++ b/unpack-sdk.py	2023-07-03 17:53:47.839524710 +0200
+@@ -2,6 +2,10 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
++# This file comes from Firefox source code, and has been slightly
++# adapted for tor-browser-build.
++# Its original path is: taskcluster/scripts/misc/unpack-sdk.py.
++
+ import hashlib
+ import os
+ import shutil
+@@ -11,26 +15,11 @@ import tempfile
+ from io import BytesIO
+ from urllib.request import urlopen
+ 
+-from mozpack.macpkg import Pbzx, uncpio, unxar
+-
+-
+-def unpack_sdk(url, sha256, extract_prefix, out_dir="."):
+-    with tempfile.TemporaryFile() as pkg:
+-        hash = hashlib.sha256()
+-        with urlopen(url) as fh:
+-            # Equivalent to shutil.copyfileobj, but computes sha256 at the same time.
+-            while True:
+-                buf = fh.read(1024 * 1024)
+-                if not buf:
+-                    break
+-                hash.update(buf)
+-                pkg.write(buf)
+-        digest = hash.hexdigest()
+-        if digest != sha256:
+-            raise Exception(f"(actual) {digest} != (expected) {sha256}")
++from macpkg import Pbzx, uncpio, unxar
+ 
+-        pkg.seek(0, os.SEEK_SET)
+ 
++def unpack_sdk(file_name, extract_prefix, out_dir="."):
++    with open(file_name, "rb") as pkg:
+         for name, content in unxar(pkg):
+             if name in ("Payload", "Content"):
+                 extract_payload(content, extract_prefix, out_dir)
