@@ -1,0 +1,9 @@
+# vim: filetype=yaml sw=2
+filename: 'gcc-[% c("version") %].tar.xz'
+version: '[% c("var/versions/gcc") %]'
+
+input_files:
+  - URL: 'https://ftp.gnu.org/gnu/gcc/gcc-[% c("version") %]/gcc-[% c("version") %].tar.xz'
+    sig_ext: sig
+    file_gpg_id: 1
+    gpg_keyring: gcc.gpg
