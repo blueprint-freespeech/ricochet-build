@@ -1,0 +1,35 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+# extract dependencies
+libeventdir=$distdir/libevent
+tar -C $distdir -xf [% c('input_files_by_name/libevent') %]
+openssldir=$distdir/openssl
+tar -C $distdir -xf [% c('input_files_by_name/openssl') %]
+zlibdir=$distdir/zlib
+tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
+
+# extract tor source
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
+
+# add git hash to micro-revision.i for tor-browser#24995
+echo '"[% c("abbrev", { abbrev_length => 16 }) %]"' > micro-revision.i
+
+./autogen.sh
+./configure --disable-asciidoc \
+  --with-libevent-dir="$libeventdir" --enable-static-libevent \
+  --with-openssl-dir="$openssldir" --enable-static-openssl \
+  --with-zlib-dir="$zlibdir" --enable-static-zlib \
+  --prefix="$projdir" --host=[% c('var/compiler_target') %]
+
+make -j[% c('num_procs') %]
+make install
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

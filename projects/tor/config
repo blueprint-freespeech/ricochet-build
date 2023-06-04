@@ -1,0 +1,21 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/tor") %]'
+git_hash: 'tor-[% c("version") %]'
+git_url: https://git.torproject.org/tor.git
+git_submodule: 1
+gpg_keyring: tor.gpg
+tag_gpg_id: 1
+container:
+  use_container: 1
+
+input_files:
+  - project: container-image
+  - name: libevent
+    project: libevent
+  - name: openssl
+    project: openssl
+  - name: zlib
+    project: zlib
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
