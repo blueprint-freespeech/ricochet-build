@@ -1,0 +1,35 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
+
+[% IF c("var/windows") -%]
+  ln -s $distdir/toolchain-windows-clang/bin/[% c('var/compiler_target') %]-clang $distdir/toolchain-windows-clang/bin/[% c('var/compiler_target') %]-gcc
+  make BINARY_PATH=$projdir/lib INCLUDE_PATH=$projdir/include LIBRARY_PATH=$projdir/lib -f win32/Makefile.gcc PREFIX=[% c('var/compiler_target') %]- -j[% c('num_procs') %] SHARED_MODE=1 LOC="[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]"
+  make BINARY_PATH=$projdir/lib INCLUDE_PATH=$projdir/include LIBRARY_PATH=$projdir/lib -f win32/Makefile.gcc PREFIX=[% c('var/compiler_target') %]- -j[% c('num_procs') %] SHARED_MODE=1 LOC="[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]" install
+[% ELSE -%]
+  [% IF c("var/macos") -%]
+    ln -s $distdir/toolchain-macos-clang/cctools/bin/[% c('var/compiler_target') %]-libtool $distdir/toolchain-macos-clang/cctools/bin/libtool
+  [% END -%]
+
+  [% IF c("var/linux") %]
+    export CC='gcc [% c("var/CFLAGS") %]'
+  [% END -%]
+
+  export CHOST=[% c("var/chost") %]
+  export AR=[% c("var/ar") %]
+  export RANLIB=[% c("var/ranlib") %]
+
+  ./configure --prefix=$projdir --static
+  make -j[% c('num_procs') %]
+  make install
+[% END -%]
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
