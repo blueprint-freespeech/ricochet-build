@@ -1,0 +1,18 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $distdir -xf [% c('input_files_by_name/rust-installer') %]
+cd $distdir/rust-[% c("version") %]-*
+
+STAGING_PATH=$builddir/rust-extract
+./install.sh --destdir=$STAGING_PATH
+
+mkdir -p $distdir/rust
+mv $STAGING_PATH/usr/local/bin $distdir/rust/bin
+mv $STAGING_PATH/usr/local/lib $distdir/rust/lib
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
