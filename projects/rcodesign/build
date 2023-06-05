@@ -1,0 +1,16 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $distdir -xf [% c('input_files_by_name/rust') %]
+export PATH=$distdir/rust/bin:$PATH
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]/apple-codesign
+
+mkdir -p $distdir/rcodesign
+cargo install --bin rcodesign --path . --root $distdir/rcodesign
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
