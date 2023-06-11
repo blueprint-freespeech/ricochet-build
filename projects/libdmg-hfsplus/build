@@ -1,0 +1,37 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C $distdir -xf [% c('input_files_by_name/openssl') %]
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH=$distdir/cmake/bin:$PATH
+tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
+tar -C $distdir -xf [% c('input_files_by_name/bzip2') %]
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
+
+patch -p1 < "$rootdir/libdmg.patch"
+patch -p1 < "$rootdir/hmac.patch"
+patch -p1 < "$rootdir/cmake.patch"
+
+CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release
+                -DBUILD_STATIC=ON
+                -DOPENSSL_USE_STATIC_LIBS=ON
+                -DOPENSSL_ROOT_DIR=$distdir/openssl
+                -DZLIB_INCLUDE_DIR=$distdir/zlib/include
+                -DZLIB_LIBRARIES=$distdir/zlib/lib
+                -DBZIP2_INCLUDE_DIR=$distdir/bzip2/include
+                -DBZIP2_LIBRARIES=$distdir/bzip2/lib"
+
+cmake . -G "Unix Makefiles" ${CMAKE_FLAGS}
+make -j[% c("num_procs") %]
+
+# We take only dmg and hfsplus like Mozilla does
+cp dmg/dmg hfs/hfsplus $projdir/
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

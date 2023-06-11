@@ -1,0 +1,50 @@
+diff --git a/dmg/filevault.c b/dmg/filevault.c
+index 3bda9a0..a66f026 100644
+--- a/dmg/filevault.c
++++ b/dmg/filevault.c
+@@ -1,3 +1,4 @@
++
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -177,7 +178,7 @@ void fvClose(AbstractFile* file) {
+ 		cacheChunk(info, 0);
+ 	}
+ 
+-	HMAC_CTX_cleanup(&(info->hmacCTX));
++	HMAC_CTX_free(info->hmacCTX);
+ 
+ 	if(info->headerDirty) {
+ 		if(info->version == 2) {
+@@ -215,6 +216,7 @@ AbstractFile* createAbstractFileFromFileVault(AbstractFile* file, const char* ke
+ 
+ 	toReturn = (AbstractFile*) malloc(sizeof(AbstractFile));	
+ 	info = (FileVaultInfo*) malloc(sizeof(FileVaultInfo));
++	memset(info, 0x00, sizeof(*info));
+ 
+ 	info->version = 2;
+ 
+@@ -234,8 +236,8 @@ AbstractFile* createAbstractFileFromFileVault(AbstractFile* file, const char* ke
+ 		hmacKey[i] = curByte;
+ 	}
+ 
+-	HMAC_CTX_init(&(info->hmacCTX));
+-	HMAC_Init_ex(&(info->hmacCTX), hmacKey, sizeof(hmacKey), EVP_sha1(), NULL);
++	info->hmacCTX = HMAC_CTX_new();
++	HMAC_Init_ex(info->hmacCTX, hmacKey, sizeof(hmacKey), EVP_sha1(), NULL);
+ 	AES_set_decrypt_key(aesKey, FILEVAULT_CIPHER_KEY_LENGTH * 8, &(info->aesKey));
+ 	AES_set_encrypt_key(aesKey, FILEVAULT_CIPHER_KEY_LENGTH * 8, &(info->aesEncKey));
+ 
+diff --git a/includes/dmg/filevault.h b/includes/dmg/filevault.h
+index 527c68d..ca5c4de 100644
+--- a/includes/dmg/filevault.h
++++ b/includes/dmg/filevault.h
+@@ -79,7 +79,7 @@ typedef struct FileVaultInfo {
+ 
+ 	AbstractFile* file;
+ 
+-	HMAC_CTX      hmacCTX;
++	HMAC_CTX*     hmacCTX;
+ 	AES_KEY       aesKey;
+ 	AES_KEY       aesEncKey;
+ 
