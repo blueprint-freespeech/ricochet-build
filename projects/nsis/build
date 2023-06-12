@@ -1,0 +1,49 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+# NSIS requires zlib and we later set the path using ZLIB_W32.
+tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
+tar -C $builddir -xf nsis-[% c('version') %].tar.bz2
+cd $builddir/nsis-[% c('version') %]-src
+
+# Adding --no-insert-timestamp to APPEND_LINKFLAGS is not working as it
+# is used for both the host and cross-compiled parts, but this option is
+# only valid for the Windows linker. Therefore we add it using a patch
+# to the cross-compilation part only. Still needed as of 3.06.1, see: #40090.
+patch -p1 < $rootdir/no-insert-timestamp.patch
+# tor-browser-build#40822: NSIS adds a flag to tell it supports ASLR, but it
+# does so only to pass MS certifications. According to the NSIS forums, they
+# intended not to ship the .reloc to save space. But, according to the bug
+# tracker, binutils 2.36 started adding a .reloc section by default, and we need
+# to disable it with this patch.
+patch -p1 < $rootdir/no-reloc-section.diff
+
+[% IF c("var/windows-x86_64") %]
+  # Seems like setting TARGET_ARCH is not enough so we need to patch build.cpp
+  # manually; this is confirmed by a comment in the same file.
+  sed -i 's/m_target_type=TARGET_X86UNICODE/m_target_type=TARGET_AMD64/' Source/build.cpp
+  [% SET target = "amd64" %]
+[% ELSE %]
+  [% SET target = "x86" %]
+[% END %]
+
+[% SET scons_args = 'VERSION=' _ c("version")
+        _ ' APPEND_CCFLAGS="-fgnu89-inline"'
+        _ " SKIPUTILS='NSIS Menu' XGCC_W32_PREFIX=" _ c("var/compiler_target") _ "-"
+        _ " TARGET_ARCH=" _ target
+        _ ' ZLIB_W32=$distdir/zlib/'
+        _ ' PREFIX=$distdir/nsis' -%]
+# Parallel compilation might result in errors, but they seems to be recoverable,
+# so we first run scons in parallel, and suppress any error, then we try again,
+# but the second time they make the build fail.
+scons [% scons_args %] -j[% c("num_procs") %] || true
+scons [% scons_args %]
+scons [% scons_args %] install
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]

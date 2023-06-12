@@ -1,0 +1,23 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/nsis") %]'
+container:
+  use_container: 1
+
+var:
+  build-toolchain: toolchain-windows-gcc
+  deps:
+    - scons
+    - zlib1g-dev
+
+input_files:
+  - project: container-image
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - name: zlib
+    project: zlib
+  - filename: 'nsis-[% c("version") %].tar.bz2'
+    URL: 'https://downloads.sourceforge.net/nsis/nsis-[% c("version") %]-src.tar.bz2'
+    sha256sum: a85270ad5386182abecb2470e3d7e9bec9fe4efd95210b13551cb386830d1e87
+  - filename: no-insert-timestamp.patch
+  - filename: no-reloc-section.diff
