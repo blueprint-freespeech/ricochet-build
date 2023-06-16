@@ -1,0 +1,9 @@
+# vim: filetype=yaml sw=2
+filename: 'mingw-w64-[% c("version") %].tar.gz'
+version: '[% c("var/versions/mingw-w64") %]'
+git_url: https://git.code.sf.net/p/mingw-w64/mingw-w64
+git_hash: 'v[% c("version") %]'
+tag_gpg_id: 1
+gpg_keyring: mingw-w64.gpg
+container:
+  use_container: 0

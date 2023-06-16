@@ -1,0 +1,4 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+mv [% project %]-[% c('version') %].tar.gz [% dest_dir %]/mingw-w64-[% c('version') %].tar.gz
