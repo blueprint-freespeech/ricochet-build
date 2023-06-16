@@ -1,0 +1,36 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/mingw-w64") %]'
+container:
+  use_container: 1
+
+var:
+  setup: |
+    mkdir -p $distdir
+    tar -C $distdir -xf $rootdir/[% c("build_toolchain_tarfile") %]
+    export PATH="$distdir/[% project %]/bin:$PATH"
+    export CC=$distdir/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-gcc
+    export CXX=$distdir/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-g++
+  deps:
+    - bison
+    - texinfo
+    - libmpc-dev
+
+targets:
+  windows-i686:
+    var:
+      x86_dwarf2: '--disable-sjlj-exceptions --with-dwarf2'
+      crt_lib: '--enable-lib32 --disable-lib64'
+  windows-x86_64:
+    var:
+      x86_dwarf2:
+      crt_lib: '--enable-lib64 --disable-lib32'
+
+input_files:
+  - project: container-image
+  - project: mingw-w64-source
+    name: mingw-w64-source
+  - project: gcc-source
+    name: gcc-source
+  - project: binutils
+    name: binutils

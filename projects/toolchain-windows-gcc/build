@@ -1,0 +1,74 @@
+#!/bin/bash
+[% c('var/set_default_env') -%]
+
+tar -C $distdir -xf [% c('input_files_by_name/binutils') %]
+mv $distdir/binutils/* $projdir/.
+PATH="$projdir/bin:$PATH"
+
+# extract mingw sources
+tar -xf [% c('input_files_by_name/mingw-w64-source') %]
+mv mingw-w64-source-[% c('var/versions/mingw-w64') %] mingw-w64
+
+# build headers
+mkdir -p $builddir/mingw-w64-headers
+pushd $builddir/mingw-w64-headers
+  $rootdir/mingw-w64/mingw-w64-headers/configure --host=[% c("var/compiler_target") %] \
+    --prefix=$projdir/[% c("var/compiler_target") %]  --with-default-msvcrt=msvcrt \
+    --enable-sdk=all --enable-idl
+
+  make install
+popd
+
+# extract gcc source
+tar -xf [% c('input_files_by_name/gcc-source') %]
+mv gcc-[% c('var/versions/gcc') %] gcc
+
+# build gcc
+mkdir -p $builddir/gcc
+pushd $builddir/gcc
+    $rootdir/gcc/configure --prefix=$projdir --target=[% c("var/compiler_target") %] --disable-shared --enable-static \
+      --disable-multilib --enable-languages=c,c++ --disable-nls --enable-threads=posix [% c('var/x86_dwarf2') %]
+    make -j [% c('num_procs') %] all-gcc
+    make install-gcc
+popd
+
+# build crt
+mkdir -p $builddir/mingw-w64-crt
+pushd $builddir/mingw-w64-crt
+  $rootdir/mingw-w64/mingw-w64-crt/configure --prefix=$projdir/[% c("var/compiler_target") %] \
+    --host=[% c("var/compiler_target") %] --with-default-msvcrt=msvcrt \
+    --with-sysroot=$projdir/[% c("var/compiler_target") %] [% c('var/crt_lib') %]
+
+  make -j [% c('num_procs') %]
+  make install
+popd
+
+# build winpthreads
+mkdir -p $builddir/mingw-w64-winpthreads
+pushd $builddir/mingw-w64-winpthreads
+  $rootdir/mingw-w64/mingw-w64-libraries/winpthreads/configure --prefix=$projdir/[% c("var/compiler_target") %] \
+    --host=[% c("var/compiler_target") %] --disable-shared --enable-static
+  make -j [% c('num_procs') %]
+  make install
+popd
+
+#build widl
+mkdir -p $builddir/mingw-w64/widl
+pushd $builddir/mingw-w64/widl
+  $rootdir/mingw-w64/mingw-w64-tools/widl/configure --prefix=$projdir --target=[% c("var/compiler_target") %]
+  make -j [% c('num_procs') %]
+  make install
+popd
+
+# build gcc
+pushd $builddir/gcc
+  make -j [% c('num_procs') %]
+  make install
+popd
+
+# package
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+        }) %]
