@@ -1,0 +1,54 @@
+# vim: filetype=yaml sw=2
+version: '[% pc("package", "version") %]'
+output_dir: '[% c("var/publish_dir", { output_dir => "." }) %]'
+container:
+  use_container: 0
+
+var:
+  sign_status: unsigned
+  publish_dir: 'release/[% c("var/channel") %]/[% c("var/sign_status") %]/[% c("version") %]-[% c("var/build") %]'
+  build: build1
+
+targets:
+  testbuild:
+    var:
+      publish_dir: 'release/[% c("var/channel") %]/[% c("var/sign_status") %]/[% c("version") %]'
+
+  sign:
+    var:
+      sign_status: signed
+
+input_files:
+ # linux
+ - name: linux-i686
+   project: package
+   target_append:
+    - linux
+    - linux-i686
+ - name: linux-x86_64
+   project: package
+   target_append:
+    - linux
+    - linux-x86_64
+ # macos
+ - name: macos-x86_64
+   project: package
+   target_append:
+    - macos
+    - macos-x86_64
+ - name: macos-aarch64
+   project: package
+   target_append:
+    - macos
+    - macos-aarch64
+ # windows
+ - name: windows-i686
+   project: package
+   target_append:
+    - windows
+    - windows-i686
+ - name: windows-x86_64
+   project: package
+   target_append:
+    - windows
+    - windows-x86_64

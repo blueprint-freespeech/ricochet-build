@@ -1,0 +1,43 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+# copy all our packages to publish dir
+
+cp [% c('input_files_by_name/linux-i686') %]/* [% dest_dir %]/.
+cp [% c('input_files_by_name/linux-x86_64') %]/* [% dest_dir %]/.
+cp [% c('input_files_by_name/macos-x86_64') %]/* [% dest_dir %]/.
+cp [% c('input_files_by_name/macos-aarch64') %]/* [% dest_dir %]/.
+cp [% c('input_files_by_name/windows-i686') %]/* [% dest_dir %]/.
+cp [% c('input_files_by_name/windows-x86_64') %]/* [% dest_dir %]/.
+
+# calculate hashes of artifacts
+pushd [% dest_dir %]
+echo -n > sha256sums.txt
+for file in $(ls | sort)
+do
+    sha256sum $file >> sha256sums.txt
+done
+popd
+
+# gpg sign our build outputs
+[% IF c("var/sign") %]
+GPG_KEYRING="[% c('var/signing/gpg_keyring') %]"
+GPG_PASSWORD_FILE="[% c('var/signing/gpg_password_file') %]"
+
+sign_file() {
+    FILE=$1
+    gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --pinentry-mode loopback --passphrase-file "${GPG_PASSWORD_FILE}" -abs "${FILE}"
+}
+[% ELSE %]
+sign_file() {
+    FILE=$1
+    echo "not pgp signing ${FILE}"
+}
+[% END %]
+
+pushd [% dest_dir %]
+for file in $(ls | sort)
+do
+    sign_file $file
+done
+popd
