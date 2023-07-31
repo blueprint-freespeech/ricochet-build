@@ -1,0 +1,33 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
+
+cd $builddir
+tar -xf $rootdir/[% c('input_files_by_name/llvm-project-source') %]
+
+cd llvm-project-source
+export LLVM_HOME=$(pwd)
+
+mkdir build
+cd build
+
+# LLVM_ENABLE_ZLIB solves the "contains a compressed section, but zlib is not available" on lld
+# LLVM_INSTALL_UTILS allows this LLVM to be used to compile Rust
+cmake ../llvm -G "Unix Makefiles" \
+              -DCMAKE_INSTALL_PREFIX=$projdir \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DLLVM_TARGETS_TO_BUILD="X86;ARM;AArch64" \
+              -DLLVM_ENABLE_PROJECTS="clang;lld" \
+              -DLLVM_ENABLE_ZLIB=ON \
+              -DLLVM_INSTALL_UTILS=ON \
+
+make -j[% c("num_procs") %] install
+
+cd $distdir
+mv clang-build clang
+[% c('tar', {
+        tar_src => clang,
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]

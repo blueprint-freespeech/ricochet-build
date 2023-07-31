@@ -1,0 +1,16 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/llvm-project") %]'
+container:
+  use_container: 1
+
+var:
+  deps:
+    - python3
+
+input_files:
+  - project: container-image
+  - project: cmake
+    name: cmake
+  - project: llvm-project-source
+    name: llvm-project-source
