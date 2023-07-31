@@ -1,0 +1,17 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
+
+./bootstrap --prefix=$projdir -- -DCMAKE_USE_OPENSSL=OFF
+make -j[% c('num_procs') %]
+make install
+
+cd $distdir
+mv cmake-build cmake
+[% c('tar', {
+        tar_src => cmake,
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
+
