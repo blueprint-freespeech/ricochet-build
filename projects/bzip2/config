@@ -1,0 +1,15 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/bzip2") %]'
+container:
+  use_container: 1
+
+input_files:
+  - project: container-image
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - name: bzip2-source
+    URL: https://sourceware.org/pub/bzip2/bzip2-[% c("version") %].tar.gz
+    sig_ext: sig
+    file_gpg_id: 1
+    gpg_keyring: bzip2.gpg

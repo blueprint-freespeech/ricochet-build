@@ -1,0 +1,16 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C $builddir -xf [% c('input_files_by_name/bzip2-source') %]
+cd $builddir/bzip2-[% c('version') %]
+
+make -j[% c('num_procs') %] CC=$CC
+make -j[% c('num_procs') %] install CC=$CC PREFIX=$projdir
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
