@@ -1,0 +1,13 @@
+Source: ricochet-refresh
+Section: net
+Priority: optional
+Maintainer: Blueprint For Freespeech <ricochet@blueprintforfreespeech.net>
+Build-Depends: debhelper (>= 10)
+
+Package: ricochet-refresh
+Architecture: [% c("var/deb_arch") %]
+Homepage: https://ricochetrefresh.net/
+Depends: \${shlibs:Depends}
+Description: Anonymous metadata-resistant instant messaging
+ Ricochet-Refresh is an open source project to allow private and anonymous instant messaging. It is metadata-resistant, anonymous, decentralised and easy to use.
+

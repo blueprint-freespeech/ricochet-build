@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ricochet-Refresh
+GenericName=Messenger
+Comment=Anonymous metadata-resistant instant messaging
+Categories=Network;InstantMessaging;Chat;P2P;Qt
+Icon=ricochet-refresh
+Exec=$EXECOMMAND

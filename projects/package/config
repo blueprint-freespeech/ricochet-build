@@ -1,0 +1,107 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %]'
+version: '[% pc("ricochet-refresh", "version") %]'
+container:
+  use_container: '[% !c("var/sign") %]'
+
+targets:
+  linux:
+    var:
+      deb_rev: 1
+      deps:
+        - debhelper
+        - imagemagick
+
+  linux-i686:
+    var:
+      deb_arch: i386
+      appimage_arch: i386
+      arch_deps:
+        # libs
+        - libfontconfig1:i386
+        - libfreetype6:i386
+        - libx11-xcb1:i386
+        - libxcb-icccm4:i386
+        - libxcb-image0:i386
+        - libxcb-shm0:i386
+        - libxcb-keysyms1:i386
+        - libxcb-randr0:i386
+        - libxcb-render0:i386
+        - libxcb-render-util0:i386
+        - libxcb-shape0:i386
+        - libxcb-sync1:i386
+        - libxcb-xfixes0:i386
+        - libxcb-xinerama0:i386
+        - libxext6:i386
+        - libxkbcommon0:i386
+        - libxkbcommon-x11-0:i386
+  linux-x86_64:
+    var:
+      deb_arch: amd64
+      appimage_arch: x86_64
+      arch_deps:
+        # libs
+        - libfontconfig1
+        - libfreetype6
+        - libx11-xcb1
+        - libxcb-icccm4
+        - libxcb-image0
+        - libxcb-shm0
+        - libxcb-keysyms1
+        - libxcb-randr0
+        - libxcb-render0
+        - libxcb-render-util0
+        - libxcb-shape0
+        - libxcb-sync1
+        - libxcb-xfixes0
+        - libxcb-xinerama0
+        - libxext6
+        - libxkbcommon0
+        - libxkbcommon-x11-0
+  macos:
+    var:
+      deps:
+        - genisoimage
+        - imagemagick
+  windows:
+    var:
+      deps:
+        - imagemagick
+        - zip
+
+input_files:
+ - project: container-image
+   enable: '[% !c("var/sign") %]'
+ - project: ricochet-refresh
+   name: ricochet-refresh
+ - filename: shared
+   # linux packaging
+ - filename: linux
+   enable: '[% c("var/linux") %]'
+ - name: linuxdeploy
+   enable: '[% c("var/linux-i686") %]'
+   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20230713-1/linuxdeploy-i386.AppImage
+   sha256sum: 0fe6af119dccfeea5eb89f05913e12b8cc40d5ccb6b9dbe6fe4a955ac4fc912f
+ - name: linuxdeploy
+   enable: '[% c("var/linux-x86_64") %]'
+   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20230713-1/linuxdeploy-x86_64.AppImage
+   sha256sum: a860c028996ca6e78dcc308b38278f87ce8b1eb54763b4f626c238f0f9769bf8
+   # windows packaging
+ - filename: windows
+   enable: '[% c("var/windows") %]'
+ - project: nsis
+   name: nsis
+   enable: '[% c("var/windows") %]'
+   # macos packaging
+ - filename: macos
+   enable: '[% c("var/macos") %]'
+ - name: rcodesign
+   project: rcodesign
+   enable: '[% c("var/macos") && c("var/sign") %]'
+ - project: libdmg-hfsplus
+   name: libdmg-hfsplus
+   enable: '[% c("var/macos") %]'
+   target_replace:
+     '^macos-.*': linux-x86_64
+     '^macos$': linux
+

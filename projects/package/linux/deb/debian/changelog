@@ -1,0 +1,47 @@
+ricochet-refresh (3.0.17) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.17
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net>  Wed, 11 Oct 2023 00:00:00 +0000
+
+ricochet-refresh (3.0.16) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.16
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net>  Sat, 17 Jun 2023 23:35:32 +0200
+
+ricochet-refresh (3.0.15) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.15
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net>  Mon, 26 Sep 2022 19:40:07 +0200
+
+ricochet-refresh (3.0.14) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.14
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net>  Sat, 17 Sep 2022 21:45:52 +0200
+
+ricochet-refresh (3.0.13) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.13
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net>  Tue, 09 Aug 2022 19:06:24 +0200
+
+ricochet-refresh (3.0.12) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.12
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net> Tue, 28 Jun 2022 17:24:00 +0000
+
+ricochet-refresh (3.0.11) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.11 
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net>  Fri, 25 Mar 2022 17:08:00 +0000
+
+ricochet-refresh (3.0.10) unstable; urgency=medium
+
+  * Initial release
+
+ -- Marco Simonelli <marco@blueprintforfreespeech.net>  Tue, 21 Sep 2021 22:35:26 +1000

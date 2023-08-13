@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+clean:
+	@# Do nothing
+
+build:
+	@# Do nothing
+
+binary:
+	dh_fixperms
+	chmod 755 debian/ricochet-refresh/opt/ricochet_refresh
+	chmod 755 debian/ricochet-refresh/usr/bin/ricochet-refresh
+	dh_shlibdeps
+	dh_gencontrol
+	dh_builddeb
