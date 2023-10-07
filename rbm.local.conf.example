@@ -1,0 +1,53 @@
+---
+### This file is used to override options from rbm.conf to adapt them
+### to your local setup.
+###
+### Copy this file as rbm.local.conf to enable it, and uncomment the
+### options you want to modify.
+
+### The tmp_dir option defines where temporary files are stored. The
+### builds are made from this directory, so using a directory on a fast
+### disk can improve build time. By default we are using a tmp directory
+### under the ricochet-build directory.
+#tmp_dir: /tmp
+
+### The debug option defines whether a debugging shell should be opened
+### automatically in the build directory/container in case of build
+### failure. If you are doing automated builds, you might want to disable
+### this.
+#debug: 0
+
+### The build_log option defines in which file the build logs of each
+### component are stored. If you set it to '-' the logs are output on
+### stdout and stderr.
+#build_log: '-'
+
+### By default, the logs from previous builds are kept in the log files.
+### If you set build_log_append to 0, then previous logs are cleaned
+### when starting a new build.
+#build_log_append: 0
+
+### The num_procs option can be used to select the number of
+### build processes to run simultaneously. You can also use the
+### RBM_NUM_PROCS environment variable. The default is the number of
+### processing units available, as returned by `nproc`.
+#num_procs: 8
+
+var:
+    ### Various release-signing settings for use with the the 'sign' target
+    signing:
+      ### Windows code-signing settings used in the 'package' project
+      # pkcs11_engine: /path/to/pkcs11.so
+      # pkcs11_module: /path/to/libeToken.so
+      # certs: signing_cert.crt
+      # key_id: DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF
+      # pkcs11_pass_file: /path/to/pass/file
+      # timestamp_url: http://timeserver.com
+      ### macOS code-signing and notarizing settings used in the 'package'
+      ### project; see https://gregoryszorc.com/docs/apple-codesign/0.22.0/
+      # p12_file: /path/to/develper-id.p12
+      # p12_password_file: /path/to/certificate/password/file
+      # app_store_connect_api_key: /path/to/api-key.json
+      ### PGP signing settings used in the 'release' project
+      # gpg_keyring: /path/to/gpg/keyring
+      # gpg_password_file: /path/to/gpg/password/file
