@@ -7,7 +7,7 @@ container:
 var:
   sign_status: unsigned
   publish_dir: 'release/[% c("var/channel") %]/[% c("var/sign_status") %]/[% c("version") %]-[% c("var/build") %]'
-  build: build1
+  build: build2
 
 targets:
   testbuild:
