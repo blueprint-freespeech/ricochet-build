@@ -82,7 +82,7 @@ input_files:
   - name: tor
     project: tor
   - name: tor-expert-bundle
-    URL: https://archive.torproject.org/tor-package-archive/torbrowser/[% c("var/versions/tor-expert-bundle") %]/tor-expert-bundle-[% c("var/versions/tor-expert-bundle") %]-[% c("var/osname") %]-[% c("var/arch") %].tar.gz
+    URL: https://archive.torproject.org/tor-package-archive/torbrowser/[% c("var/versions/tor-expert-bundle") %]/tor-expert-bundle-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/versions/tor-expert-bundle") %].tar.gz
     sig_ext: asc
     file_gpg_id: 1
     gpg_keyring: tor-browser.gpg
