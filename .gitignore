@@ -1,5 +1,6 @@
 # standard rbm directories
 /git_clones
+/hg_clones
 /logs
 /out
 /tmp
