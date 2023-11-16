@@ -2,7 +2,7 @@
 filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
 version: '[% c("abbrev") %]'
 git_url: https://github.com/mozilla/libdmg-hfsplus
-git_hash: 2ee327795680101d36f9700bd0fb618362237718
+git_hash: a0a959bd25370c1c0a00c9ec525e3e78285adbf9
 container:
   use_container: 1
 
@@ -12,12 +12,8 @@ input_files:
     project: '[% c("var/build-toolchain") %]'
   - name: cmake
     project: cmake
-  - name: openssl
-    project: openssl
   - name: zlib
     project: zlib
   - name: bzip2
     project: bzip2
-  - filename: libdmg.patch
-  - filename: hmac.patch
   - filename: cmake.patch
