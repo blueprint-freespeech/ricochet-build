@@ -219,8 +219,8 @@ pushd $builddir
     cp -r $rootdir/macos/dmg/. .
 
     # generate dmg background image
-    convert $rootdir/macos/background.svg -resize 415x250 $rootdir/macos/background1x.png
-    convert $rootdir/macos/background.svg -resize 830x500 $rootdir/macos/background2x.png
+    inkscape $rootdir/macos/background.svg -w 415 -h 250 -o $rootdir/macos/background1x.png
+    inkscape $rootdir/macos/background.svg -w 830 -h 500 -o $rootdir/macos/background2x.png
     mkdir .background
     convert $rootdir/macos/background1x.png $rootdir/macos/background2x.png .background/background.tiff
 
