@@ -137,6 +137,8 @@ mkdir appimage
 pushd appimage
 linuxdeploy="$rootdir/[% c('input_files_by_name/linuxdeploy') %]"
 chmod +x $linuxdeploy
+# https://github.com/AppImage/AppImageKit/issues/1027#issuecomment-641601097
+sed 's|AI\x02|\x00\x00\x00|g' -i $linuxdeploy
 
 mkdir -p AppDir/usr/bin
 cp -a $distdir/ricochet-refresh/* AppDir/usr/bin/.
