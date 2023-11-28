@@ -81,12 +81,12 @@ input_files:
    enable: '[% c("var/linux") %]'
  - name: linuxdeploy
    enable: '[% c("var/linux-i686") %]'
-   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20230713-1/linuxdeploy-i386.AppImage
-   sha256sum: 0fe6af119dccfeea5eb89f05913e12b8cc40d5ccb6b9dbe6fe4a955ac4fc912f
+   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20231026-1/linuxdeploy-i386.AppImage
+   sha256sum: bca5ad35204f06a6ca5930aa1c5cceec7978ffc2c26bf16dc05ed91587488bbb
  - name: linuxdeploy
    enable: '[% c("var/linux-x86_64") %]'
-   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20230713-1/linuxdeploy-x86_64.AppImage
-   sha256sum: a860c028996ca6e78dcc308b38278f87ce8b1eb54763b4f626c238f0f9769bf8
+   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20231026-1/linuxdeploy-x86_64.AppImage
+   sha256sum: c242e21f573532c03adc2c356b70055ee0de2ae66e235d086b714e69d2cae529
    # windows packaging
  - filename: windows
    enable: '[% c("var/windows") %]'
