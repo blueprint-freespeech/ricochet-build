@@ -126,3 +126,10 @@ ricochet-windows-x86_64-testbuild: submodule-update
 
 ricochet-release-testbuild: submodule-update
 	$(rbm) build release --target testbuild
+
+# Git Sign+Tag
+
+ricochet-signtag-stable:
+	VERSION=$(shell ./rbm/rbm showconf release "version" --target stable); \
+	BUILDN=$(shell ./rbm/rbm showconf release "var/build" --target stable); \
+	git tag -s "$$VERSION-$$BUILDN" -m "tagging $$VERSION-$$BUILDN" HEAD
