@@ -18,7 +18,9 @@ clean:
 
 # Stable Releases
 
-ricochet-linux-stable: ricochet-linux-i686-stable ricochet-linux-x86_64-stable
+ricochet-linux-stable:
+	$(MAKE) ricochet-linux-i686-stable
+	$(MAKE) ricochet-linux-x86_64-stable
 
 ricochet-linux-i686-stable: submodule-update
 	$(rbm) build package --target linux --target linux-i686 --target stable
@@ -26,7 +28,9 @@ ricochet-linux-i686-stable: submodule-update
 ricochet-linux-x86_64-stable: submodule-update
 	$(rbm) build package --target linux --target linux-x86_64 --target stable
 
-ricochet-macos-stable: ricochet-macos-x86_64-stable ricochet-macos-aarch64-stable
+ricochet-macos-stable:
+	$(MAKE) ricochet-macos-x86_64-stable
+	$(MAKE)  ricochet-macos-aarch64-stable
 
 ricochet-macos-x86_64-stable: submodule-update
 	$(rbm) build package --target macos --target macos-x86_64 --target stable
@@ -34,7 +38,9 @@ ricochet-macos-x86_64-stable: submodule-update
 ricochet-macos-aarch64-stable: submodule-update
 	$(rbm) build package --target macos --target macos-aarch64 --target stable
 
-ricochet-windows-stable: ricochet-windows-i686-stable ricochet-windows-x86_64-stable
+ricochet-windows-stable:
+	$(MAKE) ricochet-windows-i686-stable
+	$(MAKE) ricochet-windows-x86_64-stable
 
 ricochet-windows-i686-stable: submodule-update
 	$(rbm) build package --target windows --target windows-i686 --target stable
@@ -50,7 +56,9 @@ ricochet-release-stable-sign: submodule-update
 
 # Alpha Releases
 
-ricochet-linux-alpha: ricochet-linux-i686-alpha ricochet-linux-x86_64-alpha
+ricochet-linux-alpha:
+	$(MAKE) ricochet-linux-i686-alpha
+	$(MAKE) ricochet-linux-x86_64-alpha
 
 ricochet-linux-i686-alpha: submodule-update
 	$(rbm) build package --target linux --target linux-i686 --target alpha
@@ -58,7 +66,9 @@ ricochet-linux-i686-alpha: submodule-update
 ricochet-linux-x86_64-alpha: submodule-update
 	$(rbm) build package --target linux --target linux-x86_64 --target alpha
 
-ricochet-macos-alpha: ricochet-macos-x86_64-alpha ricochet-macos-aarch64-alpha
+ricochet-macos-alpha:
+	$(MAKE) ricochet-macos-x86_64-alpha
+	$(MAKE) ricochet-macos-aarch64-alpha
 
 ricochet-macos-x86_64-alpha: submodule-update
 	$(rbm) build package --target macos --target macos-x86_64 --target alpha
@@ -66,7 +76,9 @@ ricochet-macos-x86_64-alpha: submodule-update
 ricochet-macos-aarch64-alpha: submodule-update
 	$(rbm) build package --target macos --target macos-aarch64 --target alpha
 
-ricochet-windows-alpha: ricochet-windows-i686-alpha ricochet-windows-x86_64-alpha
+ricochet-windows-alpha:
+	$(MAKE) ricochet-windows-i686-alpha
+	$(MAKE) ricochet-windows-x86_64-alpha
 
 ricochet-windows-i686-alpha: submodule-update
 	$(rbm) build package --target windows --target windows-i686 --target alpha
@@ -82,7 +94,9 @@ ricochet-release-alpha-sign: submodule-update
 
 # Dev Builds
 
-ricochet-linux-testbuild: ricochet-linux-i686-testbuild ricochet-linux-x86_64-testbuild
+ricochet-linux-testbuild:
+	$(MAKE) ricochet-linux-i686-testbuild
+	$(MAKE) ricochet-linux-x86_64-testbuild
 
 ricochet-linux-i686-testbuild: submodule-update
 	$(rbm) build package --target linux --target linux-i686 --target testbuild
@@ -90,7 +104,9 @@ ricochet-linux-i686-testbuild: submodule-update
 ricochet-linux-x86_64-testbuild: submodule-update
 	$(rbm) build package --target linux --target linux-x86_64 --target testbuild
 
-ricochet-macos-testbuild: ricochet-macos-x86_64-testbuild ricochet-macos-aarch64-testbuild
+ricochet-macos-testbuild:
+	$(MAKE) ricochet-macos-x86_64-testbuild
+	$(MAKE) ricochet-macos-aarch64-testbuild
 
 ricochet-macos-x86_64-testbuild: submodule-update
 	$(rbm) build package --target macos --target macos-x86_64 --target testbuild
@@ -98,7 +114,9 @@ ricochet-macos-x86_64-testbuild: submodule-update
 ricochet-macos-aarch64-testbuild: submodule-update
 	$(rbm) build package --target macos --target macos-aarch64 --target testbuild
 
-ricochet-windows-testbuild: ricochet-windows-i686-testbuild ricochet-windows-x86_64-testbuild
+ricochet-windows-testbuild:
+	$(MAKE) ricochet-windows-i686-testbuild
+	$(MAKE) ricochet-windows-x86_64-testbuild
 
 ricochet-windows-i686-testbuild: submodule-update
 	$(rbm) build package --target windows --target windows-i686 --target testbuild
