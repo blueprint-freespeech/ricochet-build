@@ -1,0 +1,10 @@
+diff '--color=auto' -rupN nsis-3.09-orig/Contrib/System/SConscript nsis-3.09-src/Contrib/System/SConscript
+--- nsis-3.09-orig/Contrib/System/SConscript	2024-01-10 11:07:15.161175520 +0100
++++ nsis-3.09-src/Contrib/System/SConscript	2024-01-10 11:08:47.338628667 +0100
+@@ -76,4 +76,5 @@ resources = Split("""
+ 
+ env.Depends(res_target, resources)
+ 
+-env.SharedLibrary('Resource', res_target + res_main)
++resource = env.SharedLibrary('Resource', res_target + res_main)
++env.MakeReproducible(resource)

@@ -35,6 +35,9 @@ cd $builddir/nsis-[% c('version') %]-src
 # These two sed commands also come from build-mingw32-nsis.sh
 sed -i 's/-Wl,--exclude-libs,msvcrt.a/-Wl,-Xlink=-fixed/' SCons/Config/gnu
 sed -i '2i extern "C"' SCons/Config/{memcpy,memset}.c
+export SOURCE_DATE_EPOCH=$(stat -c '%Y' Source)
+# Resource.dll does not obey the source date epoch...
+patch -p1 < "$rootdir/resource-reproducible.diff"
 
 [% IF c("var/windows-x86_64") %]
   # Seems like setting TARGET_ARCH is not enough so we need to patch build.cpp
