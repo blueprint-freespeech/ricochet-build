@@ -1,0 +1,25 @@
+# vim filetype:yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/osslsigncode") %]'
+git_url: https://github.com/mtrojnar/osslsigncode
+git_hash: '[% c("version") %]'
+gpg_keyring: osslsigncode.gpg
+tag_gpg_id: 1
+container:
+  use_container: 1
+
+var:
+  deps:
+    - python3
+    - libcurl4-openssl-dev
+
+input_files:
+  - project: container-image
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - name: cmake
+    project: cmake
+  - name: openssl
+    project: openssl
+  - name: zlib
+    project: zlib

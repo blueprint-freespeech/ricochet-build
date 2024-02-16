@@ -1,0 +1,34 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+# extract dependencies
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
+tar -C $distdir -xf [% c('input_files_by_name/openssl') %]
+tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
+
+# extract osslsigncode source
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
+
+mkdir build && cd build
+
+CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release
+             -DCMAKE_INSTALL_PREFIX='$projdir'
+             -DOPENSSL_USE_STATIC_LIBS=ON
+             -DOPENSSL_ROOT_DIR=$distdir/openssl
+             -DZLIB_USE_STATIC_LIBS=ON
+             -DZLIB_ROOT=$distdir/zlib"
+
+cmake -S ../ ${CMAKE_FLAGS}
+cmake --build . -j[% c('num_procs') %]
+cmake --build . --target install
+
+cd $distdir
+mv osslsigncode-build osslsigncode
+[% c('tar', {
+        tar_src => osslsigncode,
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
