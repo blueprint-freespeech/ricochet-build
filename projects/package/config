@@ -93,6 +93,9 @@ input_files:
  - project: nsis
    name: nsis
    enable: '[% c("var/windows") %]'
+ - project: osslsigncode
+   name: osslsigncode
+   enable: '[% c("var/windows") && c("var/sign") %]'
    # macos packaging
  - filename: macos
    enable: '[% c("var/macos") %]'

@@ -14,6 +14,9 @@ ARCH=[% c("var/arch") %]
 [% IF c("var/windows") %]
 
 [% IF c("var/sign") %]
+tar -C $distdir -xf [% c('input_files_by_name/osslsigncode') %]
+PATH=$distdir/osslsigncode/bin:$PATH
+
 CERTS="[% c('var/signing/certs') %]"
 KEY="[% c('var/signing/key') %]"
 TIMESTAMP_URL="[% c('var/signing/timestamp_url') %]"
