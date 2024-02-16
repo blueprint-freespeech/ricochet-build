@@ -37,11 +37,8 @@ var:
     ### Various release-signing settings for use with the the 'sign' target
     signing:
       ### Windows code-signing settings used in the 'package' project
-      # pkcs11_engine: /path/to/pkcs11.so
-      # pkcs11_module: /path/to/libeToken.so
-      # certs: signing_cert.crt
-      # key_id: DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF
-      # pkcs11_pass_file: /path/to/pass/file
+      # certs: /path/to/certificate.pem
+      # key: /path/to/signing.key
       # timestamp_url: http://timeserver.com
       ### macOS code-signing and notarizing settings used in the 'package'
       ### project; see https://gregoryszorc.com/docs/apple-codesign/0.22.0/

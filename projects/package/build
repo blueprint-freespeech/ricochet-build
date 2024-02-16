@@ -14,18 +14,14 @@ ARCH=[% c("var/arch") %]
 [% IF c("var/windows") %]
 
 [% IF c("var/sign") %]
-PKCS11_ENGINE="[% c('var/signing/pkcs11_engine') %]"
-PKCS11_MODULE="[% c('var/signing/pkcs11_module') %]"
 CERTS="[% c('var/signing/certs') %]"
-KEY_ID="[% c('var/signing/key_id') %]"
-PKCS11_PASSFILE="[% c('var/signing/pkcs11_pass_file') %]"
-PKCS11_PASS="$(cat "${PKCS11_PASSFILE}")"
+KEY="[% c('var/signing/key') %]"
 TIMESTAMP_URL="[% c('var/signing/timestamp_url') %]"
 
 # sign binary in-place
 sign_binary() {
     BINARY=$1
-    osslsigncode -pkcs11engine ${PKCS11_ENGINE} -pkcs11module ${PKCS11_MODULE} -h sha256 -certs ${CERTS} -key ${KEY_ID} -pass ${PKCS11_PASS} -t ${TIMESTAMP_URL} -in ${BINARY} -out ${BINARY}.signed
+    osslsigncode -h sha256 -certs ${CERTS} -key ${KEY} -t ${TIMESTAMP_URL} -in ${BINARY} -out ${BINARY}.signed
     mv ${BINARY}.signed ${BINARY}
 }
 [% ELSE %]
