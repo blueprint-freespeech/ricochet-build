@@ -132,7 +132,7 @@ CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
     CMAKE_FLAGS="-DCMAKE_CXX_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
     CMAKE_FLAGS="-DCMAKE_ASM_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
     CMAKE_FLAGS="-DCMAKE_PREFIX_PATH=$distdir/toolchain-macos-clang/clang/lib/ $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DCMAKE_FRAMEWORK_PATH=$distdir/toolchain-macos-clang/MacOSX11.0.sdk/System/Library/Frameworks $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_FRAMEWORK_PATH=$distdir/toolchain-macos-clang/MacOSX[% pc("toolchain-macos-clang", "version") %].sdk/System/Library/Frameworks $CMAKE_FLAGS"
 [% END -%]
 
 mkdir build && cd build
