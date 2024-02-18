@@ -223,7 +223,7 @@ pushd $builddir
     inkscape $rootdir/macos/background.svg -w 415 -h 250 -o $rootdir/macos/background1x.png
     inkscape $rootdir/macos/background.svg -w 830 -h 500 -o $rootdir/macos/background2x.png
     mkdir .background
-    convert $rootdir/macos/background1x.png $rootdir/macos/background2x.png .background/background.tiff
+    convert -units PixelsPerInch -density 72 $rootdir/macos/background1x.png $rootdir/macos/background2x.png .background/background.tiff
 
     # copy and sign app bundle
     cp -a $distdir/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
