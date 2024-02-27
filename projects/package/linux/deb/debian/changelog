@@ -1,3 +1,9 @@
+ricochet-refresh (3.0.20) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.20
+
+ -- Richard Pospesel <richard@blueprintforfreespeech.net>  Tue, 27 Feb 2024 00:00:00 +0000
+
 ricochet-refresh (3.0.19) unstable; urgency=medium
 
   * Upgrade to Ricochet-Refresh 3.0.19
