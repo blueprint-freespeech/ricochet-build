@@ -28,6 +28,6 @@ make -j[% c("num_procs") %] install
 cd $distdir
 mv clang-build clang
 [% c('tar', {
-        tar_src => clang,
+        tar_src => 'clang',
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]

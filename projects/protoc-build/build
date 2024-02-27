@@ -8,7 +8,7 @@ mv $builddir/protobuf/bin $projdir/.
 cd $distdir
 mv protoc-build protoc
 [% c('tar', {
-        tar_src => protoc,
+        tar_src => 'protoc',
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]
 

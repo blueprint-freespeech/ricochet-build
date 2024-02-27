@@ -29,6 +29,6 @@ cmake --build . --target install
 cd $distdir
 mv osslsigncode-build osslsigncode
 [% c('tar', {
-        tar_src => osslsigncode,
+        tar_src => 'osslsigncode',
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]

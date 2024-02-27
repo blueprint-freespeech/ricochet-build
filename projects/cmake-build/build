@@ -11,7 +11,7 @@ make install
 cd $distdir
 mv cmake-build cmake
 [% c('tar', {
-        tar_src => cmake,
+        tar_src => 'cmake',
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]
 
