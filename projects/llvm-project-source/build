@@ -4,6 +4,6 @@
 tar xf [% project %]-[% c("version") %].tar.gz
 mv [% project %]-[% c("version") %] llvm-project-source
 [% c('tar', {
-        tar_src => [ 'llvm-project-source' ],
+        tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
     }) %]
