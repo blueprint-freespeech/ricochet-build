@@ -12,7 +12,7 @@ cp [% c('input_files_by_name/windows-x86_64') %]/* [% dest_dir %]/.
 
 # calculate hashes of artifacts
 pushd [% dest_dir %]
-echo -n > sha256sums.txt
+rm -f sha256sums.txt
 for file in $(ls | sort)
 do
     sha256sum $file >> sha256sums.txt
