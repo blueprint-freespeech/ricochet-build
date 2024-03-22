@@ -73,7 +73,7 @@ input_files:
  - name: build-toolchain
    project: '[% c("var/build-toolchain") %]'
  - URL: 'https://download.qt.io/archive/qt/5.15/[% c("version")%]/single/qt-everywhere-opensource-src-[% c("version")%].tar.xz'
-   sha256sum: 93f2c0889ee2e9cdf30c170d353c3f829de5f29ba21c119167dee5995e48ccce
+   sha256sum: 9550ec8fc758d3d8d9090e261329700ddcd712e2dda97e5fcfeabfac22bea2ca
  - filename: fix_climits.patch
    enable: '[% c("var/linux") %]'
  - filename: fix_hardcode_xcode_paths.patch
