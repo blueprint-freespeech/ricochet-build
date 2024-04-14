@@ -105,7 +105,7 @@ for size in 16 24 32 48 64 96 128 192 256 512 1024
 do
     ICON_PATH="debian/ricochet-refresh/usr/share/icons/hicolor/${size}x${size}/apps"
     mkdir -p ${ICON_PATH}
-    convert $rootdir/shared/icon-1024.png -resize ${size}x${size} ${ICON_PATH}/ricochet-refresh.png
+    convert -define png:exclude-chunks=date,time $rootdir/shared/icon-1024.png -resize ${size}x${size} ${ICON_PATH}/ricochet-refresh.png
 done
 
 # generate desktop file
@@ -148,7 +148,7 @@ cp -a $distdir/ricochet-refresh/* AppDir/usr/bin/.
 ICON_ARGS=
 for size in 16 32 64 128 192 256 512
 do
-    convert $rootdir/shared/icon-1024.png -resize ${size}x${size} ricochet-refresh-${size}.png
+    convert -define png:exclude-chunks=date,time $rootdir/shared/icon-1024.png -resize ${size}x${size} ricochet-refresh-${size}.png
     ICON_ARGS="${ICON_ARGS} -i ricochet-refresh-${size}.png"
 done
 
