@@ -136,6 +136,7 @@ CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
 [% END -%]
 
 mkdir build && cd build
+export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
 RICOCHET_REFRESH_VERSION=[% c('version') %] cmake -S ../src $CMAKE_FLAGS
 
 cmake --build . -j[% c('num_procs') %]
