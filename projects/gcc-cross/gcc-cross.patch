@@ -1,0 +1,18 @@
+Avoids "../../../gcc-10.3.0/libsanitizer/asan/asan_linux.cpp:217:21: error:
+'PATH_MAX' was not declared in this scope". PATH_MAX is in /include/linux/limits.h,
+which is usually included by /include/limits.h (indirectly, through posix headers,
+etc.). For some reason, when cross-compiling, this inclusion chain is broken and
+we must include <linux/limits.h> by hand.
+
+Index: gcc-10.3.0/libsanitizer/asan/asan_linux.cpp
+===================================================================
+--- gcc-10.3.0.orig/libsanitizer/asan/asan_linux.cpp
++++ gcc-10.3.0/libsanitizer/asan/asan_linux.cpp
+@@ -32,6 +32,7 @@
+ #include <dlfcn.h>
+ #include <fcntl.h>
+ #include <limits.h>
++#include <linux/limits.h>
+ #include <pthread.h>
+ #include <stdio.h>
+ #include <unistd.h>
