@@ -5,6 +5,7 @@ container:
   use_container: 1
 
 var:
+  distdir: binutils
   deps:
     - bison
     - texinfo
@@ -13,6 +14,10 @@ targets:
   windows:
     var:
       configure_opt: '--disable-shared --enable-static --target=[% c("var/arch") %]-w64-mingw32 --disable-multilib --enable-lto --disable-gdb --enable-deterministic-archives'
+
+  linux-cross:
+    var:
+      distdir: 'binutils-cross-[% c("var/arch") %]'
 
 input_files:
   - project: container-image
