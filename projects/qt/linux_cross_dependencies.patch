@@ -1,0 +1,191 @@
+Add dependencies for cross-compilation
+
+Index: qt-everywhere-src-5.15.13/qtbase/src/gui/configure.json
+===================================================================
+--- qt-everywhere-src-5.15.13.orig/qtbase/src/gui/configure.json
++++ qt-everywhere-src-5.15.13/qtbase/src/gui/configure.json
+@@ -64,6 +64,16 @@
+                 { "type": "makeSpec", "spec": "BCM_HOST" }
+             ]
+         },
++        "brotli": {
++            "sources": [
++                "-lbrotlidec -lbrotlicommon"
++            ]
++        },
++        "dl": {
++            "sources": [
++                "-ldl"
++            ]
++        },
+         "dxguid": {
+             "label": "DirectX GUID",
+             "sources": [
+@@ -244,7 +254,16 @@
+                 { "libs": "-lfreetype" }
+             ],
+             "use": [
+-                { "lib": "zlib", "condition": "features.system-zlib" }
++                { "lib": "zlib", "condition": "features.system-zlib" },
++                { "lib": "libm" },
++                { "lib": "libpng" },
++                { "lib": "brotli" },
++                { "lib": "libz" }
++            ]
++        },
++        "expat": {
++            "sources": [
++                "-lexpat"
+             ]
+         },
+         "fontconfig": {
+@@ -264,7 +283,7 @@
+                 { "type": "pkgConfig", "args": "fontconfig" },
+                 { "type": "freetype", "libs": "-lfontconfig" }
+             ],
+-            "use": "freetype"
++            "use": "freetype expat uuid pthread"
+         },
+         "gbm": {
+             "label": "GBM",
+@@ -327,6 +346,12 @@
+                 "-llgmon"
+             ]
+         },
++        "libbsd": {
++            "sources": [
++                { "type": "pkgConfig", "args": "libbsd" }
++            ],
++            "use": "dl libmd"
++        },
+         "libinput": {
+             "label": "libinput",
+             "test": {
+@@ -378,6 +403,16 @@
+                 "-ljpeg"
+             ]
+         },
++        "libm": {
++            "sources": [
++                "-lm"
++            ]
++        },
++        "libmd": {
++            "sources": [
++                { "type": "pkgConfig", "args": "libmd" }
++            ]
++        },
+         "libmd4c": {
+             "label": "libmd4c",
+             "test": {
+@@ -407,6 +442,11 @@
+                 { "lib": "zlib", "condition": "features.system-zlib" }
+             ]
+         },
++        "libz": {
++            "sources": [
++                "-lz"
++            ]
++        },
+         "mtdev": {
+             "label": "mtdev",
+             "test": {
+@@ -486,6 +526,11 @@
+                 { "type": "makeSpec", "spec": "OPENVG" }
+             ]
+         },
++        "pthread": {
++            "sources": [
++                "-lpthread"
++            ]
++        },
+         "tslib": {
+             "label": "tslib",
+             "test": {
+@@ -496,6 +541,11 @@
+                 "-lts"
+             ]
+         },
++        "uuid": {
++            "sources": [
++                "-luuid"
++            ]
++        },
+         "v4l2": {
+             "label": "V4L2",
+             "test": {
+@@ -553,6 +603,19 @@
+                 { "type": "pkgConfig", "args": "wayland-server" }
+             ]
+         },
++        "Xau": {
++            "label": "Xau",
++            "sources": [
++                { "type": "pkgConfig", "args": "xau" }
++            ]
++        },
++        "Xdmcp": {
++            "label": "Xdmcp",
++            "sources": [
++                { "type": "pkgConfig", "args": "xdmcp" }
++            ],
++            "use": "libbsd"
++        },
+         "xlib": {
+             "label": "XLib",
+             "test": {
+@@ -563,8 +626,10 @@
+             },
+             "headers": "X11/Xlib.h",
+             "sources": [
++                { "type": "pkgConfig", "args": "x11" },
+                 { "type": "makeSpec", "spec": "X11" }
+-            ]
++            ],
++            "use": "xcb dl"
+         },
+         "x11sm": {
+             "label": "X11 session management",
+@@ -590,7 +655,8 @@
+             "sources": [
+                 { "type": "pkgConfig", "args": "xcb >= 1.11" },
+                 "-lxcb"
+-            ]
++            ],
++            "use": "Xau Xdmcp"
+         },
+         "xcb_icccm": {
+             "label": "XCB ICCCM >= 0.3.9",
+@@ -608,7 +674,7 @@
+                 { "type": "pkgConfig", "args": "xcb-image >= 0.3.9" },
+                 "-lxcb-image"
+             ],
+-            "use": "xcb_shm xcb"
++            "use": "xcb_shm xcb_util xcb"
+         },
+         "xcb_keysyms": {
+             "label": "XCB Keysyms >= 0.3.9",
+@@ -682,6 +748,13 @@
+             ],
+             "use": "xcb"
+         },
++        "xcb_util": {
++            "label": "XCB Util",
++            "sources": [
++                "-lxcb-util"
++            ],
++            "use": "xcb"
++        },
+         "xcb_xlib": {
+             "label": "XCB Xlib",
+             "test": {
+@@ -768,7 +841,8 @@
+             "sources": [
+                 { "type": "pkgConfig", "args": "xkbcommon-x11" },
+                 "-lxkbcommon -lxkbcommon-x11"
+-            ]
++            ],
++            "use": "xcb xcb_xkb"
+         },
+         "xrender": {
+             "label": "XRender for native painting",

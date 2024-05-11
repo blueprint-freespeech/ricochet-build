@@ -21,6 +21,22 @@ cd $builddir/qt-everywhere-src-[% c('version') %]
   sed -i "s/lib64/lib\/x86_64-linux-gnu/g" qtbase/mkspecs/linux-g++-64/qmake.conf
 [% END -%]
 
+[% IF c("var/linux-cross") %]
+  # The configure script disables pkg-config when cross-compiling if
+  # PKG_CONFIG_LIBDIR and PKG_CONFIG_SYSROOT_DIR are not defined
+  export PKG_CONFIG_LIBDIR="/usr/lib/[% c("var/compiler_target") %]/pkgconfig:/usr/share/pkgconfig"
+  export PKG_CONFIG_SYSROOT_DIR=/
+  # The linker fails to find some indirect dependencies: patch qt so
+  # it knows exactly what it must link to
+  patch -p1 < $rootdir/linux_cross_dependencies.patch
+  # We don't want to include /usr/include's native headers, so we
+  # create symlinks to the required headers instead
+  cppincludes=$distdir/gcc/include
+  for hdir in fontconfig xcb xkbcommon X11; do
+    ln -s "/usr/include/$hdir" "$cppincludes/$hdir"
+  done
+[% END -%]
+
 [% IF c("var/windows") -%]
   # remove d3d12 support (or else build looks for fxc.exe for shader compilation which we do not have)
   sed -i 's/qtConfig(d3d12): SUBDIRS += d3d12//' qtdeclarative/src/plugins/scenegraph/scenegraph.pro
@@ -47,7 +63,7 @@ cd $builddir/qt-everywhere-src-[% c('version') %]
 
 ./configure \
   -prefix "$projdir" \
-  [% IF c("var/macos") -%]-I $cppincludes [% END -%] \
+  [% IF c("var/macos") || c("var/linux-cross") -%]-I $cppincludes [% END -%] \
   -xplatform [% c('var/xplatform') %] \
   -device-option CROSS_COMPILE=[% c('var/cross_compile') %] \
   -release \
