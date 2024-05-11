@@ -17,6 +17,9 @@ mkdir build && cd build
 # compilers are specified through envvars
 CMAKE_FLAGS='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX='$projdir' -Dprotobuf_WITH_ZLIB=OFF -Dprotobuf_BUILD_SHARED_LIBRARIES=OFF -Dprotobuf_BUILD_TESTS=OFF'
 
+[% IF c("var/linux-cross") -%]
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=[% c("var/arch") %] $CMAKE_FLAGS"
+[% END -%]
 [% IF c("var/windows-i686") -%]
     CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=i386 $CMAKE_FLAGS"
 [% END -%]
