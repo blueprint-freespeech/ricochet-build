@@ -130,6 +130,7 @@ mv ricochet-refresh_${VERSION}_${DEBARCH}.deb $projdir/.
 
 popd # deb
 
+[% IF ! c("var/linux-cross") -%]
 #
 # build appimage
 #
@@ -177,6 +178,7 @@ rm /var/tmp/rbm
 mv Ricochet-Refresh-*${APPIMAGEARCH}.AppImage $projdir/ricochet-refresh-${VERSION}-${APPIMAGEARCH}.appimage
 
 popd # appimage
+[% END -%]
 
 #
 # portable tar.gz
