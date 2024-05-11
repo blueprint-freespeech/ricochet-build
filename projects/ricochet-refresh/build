@@ -80,6 +80,10 @@ popd
   export PKG_CONFIG_LIBDIR=$sysrootdir/lib/pkgconfig
 [% END -%]
 
+[% IF c("var/linux-cross") -%]
+  export PKG_CONFIG_LIBDIR="/usr/lib/[% c("var/compiler_target") %]/pkgconfig:/usr/share/pkgconfig"
+[% END -%]
+
 CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
                 -DFORCE_QT5=ON
                 -DProtobuf_USE_STATIC_LIBS=ON
@@ -95,6 +99,9 @@ CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
 # Set toolchain file
 [% IF c("var/linux-i686") -%]
     CMAKE_FLAGS="-DCMAKE_TOOLCHAIN_FILE=../src/cmake/toolchains/i386-linux-gnu.cmake $CMAKE_FLAGS"
+[% END -%]
+[% IF c("var/linux-cross") -%]
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=[% c("var/arch") %] $CMAKE_FLAGS"
 [% END -%]
 [% IF c("var/windows") -%]
     CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Windows $CMAKE_FLAGS"
