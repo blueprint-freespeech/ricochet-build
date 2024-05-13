@@ -1,0 +1,29 @@
+filename: '[% project %]-[% c("version") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/linuxdeploy") %]'
+container:
+  use_container: 1
+
+var:
+  linux_cross: 1
+
+targets:
+  linux-x86_64:
+    var:
+      appimage_arch: x86_64
+  linux-i686:
+    var:
+      appimage_arch: i386
+      arch_deps:
+        - zlib1g:i386
+
+
+input_files:
+ - project: container-image
+ - name: linuxdeploy
+   enable: '[% c("var/linux-i686") %]'
+   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/[% c("version") %]/linuxdeploy-[% c("var/appimage_arch") %].AppImage
+   sha256sum: bca5ad35204f06a6ca5930aa1c5cceec7978ffc2c26bf16dc05ed91587488bbb
+ - name: linuxdeploy
+   enable: '[% c("var/linux-x86_64") %]'
+   URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/[% c("version") %]/linuxdeploy-[% c("var/appimage_arch") %].AppImage
+   sha256sum: c242e21f573532c03adc2c356b70055ee0de2ae66e235d086b714e69d2cae529
