@@ -1,0 +1,30 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+# Define a wrapper script to remove the '-mkfs-time 0' argument
+# from linuxdeploy's internal mksquashfs command-line (it conflicts
+# with SOURCE_DATE_EPOCH and obstructs reproducible builds)
+# See https://github.com/AppImage/AppImageKit/issues/929#issuecomment-926001098
+# Adapted from https://github.com/spesmilo/electrum/blob/9c94eb99f80fba89973978dd7f6d4727818ad7a3/contrib/build-linux/appimage/make_appimage.sh
+linuxdeploy=./linuxdeploy-[% c("var/appimage_arch") %].AppImage
+chmod +x $linuxdeploy
+$linuxdeploy --appimage-extract
+rm -d $projdir
+mv squashfs-root $projdir
+
+MKSQUASHFS=$projdir/plugins/linuxdeploy-plugin-appimage/appimagetool-prefix/usr/lib/appimagekit/mksquashfs
+mv $MKSQUASHFS ${MKSQUASHFS}_orig
+# Paths are hardcoded, not relative. linuxdeploy must be executed
+# from $projdir.
+cat <<EOF >$MKSQUASHFS
+#!/bin/sh
+args=\$(echo "\$@" | sed -e 's/-mkfs-time 0//')
+${MKSQUASHFS}_orig \$args
+EOF
+chmod +x $MKSQUASHFS
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
