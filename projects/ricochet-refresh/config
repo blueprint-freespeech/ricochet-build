@@ -8,6 +8,7 @@ container:
   use_container: 1
 
 var:
+  pluggable_transports: 1
   deps:
     - jq
     - patchelf
@@ -86,3 +87,4 @@ input_files:
     sig_ext: asc
     file_gpg_id: 1
     gpg_keyring: tor-browser.gpg
+    enable: '[% c("var/pluggable_transports") %]'
