@@ -12,56 +12,58 @@ export PATH=$distdir/qt/bin:$PATH
 tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 export PATH=$distdir/cmake/bin:$PATH
 tar -C $distdir -xf [% c('input_files_by_name/tor') %]
-mkdir -p $distdir/tor-expert-bundle
-tar -C $distdir/tor-expert-bundle -xf $rootdir/[% c('input_files_by_name/tor-expert-bundle') %]
 
 tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
 cd $builddir/[% project %]-[% c('version') %]/
 
+[% IF c("var/pluggable_transports") -%]
+    mkdir -p $distdir/tor-expert-bundle
+    tar -C $distdir/tor-expert-bundle -xf $rootdir/[% c('input_files_by_name/tor-expert-bundle') %]
 
-# Generate the pluggables header
-# 1. create a QMap<String, std::vector<std::string>> mapping bridge type strings (ie obfs4, snowflake, etc) to lists of bridge lines
-PT_CONFIG=$distdir/tor-expert-bundle/tor/pluggable_transports/pt_config.json
+    # Generate the pluggables header
+    # 1. create a QMap<String, std::vector<std::string>> mapping bridge type strings (ie obfs4, snowflake, etc) to lists of bridge lines
+    PT_CONFIG=$distdir/tor-expert-bundle/tor/pluggable_transports/pt_config.json
 
-PT_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego_ui/pluggables.hpp
-touch $PT_HEADER_PATH
-echo "#pragma once" > $PT_HEADER_PATH
-echo "const QMap<QString, std::vector<std::string>> defaultBridges {" >> $PT_HEADER_PATH
+    PT_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego_ui/pluggables.hpp
+    touch $PT_HEADER_PATH
+    echo "#pragma once" > $PT_HEADER_PATH
+    echo "const QMap<QString, std::vector<std::string>> defaultBridges {" >> $PT_HEADER_PATH
 
-function bridges_conf {
-  local bridge_type="$1"
-  echo "    {" >> $PT_HEADER_PATH
-  echo "        \"$bridge_type\"," >> $PT_HEADER_PATH
-  echo "        {" >> $PT_HEADER_PATH
-  jq -r ".bridges.\"$bridge_type\" | .[]" $PT_CONFIG | while read -r line; do
-    echo "          R\"($line)\"," >> "$PT_HEADER_PATH"
-  done
-  echo "        }" >> $PT_HEADER_PATH
-  echo "    }," >> $PT_HEADER_PATH
-}
+    function bridges_conf {
+      local bridge_type="$1"
+      echo "    {" >> $PT_HEADER_PATH
+      echo "        \"$bridge_type\"," >> $PT_HEADER_PATH
+      echo "        {" >> $PT_HEADER_PATH
+      jq -r ".bridges.\"$bridge_type\" | .[]" $PT_CONFIG | while read -r line; do
+        echo "          R\"($line)\"," >> "$PT_HEADER_PATH"
+      done
+      echo "        }" >> $PT_HEADER_PATH
+      echo "    }," >> $PT_HEADER_PATH
+    }
 
-for bridge_type in $(jq -r ".bridges | keys[]" $PT_CONFIG); do
-  bridges_conf $bridge_type
-done
-echo "};" >> $PT_HEADER_PATH
+    for bridge_type in $(jq -r ".bridges | keys[]" $PT_CONFIG); do
+      bridges_conf $bridge_type
+    done
+    echo "};" >> $PT_HEADER_PATH
 
-# 2. set the recommended bridge type
-recommended_bridge_type="\"$(jq -r .recommendedDefault $PT_CONFIG)\"";
-echo "const QString recommendedBridgeType = ${recommended_bridge_type};" >> $PT_HEADER_PATH
+    # 2. set the recommended bridge type
+    recommended_bridge_type="\"$(jq -r .recommendedDefault $PT_CONFIG)\"";
+    echo "const QString recommendedBridgeType = ${recommended_bridge_type};" >> $PT_HEADER_PATH
 
-# Generate the torrc header
-TORRC_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego/source/torrc.hpp
-echo "#pragma once" > $TORRC_HEADER_PATH
-# 1. get the number of pluggable transport bins
-PT_COUNT=$(jq '.pluggableTransports | length' $PT_CONFIG)
-echo "constexpr std::array<std::string_view, ${PT_COUNT}> clientTransportPlugins = {" >> $TORRC_HEADER_PATH
+    # Generate the torrc header
+    TORRC_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego/source/torrc.hpp
+    echo "#pragma once" > $TORRC_HEADER_PATH
+    # 1. get the number of pluggable transport bins
+    PT_COUNT=$(jq '.pluggableTransports | length' $PT_CONFIG)
+    echo "constexpr std::array<std::string_view, ${PT_COUNT}> clientTransportPlugins = {" >> $TORRC_HEADER_PATH
 
-# 2. write all the PT ClientTransportPlugin torrc lines
-jq -r .pluggableTransports[] $PT_CONFIG | while read -r line; do
-    echo "    R\"($line)\"," | awk '{gsub(/\$\{pt_path\}/, "pluggable_transports/"); print}' >> $TORRC_HEADER_PATH
-done
-echo "};" >> $TORRC_HEADER_PATH
-cat $TORRC_HEADER_PATH
+    # 2. write all the PT ClientTransportPlugin torrc lines
+    jq -r .pluggableTransports[] $PT_CONFIG | while read -r line; do
+        echo "    R\"($line)\"," | awk '{gsub(/\$\{pt_path\}/, "pluggable_transports/"); print}' >> $TORRC_HEADER_PATH
+    done
+    echo "};" >> $TORRC_HEADER_PATH
+    cat $TORRC_HEADER_PATH
+[% END -%]
 
 # generate src tar
 pushd $builddir
@@ -151,13 +153,15 @@ bindir=$projdir
 # build outputs
 cp -a $builddir/[% project %]-[% c('version') %]/build/ricochet-refresh/ricochet-refresh/* $projdir/.
 
-# pluggable transports
-pushd $distdir/tor-expert-bundle/tor/pluggable_transports
-    mkdir $bindir/pluggable_transports
-    for i in $(find . -type f -executable); do
-        cp $i $bindir/pluggable_transports/.
-    done
-popd
+[% IF c("var/pluggable_transports") -%]
+    # pluggable transports
+    pushd $distdir/tor-expert-bundle/tor/pluggable_transports
+        mkdir $bindir/pluggable_transports
+        for i in $(find . -type f -executable); do
+            cp $i $bindir/pluggable_transports/.
+        done
+    popd
+[% END -%]
 
 # tor
 cp $distdir/tor/bin/tor[% IF c("var/windows") %].exe[% END %] $bindir/.
