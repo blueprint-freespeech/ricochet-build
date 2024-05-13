@@ -8,6 +8,8 @@ set +x
 VERSION=[% c("version") %]
 ARCH=[% c("var/arch") %]
 
+export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
+
 #
 # Windows packaging
 #
@@ -132,13 +134,11 @@ popd # deb
 # build appimage
 #
 APPIMAGEARCH=[% c("var/appimage_arch") %]
+tar -C $distdir -xf [% c('input_files_by_name/linuxdeploy') %]
+linuxdeploy=$distdir/linuxdeploy/AppRun
+
 mkdir appimage
 pushd appimage
-linuxdeploy="$rootdir/[% c('input_files_by_name/linuxdeploy') %]"
-chmod +x $linuxdeploy
-# https://github.com/AppImage/AppImageKit/issues/1027#issuecomment-641601097
-# https://github.com/linuxdeploy/linuxdeploy/issues/154#issuecomment-741936850
-dd if=/dev/zero of=$linuxdeploy conv=notrunc bs=1 count=3 seek=8
 
 mkdir -p AppDir/usr/bin
 cp -a $distdir/ricochet-refresh/* AppDir/usr/bin/.
@@ -160,7 +160,7 @@ cat > ricochet-refresh.desktop << EOF
 EOF
 
 # build .appimage
-$linuxdeploy --appimage-extract-and-run -d ./ricochet-refresh.desktop  ${ICON_ARGS} --icon-filename=ricochet-refresh --output appimage --appdir AppDir
+$linuxdeploy -d ./ricochet-refresh.desktop  ${ICON_ARGS} --icon-filename=ricochet-refresh --output appimage --appdir AppDir
 
 mv Ricochet-Refresh-*${APPIMAGEARCH}.AppImage $projdir/ricochet-refresh-${VERSION}-${APPIMAGEARCH}.appimage
 
