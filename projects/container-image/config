@@ -21,7 +21,7 @@ pre: |
   export DEBIAN_FRONTEND=noninteractive
   # Update the package cache so the container installs the most recent
   # version of required packages.
-  [% IF c("var/linux_cross") %]
+  [% IF pc(c('origin_project'), 'var/add_architecture', { step => c('origin_step') }) %]
     # Add cross-compilation dpkg architecture
     dpkg --add-architecture [% c("var/arch_debian") %]
   [% END -%]
