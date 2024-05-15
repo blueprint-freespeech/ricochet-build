@@ -8,8 +8,5 @@ gpg_keyring: cmake.gpg
 container:
   use_container: 1
 
-var:
-  linux_cross: 0
-
 input_files:
   - project: container-image

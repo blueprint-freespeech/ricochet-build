@@ -3,9 +3,6 @@ version: '[% c("var/versions/linuxdeploy") %]'
 container:
   use_container: 1
 
-var:
-  linux_cross: 1
-
 targets:
   linux-x86_64:
     var:
