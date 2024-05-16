@@ -133,6 +133,13 @@ popd # deb
 #
 # build appimage
 #
+
+[% IF !c('container/use_container') %]
+# appimages hard-code their paths when unpacked, so provide soft-link for when
+# running outside a container
+ln -s /var/tmp/${USER} /var/tmp/rbm
+[% END %]
+
 APPIMAGEARCH=[% c("var/appimage_arch") %]
 tar -C $distdir -xf [% c('input_files_by_name/linuxdeploy') %]
 linuxdeploy=$distdir/linuxdeploy/AppRun
@@ -161,6 +168,11 @@ EOF
 
 # build .appimage
 $linuxdeploy -d ./ricochet-refresh.desktop  ${ICON_ARGS} --icon-filename=ricochet-refresh --output appimage --appdir AppDir
+
+[% IF !c('container/use_container') %]
+# cleanup our soft-link
+rm /var/tmp/rbm
+[% END %]
 
 mv Ricochet-Refresh-*${APPIMAGEARCH}.AppImage $projdir/ricochet-refresh-${VERSION}-${APPIMAGEARCH}.appimage
 
