@@ -23,10 +23,11 @@ popd
 [% IF c("var/sign") %]
 GPG_KEYRING="[% c('var/signing/gpg_keyring') %]"
 GPG_PASSWORD_FILE="[% c('var/signing/gpg_password_file') %]"
+GPG_FINGERPRINT="[% c('var/signing/gpg_fingerprint') %]"
 
 sign_file() {
     FILE=$1
-    gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --pinentry-mode loopback --passphrase-file "${GPG_PASSWORD_FILE}" -abs "${FILE}"
+    gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --pinentry-mode loopback --passphrase-file "${GPG_PASSWORD_FILE}" -absu "${GPG_FINGERPRINT}" "${FILE}"
 }
 [% ELSE %]
 sign_file() {

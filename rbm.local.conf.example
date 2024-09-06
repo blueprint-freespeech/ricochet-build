@@ -48,3 +48,4 @@ var:
       ### PGP signing settings used in the 'release' project
       # gpg_keyring: /path/to/gpg/keyring
       # gpg_password_file: /path/to/gpg/password/file
+      # gpg_fingerprint: ABCDEFGH
