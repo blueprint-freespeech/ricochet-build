@@ -28,7 +28,7 @@ input_files:
   - project: container-image
   - name: build-toolchain
     project: '[% c("var/build-toolchain") %]'
-  - URL: 'https://www.openssl.org/source/openssl-[% c("version") %].tar.gz'
+  - URL: 'https://github.com/openssl/openssl/releases/download/openssl-[% c("version") %]/openssl-[% c("version") %].tar.gz'
     sig_ext: asc
     file_gpg_id: 1
     gpg_keyring: openssl.gpg
