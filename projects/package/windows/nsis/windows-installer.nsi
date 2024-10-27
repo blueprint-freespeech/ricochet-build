@@ -107,7 +107,8 @@
         ; Files we want to install
         File ricochet-refresh.exe
         File tor.exe
-        File /r pluggable_transports
+        ; Pluggable-Transports are an optional depenendency
+        !system 'if [ -f pluggable_transports ]; then echo File /r pluggable_transports; fi'
 
         ; Create the uninstaller
         WriteUninstaller "$INSTDIR\Uninstall Ricochet Refresh.exe"
