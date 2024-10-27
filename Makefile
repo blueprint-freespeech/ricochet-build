@@ -28,6 +28,9 @@ ricochet-linux-i686-stable: submodule-update
 ricochet-linux-x86_64-stable: submodule-update
 	$(rbm) build package --target linux --target linux-x86_64 --target stable
 
+ricochet-linux-aarch64-stable: submodule-update
+	$(rbm) build package --target linux-cross --target linux --target linux-aarch64 --target stable
+
 ricochet-macos-stable:
 	$(MAKE) ricochet-macos-x86_64-stable
 	$(MAKE)  ricochet-macos-aarch64-stable
@@ -66,6 +69,9 @@ ricochet-linux-i686-alpha: submodule-update
 ricochet-linux-x86_64-alpha: submodule-update
 	$(rbm) build package --target linux --target linux-x86_64 --target alpha
 
+ricochet-linux-aarch64-alpha: submodule-update
+	$(rbm) build package --target linux-cross --target linux --target linux-aarch64 --target alpha
+
 ricochet-macos-alpha:
 	$(MAKE) ricochet-macos-x86_64-alpha
 	$(MAKE) ricochet-macos-aarch64-alpha
@@ -103,6 +109,9 @@ ricochet-linux-i686-testbuild: submodule-update
 
 ricochet-linux-x86_64-testbuild: submodule-update
 	$(rbm) build package --target linux --target linux-x86_64 --target testbuild
+
+ricochet-linux-aarch64-testbuild: submodule-update
+	$(rbm) build package --target linux-cross --target linux --target linux-aarch64 --target testbuild
 
 ricochet-macos-testbuild:
 	$(MAKE) ricochet-macos-x86_64-testbuild

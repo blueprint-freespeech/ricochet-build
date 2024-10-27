@@ -58,6 +58,35 @@ targets:
         - libxext6
         - libxkbcommon0
         - libxkbcommon-x11-0
+  linux-aarch64:
+    var:
+      deb_arch: arm64
+      appimage_arch: aarch64
+      arch_deps:
+        - libfontconfig1-dev:arm64
+        - libfreetype6-dev:arm64
+        - libxkbcommon-dev:arm64
+        - libxcb-glx0-dev:arm64
+        - libxcb-keysyms1-dev:arm64
+        - libxcb-image0-dev:arm64
+        - libxcb-shm0-dev:arm64
+        - libxcb-icccm4-dev:arm64
+        - libxcb-sync0-dev:arm64
+        - libxcb-xfixes0-dev:arm64
+        - libxcb-shape0-dev:arm64
+        - libxcb-randr0-dev:arm64
+        - libxcb-render-util0-dev:arm64
+        - libxcb-xinerama0-dev:arm64
+        - libx11-xcb-dev:arm64
+        - libglu1-mesa-dev:arm64
+        - libxrender-dev:arm64
+        - libxi-dev:arm64
+        - libxkbcommon-x11-dev:arm64
+        - libc6-dev:arm64
+        # linked to by libxdmcp, which is linked by libxcb
+        - libbsd-dev:arm64
+        # linked to by libxcb-image
+        - libxcb-util-dev:arm64
   macos:
     var:
       deps:
@@ -81,7 +110,7 @@ input_files:
    enable: '[% c("var/linux") %]'
  - project: linuxdeploy
    name: linuxdeploy
-   enable: '[% c("var/linux") %]'
+   enable: '[% c("var/linux") && ! c("var/linux-cross") %]'
    # windows packaging
  - filename: windows
    enable: '[% c("var/windows") %]'

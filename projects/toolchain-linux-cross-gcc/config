@@ -1,0 +1,22 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% pc("gcc", "version") %]'
+container:
+  use_container: 1
+
+var:
+  setup: |
+    mkdir -p $distdir
+    tar -C $distdir -xf $rootdir/[% c("build_toolchain_tarfile") %]
+    export PATH="$distdir/gcc/bin:$PATH"
+    export LD_LIBRARY_PATH=$distdir/gcc/[% c("var/compiler_target") %]/lib64:$distdir/gcc/lib64:$distdir/gcc/lib32
+    export CC="$distdir/gcc/bin/[% c("var/arch") %]-linux-gnu-gcc"
+    export CXX="$distdir/gcc/bin/[% c("var/arch") %]-linux-gnu-g++"
+    export CFLAGS='[% c("var/CFLAGS") %]'
+    export CXXFLAGS='[% c("var/CXXFLAGS") %]'
+    export LDFLAGS='[% c("var/LDFLAGS") %]'
+
+input_files:
+  - project: container-image
+  - name: gcc-cross
+    project: gcc-cross

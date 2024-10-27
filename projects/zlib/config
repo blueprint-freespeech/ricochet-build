@@ -14,6 +14,11 @@ targets:
       chost: x86_64-pc-linux-gnu
       ar: $distdir/gcc/bin/x86_64-pc-linux-gnu-gcc-ar
       ranlib: $distdir/gcc/bin/x86_64-pc-linux-gnu-gcc-ranlib
+  linux-cross:
+    var:
+      chost: '[% c("var/compiler_target") %]'
+      ar: '$distdir/gcc/bin/[% c("var/compiler_target") %]-gcc-ar'
+      ranlib: '$distdir/gcc/bin/[% c("var/compiler_target") %]-gcc-ranlib'
   macos:
     var:
       chost: '[% c("var/compiler_target") %]'

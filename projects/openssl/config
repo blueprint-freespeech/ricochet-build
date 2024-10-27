@@ -14,6 +14,9 @@ targets:
   linux-i686:
     var:
       configure_opts: linux-x86 no-shared
+  linux-aarch64:
+    var:
+      configure_opts: linux-aarch64 no-shared enable-ec_nistp_64_gcc_128
   windows-x86_64:
     var:
       configure_opts: 'mingw64 no-shared enable-capieng --cross-compile-prefix=x86_64-w64-mingw32-'

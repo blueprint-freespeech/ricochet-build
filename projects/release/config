@@ -30,6 +30,11 @@ input_files:
    target_append:
     - linux
     - linux-x86_64
+ - name: linux-aarch64
+   project: package
+   target_append:
+    - linux
+    - linux-x86_64
  # macos
  - name: macos-x86_64
    project: package

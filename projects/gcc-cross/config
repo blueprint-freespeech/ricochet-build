@@ -1,0 +1,38 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.[% c("compress_tar") %]'
+version: '[% pc("gcc-source", "version") %]'
+container:
+  use_container: 1
+hardened_gcc: 1
+var:
+  distdir: gcc
+  deps:
+    - build-essential
+    - libmpc-dev
+    - gawk
+    - rsync
+    - python3
+    - bison
+  configure_opt: '--target=[% c("var/compiler_target") %] --disable-multilib --enable-languages=c,c++ --with-glibc-version=[% c("var/glibc_version") %]'
+  glibc_version: '[% c("var/versions/glibc") %]'
+  linux_version: '[% c("var/versions/linux") %]'
+
+input_files:
+  - project: container-image
+  - project: gcc-source
+    name: gcc
+    target_replace:
+      '^linux-.*': linux-x86_64
+  - name: binutils
+    project: binutils
+    target_prepend:
+      - linux-cross
+  - name: gcc-native
+    project: gcc
+    target_replace:
+      '^linux-.*': linux-x86_64
+  - URL: 'https://ftp.gnu.org/gnu/glibc/glibc-[% c("var/glibc_version") %].tar.xz'
+    sha256sum: 9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
+  - URL: 'https://www.kernel.org/pub/linux/kernel/v5.x/linux-[% c("var/linux_version") %].tar.xz'
+    sha256sum: e310588c4b23f0959614e60f007afc20e9b1a8f296d682b041fa129f96fbe151
+  - filename: "gcc-cross.patch"
