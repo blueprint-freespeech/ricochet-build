@@ -127,6 +127,9 @@ ricochet-windows-x86_64-testbuild: submodule-update
 ricochet-release-testbuild: submodule-update
 	$(rbm) build release --target testbuild
 
+ricochet-release-testbuild-sign: submodule-update
+	$(rbm) build release --target testbuild --target sign
+
 # Git Sign+Tag
 
 ricochet-signtag-stable:
