@@ -18,6 +18,9 @@ cd $builddir/[% project %]-[% c('version') %]
   [% IF c("var/linux") %]
     export CC='gcc [% c("var/CFLAGS") %]'
   [% END -%]
+  [% IF c("var/linux-cross") %]
+    export CC="[% c("var/compiler_target") %]-$CC"
+  [% END -%]
 
   export CHOST=[% c("var/chost") %]
   export AR=[% c("var/ar") %]
