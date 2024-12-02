@@ -1,3 +1,9 @@
+ricochet-refresh (3.0.29) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.29
+
+ -- Morgan <morgan@torproject.org>  Sun, 01 Dec 2024 00:00:00 +0000
+
 ricochet-refresh (3.0.28) unstable; urgency=medium
 
   * Upgrade to Ricochet-Refresh 3.0.28
