@@ -21,6 +21,7 @@ clean:
 ricochet-linux-stable:
 	$(MAKE) ricochet-linux-i686-stable
 	$(MAKE) ricochet-linux-x86_64-stable
+	$(MAKE) ricochet-linux-aarch64-stable
 
 ricochet-linux-i686-stable: submodule-update
 	$(rbm) build package --target linux --target linux-i686 --target stable
@@ -33,7 +34,7 @@ ricochet-linux-aarch64-stable: submodule-update
 
 ricochet-macos-stable:
 	$(MAKE) ricochet-macos-x86_64-stable
-	$(MAKE)  ricochet-macos-aarch64-stable
+	$(MAKE) ricochet-macos-aarch64-stable
 
 ricochet-macos-x86_64-stable: submodule-update
 	$(rbm) build package --target macos --target macos-x86_64 --target stable
@@ -62,6 +63,7 @@ ricochet-release-stable-sign: submodule-update
 ricochet-linux-alpha:
 	$(MAKE) ricochet-linux-i686-alpha
 	$(MAKE) ricochet-linux-x86_64-alpha
+	$(MAKE) ricochet-linux-aarch64-alpha
 
 ricochet-linux-i686-alpha: submodule-update
 	$(rbm) build package --target linux --target linux-i686 --target alpha
