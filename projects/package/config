@@ -100,36 +100,35 @@ targets:
         - zip
 
 input_files:
- - project: container-image
-   enable: '[% !c("var/sign") %]'
- - project: ricochet-refresh
-   name: ricochet-refresh
- - filename: shared
-   # linux packaging
- - filename: linux
-   enable: '[% c("var/linux") %]'
- - project: linuxdeploy
-   name: linuxdeploy
-   enable: '[% c("var/linux") && ! c("var/linux-cross") %]'
-   # windows packaging
- - filename: windows
-   enable: '[% c("var/windows") %]'
- - project: nsis
-   name: nsis
-   enable: '[% c("var/windows") %]'
- - project: osslsigncode
-   name: osslsigncode
-   enable: '[% c("var/windows") && c("var/sign") %]'
-   # macos packaging
- - filename: macos
-   enable: '[% c("var/macos") %]'
- - name: rcodesign
-   project: rcodesign
-   enable: '[% c("var/macos") && c("var/sign") %]'
- - project: libdmg-hfsplus
-   name: libdmg-hfsplus
-   enable: '[% c("var/macos") %]'
-   target_replace:
-     '^macos-.*': linux-x86_64
-     '^macos$': linux
-
+  - project: container-image
+    enable: '[% !c("var/sign") %]'
+  - project: ricochet-refresh
+    name: ricochet-refresh
+  - filename: shared
+  # linux packaging
+  - filename: linux
+    enable: '[% c("var/linux") %]'
+  - project: linuxdeploy
+    name: linuxdeploy
+    enable: '[% c("var/linux") && ! c("var/linux-cross") %]'
+  # windows packaging
+  - filename: windows
+    enable: '[% c("var/windows") %]'
+  - project: nsis
+    name: nsis
+    enable: '[% c("var/windows") %]'
+  - project: osslsigncode
+    name: osslsigncode
+    enable: '[% c("var/windows") && c("var/sign") %]'
+  # macos packaging
+  - filename: macos
+    enable: '[% c("var/macos") %]'
+  - name: rcodesign
+    project: rcodesign
+    enable: '[% c("var/macos") && c("var/sign") %]'
+  - project: libdmg-hfsplus
+    name: libdmg-hfsplus
+    enable: '[% c("var/macos") %]'
+    target_replace:
+      '^macos-.*': linux-x86_64
+      '^macos$': linux
