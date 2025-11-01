@@ -148,3 +148,14 @@ ricochet-signtag-stable:
 	VERSION=$(shell ./rbm/rbm showconf release "version" --target stable); \
 	BUILDN=$(shell ./rbm/rbm showconf release "var/build" --target stable); \
 	git tag -s "$$VERSION-$$BUILDN" -m "tagging $$VERSION-$$BUILDN" HEAD
+
+#############
+# Vendoring #
+#############
+
+# rcodesign
+
+rcodesign-cargo-vendor: submodule-update
+	VENDORED_SOURCES=$(shell $(rbm) showconf rcodesign-cargo-vendor "filename" --target linux --target linux-x86_64); \
+	$(rbm) build rcodesign-cargo-vendor --target linux --target linux-x86_64; \
+	sha256sum out/rcodesign-cargo-vendor/$$VENDORED_SOURCES | cut -b 1-64

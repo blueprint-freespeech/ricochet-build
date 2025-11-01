@@ -1,0 +1,16 @@
+#!/bin/bash
+[% c("var/set_default_env") %]
+
+# setup rust
+[% pc('rust', 'var/setup', { rust_tarfile => c('input_files_by_name/rust') }) %]
+
+tar -xf [% project %]-[% c('version') %].tar.[% c('compress_tar') %]
+cd [% project %]-[% c('version') %]
+cargo vendor --locked vendor --manifest-path Cargo.toml
+
+[% c('tar', {
+  tar_src => [ 'vendor' ],
+  tar_args => '-caf ' _ dest_dir _ '/' _ c('filename'),
+  }) %]
+
+archive="[% shell_quote(dest_dir _ "/" _ c("filename")) %]"
