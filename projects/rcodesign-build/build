@@ -1,0 +1,33 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+# setup rust
+[% pc('rust', 'var/setup', { rust_tarfile => c('input_files_by_name/rust') }) %]
+# setup build toolchain
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+tar -C $builddir/[% project %]-[% c('version') %] -xf [% c('input_files_by_name/rcodesign-cargo-vendor') %]
+
+cd $builddir/[% project %]-[% c('version') %]/apple-codesign
+
+mkdir -p .cargo
+cat <<EOF > .cargo/config.toml
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "$builddir/[% project %]-[% c('version') %]/vendor"
+
+[net]
+offline=true
+EOF
+
+mkdir -p $distdir/rcodesign
+cargo install --bin rcodesign --path . --root $distdir/rcodesign [% pc('rust', 'var/cargo-flags') %]
+
+cd $distdir
+[% c('tar', {
+        tar_src => 'rcodesign',
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
