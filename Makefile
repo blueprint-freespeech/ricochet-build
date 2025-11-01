@@ -159,3 +159,10 @@ rcodesign-cargo-vendor: submodule-update
 	VENDORED_SOURCES=$(shell $(rbm) showconf rcodesign-cargo-vendor "filename" --target linux --target linux-x86_64); \
 	$(rbm) build rcodesign-cargo-vendor --target linux --target linux-x86_64; \
 	sha256sum out/rcodesign-cargo-vendor/$$VENDORED_SOURCES | cut -b 1-64
+
+# ricochet-refresh
+
+ricochet-refresh-cargo-vendor: submodule-update
+	VENDORED_SOURCES=$(shell $(rbm) showconf ricochet-refresh-cargo-vendor "filename" --target linux --target linux-x86_64); \
+	$(rbm) build ricochet-refresh-cargo-vendor --target linux --target linux-x86_64; \
+	sha256sum out/ricochet-refresh-cargo-vendor/$$VENDORED_SOURCES | cut -b 1-64

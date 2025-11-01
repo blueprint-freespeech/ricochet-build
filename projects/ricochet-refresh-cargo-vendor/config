@@ -1,0 +1,31 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("git_hash") %]-[% c("var/build_id") %].tar.[% c("compress_tar") %]'
+version: '[% pc("ricochet-refresh", "version") %]'
+git_url: '[% pc("ricochet-refresh", "git_url") %]'
+git_hash: '[% pc("ricochet-refresh", "git_hash") %]'
+git_submodule: 1
+container:
+  use_container: 1
+  disable_network:
+      build: 0
+
+var:
+  osname: 0
+  arch: 0
+
+input_files:
+  - project: container-image
+    target_replace:
+      '^linux-.*': linux-x86_64
+      '^windows-.*': linux-x86_64
+      '^macos-.*': linux-x86_64
+      '^windows$': linux
+      '^macos$': linux
+  - name: rust
+    project: rust
+    target_replace:
+      '^linux-.*': linux-x86_64
+      '^windows-.*': linux-x86_64
+      '^macos-.*': linux-x86_64
+      '^windows$': linux
+      '^macos$': linux
