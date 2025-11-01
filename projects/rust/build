@@ -1,17 +1,123 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
 
+# extract+install prebuilt rust compiler
 tar -C $distdir -xf [% c('input_files_by_name/rust-installer') %]
-cd $distdir/rust-[% c("version") %]-*
+pushd $distdir/rust-[% c("version") %]-x86_64-unknown-linux-gnu
+    STAGING_PATH=$builddir/rust-extract
+    ./install.sh --destdir=$STAGING_PATH
+popd
 
-STAGING_PATH=$builddir/rust-extract
-./install.sh --destdir=$STAGING_PATH
 
-mkdir -p $distdir/rust
-mv $STAGING_PATH/usr/local/bin $distdir/rust/bin
-mv $STAGING_PATH/usr/local/lib $distdir/rust/lib
+mkdir -p $distdir/rust-prebuilt
+mv $STAGING_PATH/usr/local/bin $distdir/rust-prebuilt/bin
+mv $STAGING_PATH/usr/local/lib $distdir/rust-prebuilt/lib
+rm -rf $STAGING_PATH
+
+export PATH=$distdir/rust-prebuilt/bin:$PATH
+#
+# Per platform setup seteps
+#
+
+# Linux
+[% IF c("var/linux") -%]
+tar -C $distdir -xf [% c('input_files_by_name/clang') %]
+export PATH=$distdir/clang/bin:$PATH
+
+LLVM_ROOT="$distdir/clang"
+export LLVM_CONFIG="$distdir/clang/bin/llvm-config"
+export CC=clang
+export CXX=clang++
+unset CFLAGS
+unset CXXFLAGS
+unset LDFLAGS
+export RUSTFLAGS="-L$distdir/gcc/lib64"
+
+# The cc crate ignores CFLAGS/CXXFLAGS for some reason...
+# So replace clang (usually a link to clang-VV) and clang++ (usually a link
+# to clang) with helper scripts.
+pushd $distdir/clang/bin
+    # It will fail if clang is not a script anymore.
+    clang=$(readlink clang)
+    rm clang clang++
+
+    cat <<EOF >clang
+#!/bin/sh
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+\$DIR/$clang --gcc-toolchain=$distdir/gcc "\$@"
+EOF
+    chmod +x clang
+
+    cat <<EOF >clang++
+#!/bin/sh
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+\$DIR/$clang --gcc-toolchain=$distdir/gcc --driver-mode=g++ "\$@"
+EOF
+    chmod +x clang++
+popd
+# Windows
+[% ELSIF c("var/windows") -%]
+LLVM_ROOT="$distdir/toolchain-windows-clang"
+
+unset CC
+unset CXX
+pushd $distdir/toolchain-windows-clang/bin
+    ln -s clang cc
+    ln -s clang++ c++
+popd
+
+# macOS
+[% ELSIF c("var/macos") -%]
+LLVM_ROOT="$distdir/toolchain-macos-clang/clang"
+
+unset CC
+unset CFLAGS
+unset CXXFLAGS
+unset LDFLAGS
+
+mkdir $distdir/helper
+cat <<EOF > $distdir/helper/[% c("var/target-triple") %]-clang
+#!/bin/sh
+$distdir/toolchain-macos-clang/cctools/bin/[% c("var/target-triple") %]-clang [% pc("toolchain-macos-clang", "var/CFLAGS") %] "\$@"
+EOF
+
+chmod +x $distdir/helper/[% c("var/target-triple") %]-clang
+export PATH=$distdir/helper:$PATH
+
+[% END -%]
+
+# extract source
+tar -C $builddir -xf [% c('input_files_by_name/rust-src') %]
+
+# build rust
+pushd $builddir/rustc-[% c('version') %]-src
+    mkdir build
+    pushd build
+        ../configure \
+          --prefix=$projdir \
+          --disable-docs --disable-compiler-docs \
+          --enable-local-rust \
+          --enable-vendor \
+          --enable-extended \
+          --release-channel=stable \
+          --sysconfdir=etc \
+          --llvm-root=${LLVM_ROOT} \
+          --set rust.jemalloc \
+          --target=x86_64-unknown-linux-gnu,[% c("var/target-triple") %] \
+          --set target.x86_64-unknown-linux-gnu.linker=clang \
+          --set target.x86_64-unknown-linux-gnu.ar=llvm-ar \
+          --set target.x86_64-unknown-linux-gnu.ranlib=llvm-ranlib \
+          --set rust.lld=true \
+          [% c("var/configure-flags") %]
+
+        make -j[% c('num_procs') %]
+        make install
+    popd
+popd
 
 cd $distdir
+
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
