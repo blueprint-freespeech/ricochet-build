@@ -28,6 +28,8 @@ targets:
     var:
       CFLAGS: "-target [% c('var/compiler_target') %] -B $cctoolsdir -isysroot $sysrootdir [% IF c('var/macos-aarch64') %]-mcpu=apple-m1[% END %]"
       LDFLAGS: "-Wl,-syslibroot,$sysrootdir -Wl,-dead_strip -Wl,-pie"
+  macos-aarch64:
+    num_procs: 1
 
 input_files:
   - project: container-image
