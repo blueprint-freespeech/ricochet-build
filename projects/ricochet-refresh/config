@@ -104,7 +104,7 @@ input_files:
   - name: ricochet-refresh-cargo-vendor
     project: ricochet-refresh-cargo-vendor
     norec:
-      sha256sum: '[% IF !c("var/testbuild") %]ecd2b7e7921ef799b5acb7e90f1c3109f038e5a113965d0a6602c3eac4fea297 [% END -%]'
+      sha256sum: '[% IF !c("var/testbuild") %]0b19e9a40bd9561620ba2b743f041a49fef4340504ec793825d2ebf586c3559d[% END -%]'
 
   - name: qt
     project: qt
