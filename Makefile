@@ -147,7 +147,13 @@ ricochet-release-testbuild-sign: submodule-update
 ricochet-signtag-stable:
 	VERSION=$(shell ./rbm/rbm showconf release "version" --target stable); \
 	BUILDN=$(shell ./rbm/rbm showconf release "var/build" --target stable); \
-	git tag -s "$$VERSION-$$BUILDN" -m "tagging $$VERSION-$$BUILDN" HEAD
+	git tag -s "$$VERSION-$$BUILDN" -m "tagging stable release $$VERSION-$$BUILDN" HEAD
+
+ricochet-signtag-alpha:
+	VERSION=$(shell ./rbm/rbm showconf release "version" --target alpha); \
+	BUILDN=$(shell ./rbm/rbm showconf release "var/build" --target alpha); \
+	git tag -s "$$VERSION-$$BUILDN" -m "tagging alpha release $$VERSION-$$BUILDN" HEAD
+
 
 #############
 # Vendoring #
