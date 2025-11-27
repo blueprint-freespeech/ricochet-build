@@ -91,6 +91,7 @@ targets:
     var:
       deps:
         - genisoimage
+        - icnsutils
         - imagemagick
         - inkscape
   windows:

@@ -141,12 +141,7 @@ RICOCHET_REFRESH_VERSION=[% c('version') %] cmake -S ../src $CMAKE_FLAGS '-DCARG
 cmake --build . -j[% c('num_procs') %]
 cmake --install .
 
-# macos target builds an entire .app directory
-[% IF c("var/macos") %]
-bindir="$projdir/ricochet-refresh.app/Contents/MacOS"
-[% ELSE %]
 bindir=$projdir
-[% END %]
 
 mv $distdir/ricochet-refresh-dist/bin/* $projdir
 
