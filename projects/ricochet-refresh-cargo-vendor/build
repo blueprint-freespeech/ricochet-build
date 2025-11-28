@@ -13,8 +13,8 @@ pushd [% project %]-[% c('version') %]/src/libtego_rs
   cargo vendor --locked --manifest-path Cargo.toml $builddir/vendor/libtego_rs
 popd
 
-pushd [% project %]-[% c('version') %]/src/ricochet-refresh
-  cargo vendor --locked --manifest-path Cargo.toml $builddir/vendor/ricochet-refresh
+pushd [% project %]-[% c('version') %]/src/ricochet-refresh-qt
+  cargo vendor --locked --manifest-path Cargo.toml $builddir/vendor/ricochet-refresh-qt
 popd
 
 [% c('tar', {

@@ -16,7 +16,7 @@ tar -C $distdir -xf [% c('input_files_by_name/tor') %]
 
 # extract source
 tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
-tar -C $builddir/[% project %]-[% c('version') %] -xf [% c('input_files_by_name/ricochet-refresh-cargo-vendor') %]
+tar -C $builddir/[% project %]-[% c('version') %]/src -xf [% c('input_files_by_name/ricochet-refresh-cargo-vendor') %]
 
 cd $builddir/[% project %]-[% c('version') %]/
 
@@ -28,21 +28,21 @@ cat <<EOF > .cargo/config.toml
 replace-with = "vendored-sources"
 
 [source.vendored-sources]
-directory = "$builddir/[% project %]-[% c('version') %]/vendor/libtego_rs"
+directory = "../vendor/libtego_rs"
 
 [net]
 offline=true
 EOF
 popd
 
-pushd src/ricochet-refresh
+pushd src/ricochet-refresh-qt
 mkdir -p .cargo
 cat <<EOF > .cargo/config.toml
 [source.crates-io]
 replace-with = "vendored-sources"
 
 [source.vendored-sources]
-directory = "$builddir/[% project %]-[% c('version') %]/vendor/ricochet-refresh"
+directory = "../vendor/ricochet-refresh-qt"
 
 [net]
 offline=true

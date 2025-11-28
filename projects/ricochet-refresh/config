@@ -1,8 +1,8 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
 version: '[% c("var/versions/ricochet-refresh") %]'
-git_url: https://github.com/blueprint-freespeech/ricochet-refresh.git
-git_hash: 'ricochet-refresh-v[% c("version") %]'
+git_url: '[% c("var/git_urls/ricochet-refresh") %]'
+git_hash: '[% c("var/git_hashes/ricochet-refresh") %]'
 git_submodule: 1
 container:
   use_container: 1
@@ -17,8 +17,6 @@ targets:
   testbuild:
     fetch: 1
     version: '3.1-testbuild-[% exec("git rev-parse --short HEAD") %]'
-    #git_url: /path/to/your/ricochet-refresh/.git
-    git_hash: main
 
   linux-i686:
     var:

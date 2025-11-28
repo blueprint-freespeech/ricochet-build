@@ -34,18 +34,28 @@
 #num_procs: 8
 
 var:
-    ### Various release-signing settings for use with the the 'sign' target
-    signing:
-      ### Windows code-signing settings used in the 'package' project
-      # certs: /path/to/certificate.pem
-      # key: /path/to/signing.key
-      # timestamp_url: http://timeserver.com
-      ### macOS code-signing and notarizing settings used in the 'package'
-      ### project; see https://gregoryszorc.com/docs/apple-codesign/0.22.0/
-      # p12_file: /path/to/develper-id.p12
-      # p12_password_file: /path/to/certificate/password/file
-      # app_store_connect_api_key: /path/to/api-key.json
-      ### PGP signing settings used in the 'release' project
-      # gpg_keyring: /path/to/gpg/keyring
-      # gpg_password_file: /path/to/gpg/password/file
-      # gpg_fingerprint: ABCDEFGH
+  ### Various release-signing settings for use with the the 'sign' target
+  signing:
+    ### Windows code-signing settings used in the 'package' project
+    # certs: /path/to/certificate.pem
+    # key: /path/to/signing.key
+    # timestamp_url: http://timeserver.com
+    ### macOS code-signing and notarizing settings used in the 'package'
+    ### project; see https://gregoryszorc.com/docs/apple-codesign/0.22.0/
+    # p12_file: /path/to/develper-id.p12
+    # p12_password_file: /path/to/certificate/password/file
+    # app_store_connect_api_key: /path/to/api-key.json
+    ### PGP signing settings used in the 'release' project
+    # gpg_keyring: /path/to/gpg/keyring
+    # gpg_password_file: /path/to/gpg/password/file
+    # gpg_fingerprint: ABCDEFGH
+
+targets:
+  testbuild:
+    var:
+      ### Set a custom git_url for ricochet-refresh testbuilds
+      git_urls:
+        # ricochet-refresh: /path/to/ricochet-refresh/.git
+      ### Set a custom git_hash for ricochet-refreh testbuilds
+      git_hashes:
+        # ricochet-refresh: branch-name
