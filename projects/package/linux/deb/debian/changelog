@@ -1,3 +1,9 @@
+ricochet-refresh (3.0.41) unstable; urgency=medium
+
+  * Upgrade to Ricochet-Refresh 3.0.41
+
+ -- Morgan <morgan@blueprintforfreespeech.net>  Tue, 28 Apr 2026 00:00:00 +0000
+
 ricochet-refresh (3.0.40) unstable; urgency=medium
 
   * Upgrade to Ricochet-Refresh 3.0.40
