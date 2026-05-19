@@ -102,7 +102,7 @@ input_files:
  - name: build-toolchain
    project: '[% c("var/build-toolchain") %]'
  - URL: 'https://download.qt.io/archive/qt/5.15/[% c("version")%]/single/qt-everywhere-opensource-src-[% c("version")%].tar.xz'
-   sha256sum: cea1fbabf02455f3f0e8eaa839f5d6f45cdb56b62c8a83af5c1d00ac05f912ea
+   sha256sum: 173c2326dae138bbb0d98921e9d911e55c00163d93a6db29f294b5e19ff306ae
  - filename: fix_climits.patch
    enable: '[% c("var/linux") %]'
  - filename: linux_cross_dependencies.patch
