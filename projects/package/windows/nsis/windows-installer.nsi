@@ -108,7 +108,8 @@
         File ricochet-refresh.exe
         File tor.exe
         ; Pluggable-Transports are an optional depenendency
-        !system 'if [ -f pluggable_transports ]; then echo File /r pluggable_transports; fi'
+        !system 'if [ -d pluggable_transports ]; then echo File /r pluggable_transports > pluggable-transports.nsh; fi'
+        !include /NONFATAL pluggable-transports.nsh
 
         ; Create the uninstaller
         WriteUninstaller "$INSTDIR\Uninstall Ricochet Refresh.exe"

@@ -56,7 +56,7 @@ pushd $builddir
 cp -a $distdir/ricochet-refresh/* .
 cp $rootdir/windows/nsis/* .
 
-makensis -DMUI_VERSION="${VERSION}" windows-installer.nsi
+makensis -V4 -DMUI_VERSION="${VERSION}" windows-installer.nsi
 [% IF !c('container/use_container') %]
 # cleanup our soft-link
 rm /var/tmp/rbm
