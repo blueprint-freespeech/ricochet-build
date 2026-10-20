@@ -37,6 +37,11 @@ targets:
       container:
         suite: bullseye
         arch: amd64
+        debian_mirror: >
+          "deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg check-valid-until=no] http://archive.debian.org/debian bullseye main"
+          "deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg check-valid-until=no] http://archive.debian.org/debian bullseye-updates main"
+          "deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg check-valid-until=no] http://archive.debian.org/debian-security bullseye-security main"
+
 
 input_files:
   - project: mmdebstrap
